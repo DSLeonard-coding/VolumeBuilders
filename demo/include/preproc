@@ -1,0 +1,9 @@
+#!/bin/bash
+# run this script to build a preview of the preprocessed DetectorConstruction.hh
+#  with all autoincludes pulled in.
+mkdir Sim
+touch Sim/CupDetectorConstruction.hh
+g++ -H -dD -I ../ -P -E DetectorConstruction.hh -o pp
+rm -rf Sim
+less pp
+rm pp

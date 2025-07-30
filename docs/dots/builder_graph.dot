@@ -1,0 +1,79 @@
+digraph fake_hierarchy {
+    size="12,";
+    rankdir = BT; // bottom to top
+
+    node [shape = box];
+
+    subgraph cluster_row1 {
+    label = "Structures";
+    nodesep = 2.0;
+    StructureView;
+    subgraph cluster_row2 {
+        label = "Builders";
+        BuilderView;
+        RZBuilderPtr;
+        BoxBuilderPtr;
+        FromG4VSolidPtr;
+        rank = same;
+    }
+    AssemblyPtr;
+    dummy;
+    rank = same;
+    }
+
+
+    //subgraph cluster_row3 {
+ //   label="FromG4VSolid Factory";
+ //   rank=same;
+ // }
+
+subgraph cluster_row3 {
+    label = "Structure Factories"
+    subgraph cluster_row4 {
+        label = "Builder Factories";
+        "CreateFromG4VSolid()";
+        "CreateBoxBuilder()";
+        "CreatePolycone()";
+        "CreatePolyhedra()";
+        "CreateCylinder()";
+        rank = same;
+    }
+    "CreateAssembly()";
+}
+
+subgraph side_comments {
+    label ="";
+    rankdir=TB;
+    style = invis;
+    builderComment;
+    concreteBuilderComment;
+    structureComment;
+    factoryComment;
+    builderComment -> concreteBuilderComment-> factoryComment [style = invis];
+    structureComment-> builderComment  [style = invis];
+}
+
+    // edges between nodes
+     dummy [label = "", shape = box, width = 0.5; style = invis];
+    structureComment [label="Structures are a common view on builders and assemblies.\n  They can have VisAtts etc. set, hierarchical application of offset, and rotation,\n and finally placement", shape=plaintext, fontcolor=gray50, fontsize=12, width=0, height=0]
+    structureComment -> StructureView [color = gray50];
+    builderComment [label="BuilderViews allow operating on collections of different concrete builders.\n  This view allows all operations except initial solid configuration.", shape=plaintext, fontcolor=gray50, fontsize=12, width=0, height=0]
+    builderComment -> BuilderView [color = gray50];
+    concreteBuilderComment [label="Specialized builders are just what factories return.\n  They do everything, solid configuration, boolean, transforms,\n logical construction, visAtts, ect, and placment", shape=plaintext, fontcolor=gray50, fontsize=12, width=0, height=0]
+    concreteBuilderComment -> RZBuilderPtr [color = gray50];
+    factoryComment [label="Factories are the basic builder interferace,\n starting a fluent builder chain that can do everything.", shape=plaintext, fontcolor=gray50, fontsize=12, width=0, height=0]
+    factoryComment -> "CreateCylinder()" [color = gray50];
+    StructureView -> BuilderView;
+    StructureView -> dummy [style = invis];
+    StructureView -> AssemblyPtr;
+    dummy -> "CreateFromG4VSolid()" [style = invis];
+    BuilderView -> RZBuilderPtr;
+    BuilderView -> "FromG4VSolidPtr";
+    BuilderView -> "BoxBuilderPtr";
+    FromG4VSolidPtr -> "CreateFromG4VSolid()";
+    RZBuilderPtr -> "CreatePolycone()";
+    RZBuilderPtr -> "CreatePolyhedra()";
+    RZBuilderPtr -> "CreateCylinder()";
+    BoxBuilderPtr -> "CreateBoxBuilder()";
+    AssemblyPtr -> "CreateAssembly()";
+}

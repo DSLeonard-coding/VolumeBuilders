@@ -1,0 +1,23 @@
+build/**
+html/**
+docs/html/**
+public/**
+latex/**
+docs/latex/**
+
+
+# Ignore other user-specific or temporary files
+.idea/
+!.idea/modules.xml
+!*.iml
+!.idea/misc.xml
+!.idea/compiler.xml
+!.idea/encodings.xml
+# Potentially:
+!.idea/vcs.xml
+!.idea/runConfigurations/
+!.idea/libraries/
+
+*.swp
+geotree.txt
+build/

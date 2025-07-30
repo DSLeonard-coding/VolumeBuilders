@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#Then build auto-includes
+
+incfile=include/autoincludes.inc
+tmpfile=tmp_autoinc >/dev/null 2>&1
+rm -f $tmpfile 
+touch $tmpfile
+for file in `find -L src/*  -name "*.inc"`
+do
+echo "#include \"../$file\"" >> $tmpfile
+done
+
+if ! diff -q $tmpfile $incfile &>/dev/null  || [[ ! -f $incfile ]] 
+then
+    echo updating $incfile
+    mv $tmpfile include/autoincludes.inc
+fi
+rm -f $tmpfile >/dev/null 2>&1
+
