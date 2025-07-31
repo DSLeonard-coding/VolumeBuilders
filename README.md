@@ -19,12 +19,12 @@ VolumeBuilders is a fluent-style (ie chained) builder system for simplified and 
 Some benefits/features include:
 - Full doxygen documentation with hover docs and parameter hints, preconfigured for JetBrains clion IDE.
 - Definition of solid planes relative to arbitrary origins simplifies placement/overlap.
-- Much reduced repetition of units, parameters, types, and variable names,  
+- Much reduced repetition of units, parameters, types, and variable names
+- Ex: copy and place loops specify only what is changing (position for instance), easing comprehension.  Noise hides bugs.      
 - Far fewer temporary object declarations, 
 - Omission of defaulted configs (offsets, rotations, etc)
 - Automated logical/phsyical suffix naming and configurable copy naming/numbering.
 - Simplified hierarchical assemblies with simplified reflection planned.
-- Code is _focussed on the geometry configuration_, making correctness and review easier, and bugs harder.
 - It is fully interoperable with standard geant classes/methods, and thus is gradually adoptable/implementable.  
 
 ## Primary References
