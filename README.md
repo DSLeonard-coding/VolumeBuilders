@@ -28,6 +28,14 @@ Some benefits/features include:
 - It is fully interoperable with standard geant classes/methods, and thus is gradually adoptable/implementable.  
 
 ## Primary References
+1. The examples below are probably the 1st choice
+2. **[Factories](@ref Factories)**, and specifically solid builder factories, are the primary visible/starting interface to VolumeBuilder and are documented in the linked page.
+3. [VolumeBuilder methods](@ref DLG4::VolumeBuilders::VolumeBuilder) documents methods available for all builders. They can be chained to configure things like booleans, the logical volumes and placements.   
+4. **[Builder classes](@ref Builders)** documentation additionally include builder-specific methods, depending on the factory used.  There aren't many, but RZBuilder (used by CreatePolyCone() and CreatePolyHedra) has a few. 
+5. Hover text and parameter hints are available for all methods if using a modern IDE.  CLion is highly recommended and supported. 
+6. **[Assembly](@ref DLG4::VolumeBuilders::Assembly())**, a structure [StructureView](@ref StructureBuilder), and more are documented in the general Doxygen class listings.  
+7. **[the Topics page](topics.html)** groups listings of  classes, methods, etc by purpose, etc. 
+
 
 The best references are examples like those in sections below. In general the **[Factories](@ref Factories)**, and specifically solid builder factories, are the primary visible/starting interface to VolumeBuilder and are documented in the linked page.  [VolumeBuilder methods](@ref DLG4::VolumeBuilders::VolumeBuilder)  methods can be chained to configure things like booleans, the logical volumes and placements.   Some builder-specific properties are configurable after factory construction and are documented by the **[builder class](@ref Builders)** related to the factory. This is particularly true for RZBuilder. Hover text and parameter hints are available for all methods if using a modern IDE.  CLion is highly recommended and supported. Doxygen documentation is also available for an **[Assembly](@ref DLG4::VolumeBuilders::Assembly())**, a structure [StructureView](@ref StructureBuilder), and more.  Groups of classes, methods, etc of interest will be documented in **[the Topics page](topics.html)**
 
