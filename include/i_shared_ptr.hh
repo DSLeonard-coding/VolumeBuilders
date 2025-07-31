@@ -1,15 +1,12 @@
 #ifndef ISHAREDother_HH
 #define ISHAREDother_HH
-/// @class DLG4::i_shared_ptr
+/// @file i_shared_ptr.hh
 ///  @verbatim
 // Created by Douglas S. Leonard on 6/8/25.  All rights Reserved
 //
 // MIT license FOR THIS FILE, may not apply to other files.
 //
-// A wrapper for std::shared_ptr that allows and facilitates many implicit(i) type conversions.
-// such as from T to i_shared_ptr<T>.   Very useful for accepting paramters in a CRTP fluent base class
-// You can accept a type erased class or ctor parameters to it and avoid BOTH the overload (ctor params)
-// AND the templating (handled in the tpe erasing class in ONE place) at the method definition.
+
 /// @endverbatim
 
 //#include <atomic>    // for std::atomic
@@ -18,25 +15,32 @@
 #include <memory>
 #include "IVolumeBuilder.hh"
 
-/////WARNING********  DO NOT ADD POINTER DATA TO THIS CLASS.
-///  The base class (shared_ptr) has a non-virtual destructor..  Technically any deletion through
-///  a base class pointer is undefined behavior according to C++.  According to real compilers,
-///  It's fine, so long as there is nothing here that requires a delete call or such.
-///  This COULD be rewritten to hold the shared pointer instead of inheriting from it.  AI even might
-///  get it right, might.
-///
-///
-/// @ingroup products
-/// @tparam T The type of the object to be shared.
-/// @see VolumeBuilder
-/// @see VolumeBuilderReference
+
 namespace DLG4 {
-    template <typename T>
+    /// @class DLG4::i_shared_ptr
+    /// A wrapper for std::shared_ptr that allows and facilitates many implicit(i) type conversions.
+    /// such as from T to i_shared_ptr<T>.   Very useful for accepting paramters in a CRTP fluent base class
+    /// You can accept a type erased class or ctor parameters to it and avoid BOTH the overload (ctor params)
+    /// AND the templating (handled in the tpe erasing class in ONE place) at the method definition.
+    ///
+    ///  WARNING********  DO NOT ADD POINTER DATA TO THIS CLASS.
+    ///  DO NOT DELETE THROUGH shared_ptr BASE REFERENCE.
+    ///  The base class (shared_ptr) has a non-virtual destructor..  Technically any deletion through
+    ///  a base class pointer is undefined behavior according to C++.  According to real compilers,
+    ///  It's fine, so long as there is nothing here that requires a delete call or such.
+    ///  This COULD be rewritten to hold the shared pointer instead of inheriting from it.  AI even might
+    ///  get it right, might.
+    ///
+    ///
+    /// @tparam T The type of the object to be shared.
     class i_shared_ptr: public std::shared_ptr<T> {
     public:
         /// Inherit all constructors from std::shared_ptr
         using std::shared_ptr<T>::shared_ptr;
 
+        //Getting all the ctors to work where needed was admitedly a bit of whack-a-mole.
+        //and likely is not optimal:
+        
         template <typename U, typename = std::enable_if_t<std::is_convertible_v<U *, T *> > >
         i_shared_ptr(const std::shared_ptr<U> &ptr) : std::shared_ptr<T>(ptr) {
         }

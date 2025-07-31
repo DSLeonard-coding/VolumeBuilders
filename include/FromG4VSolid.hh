@@ -15,12 +15,6 @@
 #include "VolumeBuilder.hh"
 
 namespace DLG4::VolumeBuilders {
-    /**
-     * @brief A builder made from a G4VSolid
-     * @headerfile FromG4VSolid.hh
-     * @see VolumeBuilder for inherited methods.
-     * @ingroup Builders
-     * */
     class FromG4VSolid;
 
     /**
@@ -41,7 +35,7 @@ namespace DLG4::VolumeBuilders {
     class FromG4VSolid: public VolumeBuilder<FromG4VSolid> {
         friend class VolumeBuilder<FromG4VSolid>;
         friend class VolumeBuilderReference;
-        friend FromG4VSolidPtr CreateAnySolidBuider(G4VSolid *solid);
+        friend FromG4VSolidPtr CreateFromG4VSolidBuider(G4VSolid *solid);
 
     public:
         // No functional public methods.  Only the Factory!
