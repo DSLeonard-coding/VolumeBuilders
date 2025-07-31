@@ -7,9 +7,9 @@ README for VolumeBuilders  code (and readme) Copyright Doug Leonard 2025, All ri
 
 Distributed under MIT (Expat) license.
 
-[The git code repo](https://gitlab.com/douglas_s_leonard/physics_utilities/VolumeBuilder)
+[The git code repo](https://gitlab.com/douglas_s_leonard/physics_utilities/VolumeBuilders)
 
-[The Doxygen documentation page (if you're not already there)](https://douglas_s_leonard.gitlab.io/physics_utilities/VolumeBuilder/)
+[The Doxygen documentation page (if you're not already there)](https://douglas_s_leonard.gitlab.io/physics_utilities/VolumeBuilders/)
 
 
 ## Introduction
