@@ -96,14 +96,14 @@
 
 
             /**
-             * An alias for MakePlacement and ClonePlacement
+             * An alias for MakePlacement and ForkForPlacement
              * Used for one or many unaltered placments in sequence,
              * usually with auto naming and/or numbering
              * @return The builder
              * @ingroup products
             * @ingroup PlacementConfigs
             */
-            DerivedPtr PlaceAndCopy() {
+            DerivedPtr PlaceAndFork() {
                 this->MakePlacement();
                 auto clone = this->ForkForPlacement(); // default/preset options
                 return clone;

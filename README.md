@@ -241,12 +241,12 @@ for (int i=1; i=10, i++){                         // loop over positions.
       /*
        * Code focusses on ONLY what is being chaged!!! Easy to debug, won't miss anything!
        * Builders follow immutability principles, use once and copy.
-       * Updates the vector element for next iteration.  PlaceAndCopy 
+       * Updates the vector element for next iteration.  PlaceAndFork 
        * Increments copy_no by default, but has options to update name instead.
        * Or you can provide custom number or name in each loop.
        */
       builder = builder->SetPhysOffset((x_pos[i],y_pos[i],0)) // uses preset units above.                                                            
-                       ->PlaceAndCopy()                                                                                                   
+                       ->PlaceAndFork()                                                                                                   
       }
    }
 }
@@ -294,7 +294,7 @@ A working example is provided in the demo/src/Geometries and can be run with the
             ->SetColor(0, 1, 0) // We can pre-configure the logical-volume!
             ->ForceSolid(true)
             ->SetPhysOffset({0, 0, -200})
-            ->PlaceAndCopy()
+            ->PlaceAndFork()
             ->SetColor(1, 0, 0) // but the copy still shares logical volume so they are now ALL red.
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement()

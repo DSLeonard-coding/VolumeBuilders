@@ -47,7 +47,7 @@ void DetectorConstruction::ConstructAssembly() {
             ->SetColor(0, 1, 0) // We can pre-configure the logical-volume!
             ->ForceSolid(true)
             ->SetPhysOffset({0, 0, -200})
-            ->PlaceAndCopy()
+            ->PlaceAndFork()
             ->SetColor(1, 0, 0) // but the copy still shares logical volume so they are now ALL red.
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement()

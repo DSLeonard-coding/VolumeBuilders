@@ -59,5 +59,5 @@ void DetectorConstruction::ConstructHexPart() {
 
     hex_filler
                      ->SetMother(world_phys)
-                     ->PlaceAndCopy();
+                     ->PlaceAndFork();
 }

@@ -100,7 +100,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::
-    PlaceAndCopy() {
+    PlaceAndFork() {
         this->MakePlacement();
         auto clone = this->ForkForPlacement(); // default/preset options
         return clone;

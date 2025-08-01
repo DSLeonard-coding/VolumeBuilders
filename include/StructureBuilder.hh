@@ -132,7 +132,7 @@
              * @ingroup products
             * @ingroup PlacementConfigs
             */
-            DerivedPtr PlaceAndCopy() ;
+            DerivedPtr PlaceAndFork() ;
 
 
 
