@@ -11,17 +11,8 @@ project(VolumeBuilders LANGUAGES CXX)
 # Set C++ standard consistent with your main project
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-option(BUILD_DEMO "Build the example demo executable" OFF)
 
-# --- Conditionally include the demo subdirectory ---
 add_subdirectory(demo)
-#if(BUILD_DEMO)
-#    message(STATUS "BUILD_DEMO is ON. Including demo subdirectory.")
-#    add_subdirectory(demo)
-#else()
-#    message(STATUS "use \n    cmake -DBUILD_DEMO=ON \n to build the demo too")
-#endif()
-# --- Find Geant4 ---
 
 execute_process(
         COMMAND $ENV{GEANT4_PATH}/bin/geant4-config --cflags

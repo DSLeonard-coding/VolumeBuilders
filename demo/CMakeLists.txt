@@ -135,7 +135,7 @@ find_package(X11 REQUIRED) # X11 generally brings in Xext, Xmu, SM, ICE, Xt.
 
 # --- Link libraries ---
 target_link_libraries(Demo PRIVATE
-        VolumeBuilder
+        VolumeBuilders
         ${ROOT_CONFIG_LIBS_RAW}
         ${GEANT4_CONFIG_LIBS_RAW}
         # Link explicit CMake targets for system libraries.
