@@ -233,7 +233,7 @@ namespace DLG4::VolumeBuilders {
          * This does NOT copy the solid and does preserve the name.\n\n
          * Let's say you have a hollow cylinder, but you want a mother volume to put it in.\n
          * \code
-         * auto cryostat_bot = cryostat_vac_bot->CopyAndReset("cryostat_vac_bot")
+         * auto cryostat_bot = cryostat_vac_bot->ForkAndReset("cryostat_vac_bot")
          *                                 ->FillSolidConfig()
          *                                 ->SetMaterial(_vacuum);
          * cryostat_bot->SetMother(cryostat_vac_bot);

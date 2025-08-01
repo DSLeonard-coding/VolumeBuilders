@@ -651,7 +651,7 @@ namespace DLG4::VolumeBuilders {
 
 
     template <typename U>
-    DERIVED BASE::CopyAndReset(const G4String &new_name) const {
+    DERIVED BASE::ForkAndReset(const G4String &new_name) const {
         NoNameCheck(new_name, "CopySolidBuilder");
         DerivedPtr copy = this->Clone();
         copy->SetName(new_name); // Set base name for derived class

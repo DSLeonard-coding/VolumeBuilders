@@ -503,7 +503,7 @@
              * @ingroup Forks
              * @return
              */
-            virtual DerivedPtr CopyAndReset(const G4String &new_name) const;
+            virtual DerivedPtr ForkAndReset(const G4String &new_name) const;
 
             /**
              * Calls MakeSolid()  and copies builder with products cleared for further construction.

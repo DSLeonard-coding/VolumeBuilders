@@ -284,7 +284,7 @@ A working example is provided in the demo/src/Geometries and can be run with the
     auto assembly = CreateAssembly("example_assembly");
     auto temp = cylinder;
     for (int i = 0; i < 3; i++) {
-        temp = temp->CopyAndReset("part_" + std::to_string(i))
+        temp = temp->ForkAndReset("part_" + std::to_string(i))
                 ->SetPhysOffset({0, 250. * (i), 0.});
         assembly->AddStructure(temp);
     }

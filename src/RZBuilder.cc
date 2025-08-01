@@ -87,7 +87,7 @@ namespace DLG4::VolumeBuilders {
         if (solid_ptr_) {
             throw std::runtime_error("Error in RZBuilder::FillSolidConfig\"\n"
                 "Cannot fill a solid builder CONFIGURATION, when the solid is already built from it."
-                "Use CopyAndReset(\"new_name\") first to get an unbuilt copy.\n\n");
+                "Use ForkAndReset(\"new_name\") first to get an unbuilt copy.\n\n");
         }
 
         // set all ID's to 0.
