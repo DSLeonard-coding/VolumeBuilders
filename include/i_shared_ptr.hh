@@ -33,6 +33,7 @@ namespace DLG4 {
     ///
     ///
     /// @tparam T The type of the object to be shared.
+    template <typename T>
     class i_shared_ptr: public std::shared_ptr<T> {
     public:
         /// Inherit all constructors from std::shared_ptr

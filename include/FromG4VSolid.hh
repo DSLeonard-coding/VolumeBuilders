@@ -49,9 +49,9 @@ namespace DLG4::VolumeBuilders {
 
     private:
         //Implement pure vitual SolidConstructor from ISolidBuilder
-        void SolidConstructor() override {
+        G4VSolid* SolidConstructor(const G4String &name) override {
             throw std::runtime_error(
-                "FromG4VSolid::SolidConstructor() not implemented.\n"
+                "FromG4VSolid::SolidConstructor(const G4String &name) not implemented.\n"
                 "FromG4VSolid is constructed using prebuilt a G4VSolid pointer.");
         }
 

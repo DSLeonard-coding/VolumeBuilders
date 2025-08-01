@@ -102,7 +102,7 @@ namespace DLG4::VolumeBuilders {
     DERIVED BASE::
     PlaceAndCopy() {
         this->MakePlacement();
-        auto clone = this->CloneForPlacement(); // default/preset options
+        auto clone = this->ForkForPlacement(); // default/preset options
         return clone;
     }
 
@@ -317,17 +317,17 @@ namespace DLG4::VolumeBuilders {
 
 
     template <typename U>
-    DERIVED BASE::CloneForPlacement(
+    DERIVED BASE::ForkForPlacement(
         std::optional<int> copy_no, const G4String &name_override) {
         // Polymorphic clone through builder view method.
-        auto c1 = this->builder_configs_->builder_view->CloneForPlacement();
+        auto c1 = this->builder_configs_->builder_view->ForkForPlacement();
         auto c2 = c1->builder_configs_->istructure_ptr;
         auto copy = i_dynamic_pointer_cast<U>(c2);
         if (!placement_configs_->is_builder) {
             // assembly
             copy->placement_configs_->children.clear();
             for (auto &child : placement_configs_->children) {
-                auto builderview_clone = child->builder_configs_->builder_view->CloneForPlacement(std::nullopt, "",true);
+                auto builderview_clone = child->builder_configs_->builder_view->ForkForPlacement(std::nullopt, "",true);
                 auto clone_istructure_view =builderview_clone->builder_configs_->istructure_ptr->ToStructureView();
                 copy->placement_configs_->children.emplace_back( clone_istructure_view );
             }
@@ -336,16 +336,16 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::CloneFinalSolid(const G4String &new_name) {
+    DERIVED BASE::ForkLogicalVolume(const G4String &new_name) {
         // Polymorphic clone through builder view method.
-        auto c1 = this->builder_configs_->builder_view->CloneFinalSolid(new_name);
+        auto c1 = this->builder_configs_->builder_view->ForkLogicalVolume(new_name);
         auto c2 = c1->builder_configs_->istructure_ptr;
         auto copy = i_dynamic_pointer_cast<U>(c2);
         if (!placement_configs_->is_builder) {
             // assembly
             copy->placement_configs_->children.clear();
             for (auto &child : placement_configs_->children) {
-                auto builderview_clone = child->builder_configs_->builder_view->CloneFinalSolid(new_name);
+                auto builderview_clone = child->builder_configs_->builder_view->ForkLogicalVolume(new_name);
                 auto clone_istructure_view =builderview_clone->builder_configs_->istructure_ptr->ToStructureView();
                 copy->placement_configs_->children.emplace_back( clone_istructure_view );
             }

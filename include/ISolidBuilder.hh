@@ -41,7 +41,7 @@
             template <typename T>
             friend class StructureBuilder;
             friend class Assembly;
-            virtual void SolidConstructor() = 0;
+            virtual G4VSolid* SolidConstructor(const G4String &name) = 0;
             virtual ~IStructureBuilder() = default;
             // clones and returns a base class pointer
             virtual SharedPtr<IStructureBuilder> clone_impl() const = 0;

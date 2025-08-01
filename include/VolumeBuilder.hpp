@@ -61,11 +61,12 @@ namespace DLG4::VolumeBuilders {
         if (!lv_configs_->material) {
             // If lv_configs_->material is still nullptr (meaning it wasn't found),
             // then create the new material and assign it.
-            lv_configs_->material = new G4Material( // This is Geant. Of course we won't delete it :)
+            lv_configs_->material = new G4Material(
+                // This is Geant. Of course we won't delete it :)
                 "VolumeBuilderDefaultGas", 2., 4. * CLHEP::g / CLHEP::mole,
                 0. * CLHEP::mg / CLHEP::cm3, kStateGas,
                 4.3 * CLHEP::kelvin, 1.e-8 * CLHEP::bar
-            );
+                );
         }
         // lv_configs_->material = new G4Material( // This is Geant.  Of course we won't delete it :)
         //         "VolumeBuilderDefaultGas", 2., 4. * CLHEP::g / CLHEP::mole,
@@ -93,18 +94,17 @@ namespace DLG4::VolumeBuilders {
     //  If we put all our data in a common base class, we wouldn't need to
     // template this.  Is that better?  Enh... Whatever.
     template <typename U>
-    template <typename T, typename std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int> >
+    template <typename T, typename std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>>
     DLG4::VolumeBuilders::VolumeBuilder<U>::VolumeBuilder(
-            const SharedPtr<T> &other,
-            SET_LINK_TYPE) : builder_configs_(other->builder_configs_,SET_LINK),
-                             boolean_configs_(other->boolean_configs_,SET_LINK),
-                             lv_configs_(other->lv_configs_, SET_LINK),
-                             placement_configs_(other->placement_configs_,SET_LINK),
-                             solid_ptr_(other->solid_ptr_,SET_LINK),
-                             logicvol_ptr_(other->logicvol_ptr_,SET_LINK),
-                             placement_(other->placement_,SET_LINK) {
+        const SharedPtr<T> &other,
+        SET_LINK_TYPE) : builder_configs_(other->builder_configs_,SET_LINK),
+                         boolean_configs_(other->boolean_configs_,SET_LINK),
+                         lv_configs_(other->lv_configs_, SET_LINK),
+                         placement_configs_(other->placement_configs_,SET_LINK),
+                         solid_ptr_(other->solid_ptr_,SET_LINK),
+                         logicvol_ptr_(other->logicvol_ptr_,SET_LINK),
+                         placement_(other->placement_,SET_LINK) {
         builder_configs_->istructure_ptr = IStructurePtr(other);
-
     }
 
 
@@ -136,8 +136,8 @@ namespace DLG4::VolumeBuilders {
         // Implicit construction through
         // ctor args..
         logicvol_ptr_.ConstructAndLink(final_solid_ptr_,
-                lv_configs_->material,
-                name);
+            lv_configs_->material,
+            name);
 
         ApplyAttributes_();
         return this->shared_from_this();
@@ -198,11 +198,11 @@ namespace DLG4::VolumeBuilders {
             this->logicvol_ptr_.make_persistent();
         } catch (const std::logic_error &) {
             std::string error =
-                    "Error in SetLogicalVolume()"
-                    "for builder named: \"" + builder_configs_->name + "\""
-                    "  A Logical Volume has already been set or built\n"
-                    "Start with a new builder or copy a configured one with "
-                    "builder->SetPlacementBuilder(\"newname\")";
+                "Error in SetLogicalVolume()"
+                "for builder named: \"" + builder_configs_->name + "\""
+                "  A Logical Volume has already been set or built\n"
+                "Start with a new builder or copy a configured one with "
+                "builder->SetPlacementBuilder(\"newname\")";
             throw std::runtime_error(error);
         }
     }
@@ -223,11 +223,11 @@ namespace DLG4::VolumeBuilders {
             this->solid_ptr_.make_persistent();
         } catch (const std::logic_error &) {
             std::string error =
-                    "Error in SetLogicalVolume();"
-                    "for builder named: \"" + builder_configs_->name + "\"\n"
-                    "  A Logical Volume has already been set or built\n"
-                    "Start with a new builder or copy a configured one with "
-                    "builder->SetPlacementBuilder(\"newname\")";
+                "Error in SetLogicalVolume();"
+                "for builder named: \"" + builder_configs_->name + "\"\n"
+                "  A Logical Volume has already been set or built\n"
+                "Start with a new builder or copy a configured one with "
+                "builder->SetPlacementBuilder(\"newname\")";
             throw std::runtime_error(error);
         }
     }
@@ -237,7 +237,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::AddUnion(const BuilderView &other, const Unit3Vec &new_offset,
-            G4RotationMatrix *rotation) {
+        G4RotationMatrix *rotation) {
         bool is_subtraction = false;
         bool is_intersection = false;
         AddBoolean(other, is_subtraction, is_intersection, new_offset, rotation);
@@ -246,7 +246,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::AddSubtraction(const BuilderView &other, const Unit3Vec &new_offset,
-            G4RotationMatrix *rotation) {
+        G4RotationMatrix *rotation) {
         if (other) {
             bool is_subtraction = true;
             bool is_intersection = false;
@@ -261,7 +261,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::AddIntersection(const BuilderView &other, const Unit3Vec &new_offset,
-            G4RotationMatrix *rotation) {
+        G4RotationMatrix *rotation) {
         if (other) {
             bool is_subtraction = false;
             bool is_intersection = true;
@@ -276,12 +276,12 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::AddBoolean(const BuilderView &other, bool is_subtraction,
-            bool is_intersection, const Unit3Vec &new_offset, G4RotationMatrix *rotation) {
+        bool is_intersection, const Unit3Vec &new_offset, G4RotationMatrix *rotation) {
         auto offset = ProvisionUnits(new_offset);
 
         if (other) {
             boolean_configs_->booleans.emplace_back(
-                    BooleanSolid{other, is_subtraction, is_intersection, offset, rotation});
+                BooleanSolid{other, is_subtraction, is_intersection, offset, rotation});
         } else {
             throw std::runtime_error("Error in AddBoolean() "
                                      "for builder named: \"" + builder_configs_->name + "\"\n"
@@ -292,16 +292,16 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     G4VSolid * BASE::GetFinalSolid() {
-    if (!final_solid_ptr_ && placement_configs_->is_builder) {
-        MakeBooleans(std::string("")); // checks are done in there.
-    }
-    // should probably have a check here, although it's a bug anyway if not built now.
+        if (!final_solid_ptr_ && placement_configs_->is_builder) {
+            MakeFinalSolid(std::string("")); // checks are done in there.
+        }
+        // should probably have a check here, although it's a bug anyway if not built now.
         return this->final_solid_ptr_;
     }
 
 
     template <typename U>
-    DERIVED BASE::MakeBooleans(G4String boolean_name) {
+    DERIVED BASE::MakeFinalSolid(G4String boolean_name) {
         this->ValidateForBooleanBuild(STRINGIFY(BASE) "MakeBooleans");
         if (boolean_name == "") {
             // may rename unimplemented
@@ -309,21 +309,23 @@ namespace DLG4::VolumeBuilders {
         }
         SetBooleanName(boolean_name);
         G4String name_temp;
+        G4String final_name;
         //  if no booleans, we forward the original to the end result.
         G4VSolid *temp_ptr = solid_ptr_.get_mutable();
+        if (boolean_configs_->boolean_name.empty()) {
+            final_name = builder_configs_->name + "_B";
+        } else {
+            final_name = boolean_configs_->boolean_name;
+        }
         for (size_t i = 0; i < boolean_configs_->booleans.size(); i++) {
             auto boolean = boolean_configs_->booleans[i];
-            bool is_last = i == (boolean_configs_->booleans.size() - 1);
+            bool is_last = (i == (boolean_configs_->booleans.size() - 1)) && !boolean_configs_->reflect_z;
             int count = i + 1;
             if (boolean_configs_->boolean_name.empty()) {
                 name_temp = builder_configs_->name + "_B" + std::to_string(count);
             }
             if (is_last) {
-                if (boolean_configs_->boolean_name.empty()) {
-                    name_temp = builder_configs_->name + "_B";
-                } else {
-                    name_temp = boolean_configs_->boolean_name;
-                }
+                name_temp = final_name;
             }
             auto count_str = std::to_string(count); //union number string
             if (!boolean.vol_ref->solid_ptr_) {
@@ -332,45 +334,54 @@ namespace DLG4::VolumeBuilders {
             }
             if (boolean.is_subtraction) {
                 temp_ptr = new G4SubtractionSolid(
-                        name_temp,
-                        temp_ptr,
-                        boolean.vol_ref->solid_ptr_.get_mutable(),
-                        boolean.rotation,
-                        boolean.offset
-                        + ((boolean.rotation != nullptr)
-                               ? *boolean.rotation * boolean.vol_ref->builder_configs_->
-                                 internal_offset
-                               : 0 * boolean.offset)
-                        - this->builder_configs_->internal_offset
-                        );
+                    name_temp,
+                    temp_ptr,
+                    boolean.vol_ref->solid_ptr_.get_mutable(),
+                    boolean.rotation,
+                    boolean.offset
+                    + ((boolean.rotation != nullptr)
+                           ? *boolean.rotation * boolean.vol_ref->builder_configs_->
+                                                         internal_offset
+                           : 0 * boolean.offset)
+                    - this->builder_configs_->internal_offset
+                    );
             } else if (boolean.is_intersection) {
                 temp_ptr = new G4IntersectionSolid(
-                        name_temp,
-                        temp_ptr,
-                        boolean.vol_ref->solid_ptr_.get_mutable(),
-                        boolean.rotation,
-                        boolean.offset
-                        + ((boolean.rotation != nullptr)
-                               ? *boolean.rotation * boolean.vol_ref->builder_configs_->
-                                 internal_offset
-                               : 0 * boolean.offset)
-                        - this->builder_configs_->internal_offset
-                        );
+                    name_temp,
+                    temp_ptr,
+                    boolean.vol_ref->solid_ptr_.get_mutable(),
+                    boolean.rotation,
+                    boolean.offset
+                    + ((boolean.rotation != nullptr)
+                           ? *boolean.rotation * boolean.vol_ref->builder_configs_->
+                                                         internal_offset
+                           : 0 * boolean.offset)
+                    - this->builder_configs_->internal_offset
+                    );
             } else {
                 temp_ptr = new G4UnionSolid(
-                        name_temp,
-                        temp_ptr,
-                        boolean.vol_ref->solid_ptr_.get_mutable(),
-                        boolean.rotation,
-                        boolean.offset
-                        + ((boolean.rotation != nullptr)
-                               ? *boolean.rotation * boolean.vol_ref->builder_configs_->
-                                 internal_offset
-                               : 0 * boolean.offset)
-                        - this->builder_configs_->internal_offset
-                        );
+                    name_temp,
+                    temp_ptr,
+                    boolean.vol_ref->solid_ptr_.get_mutable(),
+                    boolean.rotation,
+                    boolean.offset
+                    + ((boolean.rotation != nullptr)
+                           ? *boolean.rotation * boolean.vol_ref->builder_configs_->
+                                                         internal_offset
+                           : 0 * boolean.offset)
+                    - this->builder_configs_->internal_offset
+                    );
             }
         }
+        if (boolean_configs_->reflect_z) {
+            temp_ptr = new G4ReflectedSolid(final_name,
+                temp_ptr,
+                G4ReflectZ3D(0));
+            auto io = this->builder_configs_->internal_offset;
+            // flip internal offset
+            this->builder_configs_->internal_offset = {io.getX(), io.getY(), -io.getZ()};
+        }
+
         // we get one shot to link the final solid.
         if (temp_ptr) {
             final_solid_ptr_.LinkToRaw(temp_ptr);
@@ -455,12 +466,12 @@ namespace DLG4::VolumeBuilders {
               || placement_configs_->auto_copyno)
         ) {
             G4cout << "Warning: Placement Builder for " + builder_configs_->name +
-                    " copied without setting name or copy number and auto naming and numbering have been disabled \n"
-                    "Copy number auto-incrementing will be re-enabled \n"
-                    "  Use SetAutoCopyNo(true), SetAuCopyName(true), OverridePlacementName(\"name\"),  SetCopyNo(num)  \n"
-                    " to pass a name or number to MakePlacement()" << G4endl;
+                " copied without setting name or copy number and auto naming and numbering have been disabled \n"
+                "Copy number auto-incrementing will be re-enabled \n"
+                "  Use SetAutoCopyNo(true), SetAuCopyName(true), OverridePlacementName(\"name\"),  SetCopyNo(num)  \n"
+                " to pass a name or number to MakePlacement()" << G4endl;
             placement_configs_->copy_no = PlacementNameRegistry::GetNameCount(
-                    GetPlacementBaseName());
+                GetPlacementBaseName());
         }
 
         // 2. Resolve the Mother Logical Volume
@@ -472,7 +483,7 @@ namespace DLG4::VolumeBuilders {
             // auto naming incrementing
             final_name = base_name + "_P" +
                          std::to_string(
-                                 PlacementNameRegistry::GetNameCount(GetPlacementBaseName()));
+                             PlacementNameRegistry::GetNameCount(GetPlacementBaseName()));
         } else {
             final_name = GetPlacementBaseName() + "_P";
         }
@@ -481,11 +492,12 @@ namespace DLG4::VolumeBuilders {
             final_name = placement_name_override_;
         }
 
-        if (placement_configs_->mother == nullptr || !placement_configs_->mother->GetLogicalVolume()) {
+        if (placement_configs_->mother == nullptr || !placement_configs_->mother->
+            GetLogicalVolume()) {
             // will lazay trigger mother build if needed
             G4cout << "WARNING in MakePlacement of " + final_name +
-                    ". No mother volume was set or constructable.\n"
-                    "Defaulting to world volume" << G4endl;
+                ". No mother volume was set or constructable.\n"
+                "Defaulting to world volume" << G4endl;
         }
 
         if (placement_configs_->mother) {
@@ -495,23 +507,23 @@ namespace DLG4::VolumeBuilders {
         }
 
         auto transform = G4Transform3D(placement_configs_->total_rotation,
-                placement_configs_->total_translation);
+            placement_configs_->total_translation);
         // 4. Create the G4PVPlacement
         // placement is <G4VPhysicalVolume> and can construct itself:
         placement_.LinkToRaw(new G4PVPlacement(
-                transform, // G4Transform3D transform
-                currentLogical, // pCurrentLogical
-                final_name, // pName
-                effectiveMotherLogical, // pMotherLogical
-                false, // many option, only false allowed (unless you remember Geant3 :))
-                placement_configs_->copy_no, // pCopyNo
-                placement_configs_->surface_check // pSurfChk
-                ));
+            transform, // G4Transform3D transform
+            currentLogical, // pCurrentLogical
+            final_name, // pName
+            effectiveMotherLogical, // pMotherLogical
+            false, // many option, only false allowed (unless you remember Geant3 :))
+            placement_configs_->copy_no, // pCopyNo
+            placement_configs_->surface_check // pSurfChk
+            ));
         if (!placement_) {
             throw std::runtime_error(
-                    "MakeLogicalPlacement failed "
-                    "for builder named: \"" + builder_configs_->name + "\"\n"
-                    " pointer is null after calling G4PVPlacement().");
+                "MakeLogicalPlacement failed "
+                "for builder named: \"" + builder_configs_->name + "\"\n"
+                " pointer is null after calling G4PVPlacement().");
         }
         return this->shared_from_this();
     }
@@ -582,9 +594,9 @@ namespace DLG4::VolumeBuilders {
         G4ThreeVector total_translation = this->placement_configs_->parent_translation
                                           + this->placement_configs_->parent_rotation
                                           * (
-                                             this->placement_configs_->translation
-                                             + this->placement_configs_->rotation
-                                             * this->builder_configs_->internal_offset
+                                              this->placement_configs_->translation
+                                              + this->placement_configs_->rotation
+                                              * this->builder_configs_->internal_offset
                                           );
         if (!placement_configs_->is_builder) {
             // we're an assembly, apply total transform as parent transform to our children
@@ -648,8 +660,8 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::CloneSolid(const G4String &new_name) {
-        NoNameCheck(new_name, "CloneSolid");
+    DERIVED BASE::ForkFinalSolid(const G4String &new_name) {
+        NoNameCheck(new_name, "ForkFinalSolid");
         if (!solid_ptr_) {
             MakeSolid();
         }
@@ -662,8 +674,8 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::CloneFinalSolid(const G4String &new_name) {
-        NoNameCheck(new_name, "CloneFinalSolid");
+    DERIVED BASE::ForkLogicalVolume(const G4String &new_name) {
+        NoNameCheck(new_name, "ForkLogicalVolume");
         if (!final_solid_ptr_ && placement_configs_->is_builder) {
             [[maybe_unused]] auto discard = GetFinalSolid();
         }
@@ -681,8 +693,8 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::CloneForPlacement(std::optional<int> copy_no,
-            const G4String &name_override, bool parent_name_was_set) {
+    DERIVED BASE::ForkForPlacement(std::optional<int> copy_no,
+        const G4String &name_override, bool parent_name_was_set) {
         // really a clone of logical volume:
         if (!logicvol_ptr_ && placement_configs_->is_builder) {
             MakeLogicalVolume();
@@ -693,7 +705,7 @@ namespace DLG4::VolumeBuilders {
         copy->placement_name_override_ = name_override;
         // register name and get provisional copy_no:
         copy->placement_configs_->copy_no = PlacementNameRegistry::IncrementNameCount(
-                GetPlacementBaseName());
+            GetPlacementBaseName());
         //Override if copy_no was passed:
         copy->placement_configs_->copy_no = copy_no.value_or(copy->placement_configs_->copy_no);
 
@@ -797,7 +809,7 @@ namespace DLG4::VolumeBuilders {
         if (final_solid_ptr_) {
             throw std::runtime_error("Cannot " + operation + " - boolean already built!"
                                      "for builder named: \"" + builder_configs_->name + "\"\n"
-                    );
+                );
         }
     }
 
@@ -806,7 +818,7 @@ namespace DLG4::VolumeBuilders {
         if (logicvol_ptr_) {
             throw std::runtime_error("Cannot " + operation + " - logical volume already built!"
                                      "for builder named: \"" + builder_configs_->name + "\"\n"
-                    );
+                );
         }
     }
 
@@ -815,7 +827,7 @@ namespace DLG4::VolumeBuilders {
         if (placement_) {
             throw std::runtime_error("Cannot " + operation + " - placement already built!"
                                      "for builder named: \"" + builder_configs_->name + "\"\n"
-                    );
+                );
         }
     }
 
@@ -827,7 +839,7 @@ namespace DLG4::VolumeBuilders {
         if (placement_) {
             throw std::runtime_error(">>> Error in " + site + " Physical Volume was already built\n"
                                      "for builder named: \"" + builder_configs_->name + "\"\n"
-                                     "Use CloneForPlacement to copy and rebuild.");
+                                     "Use ForkForPlacement to copy and rebuild.");
         }
         // ReSharper disable once CppRedundantBooleanExpressionArgument
         if (!logicvol_ptr_ && enable_full_lazy_builds && placement_configs_->is_builder) {
@@ -835,9 +847,9 @@ namespace DLG4::VolumeBuilders {
         }
         if (!logicvol_ptr_ && placement_configs_->is_builder) {
             throw std::runtime_error(
-                    "Error in " + site + ": LogicVolume is null after MakeLogicalVolume()."
-                    "for builder named: \"" + builder_configs_->name + "\"\n"
-                    );
+                "Error in " + site + ": LogicVolume is null after MakeLogicalVolume()."
+                "for builder named: \"" + builder_configs_->name + "\"\n"
+                );
         }
     }
 
@@ -851,14 +863,14 @@ namespace DLG4::VolumeBuilders {
         }
         // ReSharper disable once CppRedundantBooleanExpressionArgument
         if (!final_solid_ptr_ && enable_full_lazy_builds && placement_configs_->is_builder) {
-            MakeBooleans(); // Will trigger ValidateForBooleanBuild below
+            MakeFinalSolid(); // Will trigger ValidateForBooleanBuild below
         }
         if (!final_solid_ptr_ && placement_configs_->is_builder) {
             // MakeBooleans always set it.
             throw std::runtime_error(
-                    "Error in ValidateForVolumeBuild from " + site +
-                    "for builder named: \"" + builder_configs_->name + "\"\n"
-                    ": It's not possible to produce this error.");
+                "Error in ValidateForVolumeBuild from " + site +
+                "for builder named: \"" + builder_configs_->name + "\"\n"
+                ": It's not possible to produce this error.");
         }
     }
 
@@ -891,44 +903,44 @@ namespace DLG4::VolumeBuilders {
     G4double BASE::GetEffectiveDefaultUnit() const {
         auto temp = builder_configs_.get();
         auto local = temp->default_unit;
-//        auto local = builder_configs_->default_unit;
+        //        auto local = builder_configs_->default_unit;
         auto global = BuilderConfigs::global_default_unit;
         G4double default_unit = local.value_or(global);
         return default_unit;
     }
 
     template <typename U>
-    DERIVED BASE::ReflectZFinalSolidCopy(const G4String &new_base_name) {
-        // build and store our final solid, then clear it for a rebuild.
-        G4VSolid *original = this->GetFinalSolid();
-        auto return_object = this->CloneSolid(new_base_name); // clears final solid
-        // we could flip all the input booleans, but why?  Just delete them.
-        //        return_object->boolean_configs_->booleans.clear();
-        // and flip the final boolean
-        return_object->final_solid_ptr_.LinkToRaw(new G4ReflectedSolid(new_base_name + "_B",
-                original,
-                G4ReflectZ3D(0)));
-        auto io = return_object->builder_configs_->internal_offset;
-        // flip internal offset
-        return_object->builder_configs_->internal_offset = {io.getX(), io.getY(), -io.getZ()};
-        return return_object;
+    DERIVED BASE::ReflectZFinalSolid() {
+        if (final_solid_ptr_ ) {
+            throw std::runtime_error("Error VolumeBuilder::ReflectZFinalSolid,  \n"
+                "The final solid is already built.  \n");
+        }
+        boolean_configs_->reflect_z = true;
+        return this->shared_from_this();
     }
 
     template <typename U>
-    DERIVED BASE::ReflectZBaseSolidCopy(G4String const &new_name) {
-        if (!boolean_configs_->booleans.empty()) {
-            G4cout <<
-                    "WARNING in VolumeBuilder::ReflectZBaseSolidCopy(): "
-                    "for builder named: \"" + builder_configs_->name + "\"\n"
-                    "You are flipping a base solid that has boolean relationships already defined  defined.\n"
-                    "This could be ok.   Flip the base solid before defining the booleans to suppress this warning.\n"
-                    << G4endl;
+    DERIVED BASE::ReflectZBaseSolid() {
+        if (final_solid_ptr_ ) {
+            throw std::runtime_error("Error VolumeBuilder::ReflectZBaseSolid,  \n"
+                "The base solid is already built.  \n");
         }
-        G4VSolid *original = this->GetBaseSolid();       // make if required: can throw.
-        auto return_object = this->CloneSolid(new_name); // clear out all products.
-        return_object->solid_ptr_.LinkToRaw(new G4ReflectedSolid(new_name, original,
-                G4ReflectZ3D(0)));
-        return return_object;
+        builder_configs_->reflect_base_solid_z = true;
+        return this->shared_from_this();
+    }
+
+    template <typename U>
+    DERIVED BASE::MakeSolid(){
+    G4VSolid *solid;
+        G4String final_name = GetBuilderName();
+    if (builder_configs_->reflect_base_solid_z) {
+        solid=SolidConstructor(final_name+"_proto_solid");
+        solid= new G4ReflectedSolid(final_name, solid,G4ReflectZ3D(0));
+    } else {
+        solid=SolidConstructor(final_name);
+    }
+    solid_ptr_.LinkToRaw(solid);
+    return this->shared_from_this();
     }
 
 
@@ -962,7 +974,7 @@ namespace DLG4::VolumeBuilders {
         // calls the BuilderView copy/convert ctor::
         // presently the i_shared converter only works with l-value.
         std::shared_ptr<U> builder_std_ptr =
-                std::const_pointer_cast<U>(this->shared_from_this());
+            std::const_pointer_cast<U>(this->shared_from_this());
         auto x = DerivedPtr(builder_std_ptr);
         return BuilderView(x);
     }
@@ -971,7 +983,7 @@ namespace DLG4::VolumeBuilders {
     StructureView BASE::ToStructureView() const {
         // calls the structure view copy/convert ctor:
         std::shared_ptr<U> builder_std_ptr =
-                std::const_pointer_cast<U>(this->shared_from_this());
+            std::const_pointer_cast<U>(this->shared_from_this());
         auto x = DerivedPtr(builder_std_ptr);
         return StructureView(x);
     }

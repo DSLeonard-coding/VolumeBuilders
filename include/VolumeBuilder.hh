@@ -105,7 +105,7 @@
             */
             DerivedPtr PlaceAndCopy() {
                 this->MakePlacement();
-                auto clone = this->CloneForPlacement(); // default/preset options
+                auto clone = this->ForkForPlacement(); // default/preset options
                 return clone;
             }
 
@@ -159,11 +159,7 @@
                  * Use GetBaseSolid() to retrieve or make and retrieve it.
                  * @return The builder
                  */
-            DerivedPtr MakeSolid() {
-                // This is setting solid on the base_pointer stored reference, not the main object
-                SolidConstructor();
-                return this->shared_from_this();
-            }
+            DerivedPtr MakeSolid();
 
             /**
              * SetName  Sets name used for solid and derived product names
@@ -179,7 +175,7 @@
 
             /** For advanced use only: Prefer FromG4VSolid(solid) almost always.
              *
-             * Directly provides the builder a solid. Could be useful after a CloneSolid()
+             * Directly provides the builder a solid. Could be useful after a ForkFinalSolid()
              * call to apply prior configs to a new custom solid, maybe if doing custom
              * solid transofrmations.
              *
@@ -471,30 +467,26 @@
              */
 
 
-            /** @defgroup TransformingCopiers  Tranforming VolumeBuilder Copiers
-             * Copies a builder with transformed final solid.
+            /** @defgroup Transformins  Shape transformers
              * */
 
             /**
-             * Creates a copy with final solid (boolean if set, else base solid) flipped in z.
-             * Does not copy logical volumes:
-             * This requires a copy, and so a rename.
-             * @ingroup TransformingCopiers
-             *
+             * Configure final solid to be flipped in z.
+             * @ingroup Transforms
              * @param new_base_name Name for new copy.
             */
-            DerivedPtr ReflectZFinalSolidCopy(const G4String &new_base_name);
+            DerivedPtr ReflectZFinalSolid();
 
             /**
-             * Flip a Base Solid, but not its boolean build.
+             * Configure base solid to be flipped BEFORE applying booleans.
              *
-             * ReflectZFinalCopy() is usually better,flips entire solid with or without booleans.
-             * @ingroup TransformingCopiers
+             * @see ReflectZFinalSolid() to flip entire solid with or without booleans.
+             * @ingroup Transforms
              *
              * @param new_name
              * @return The same builder (allows chaining)
              */
-            DerivedPtr ReflectZBaseSolidCopy(const G4String &new_name);
+            DerivedPtr ReflectZBaseSolid();
 
             /**
              * @brief Copy a configured/unbuilt Builder, with a new name.
@@ -520,7 +512,7 @@
              * @ingroup CopyBuilders
              *
              */
-            DerivedPtr CloneSolid(const G4String &new_name);
+            DerivedPtr ForkFinalSolid(const G4String &new_name);
 
 
             /**
@@ -535,7 +527,7 @@
              * @return A shared pointer to the new builder instance.
              * @ingroup CopyBuilders
              */
-            DerivedPtr CloneFinalSolid(const G4String &new_name);
+            DerivedPtr ForkLogicalVolume(const G4String &new_name);
 
 
 
@@ -553,7 +545,7 @@
              * @return A shared pointer to the new builder instance.
              * @ingroup CopyBuilders
              */
-            DerivedPtr CloneForPlacement(
+            DerivedPtr ForkForPlacement(
                 std::optional<int> copy_no = std::nullopt
                 , const G4String &name_override = ""
                 , bool parent_name_was_set =false  // in assembly/hierarchies, name change derives through parent
@@ -626,7 +618,7 @@
 
         protected:
             /// polymorphic access to solid construction
-            void SolidConstructor() override = 0;
+            G4VSolid* SolidConstructor(const G4String &name) override = 0;
 
             // base implementation of non-fluent clone.
             SharedPtr<IStructureBuilder> clone_impl() const override ;
@@ -653,7 +645,7 @@
             VolumeBuilder(const SharedPtr<T> &other, SET_LINK_TYPE );
 
             VolumeBuilder &operator=(const VolumeBuilder &other) = delete;
-            DerivedPtr MakeBooleans(G4String boolean_name = "");
+            DerivedPtr MakeFinalSolid(G4String boolean_name = "");
             VolumeBuilder(const VolumeBuilder &other);
 
             VolumeBuilder(VolumeBuilder &&) noexcept = default;

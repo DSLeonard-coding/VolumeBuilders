@@ -105,7 +105,7 @@
              * @return A shared pointer to the new builder instance.
              * @ingroup CopyBuilders
              */
-            DerivedPtr CloneForPlacement(
+            DerivedPtr ForkForPlacement(
                 std::optional<int> copy_no = std::nullopt
                 , const G4String &name_override = "") ;
 
@@ -121,7 +121,7 @@
              * @return A shared pointer to the new builder instance.
              * @ingroup CopyBuilders
              */
-            DerivedPtr CloneFinalSolid(const G4String &new_name);
+            DerivedPtr ForkLogicalVolume(const G4String &new_name);
 
 
             /**
@@ -421,7 +421,7 @@
 
         protected:
             /// polymorphic access to solid construction
-            virtual void SolidConstructor() override = 0;
+            virtual G4VSolid* SolidConstructor(const G4String &name) override = 0;
 
         private:
             //Methods with basically protected intent
@@ -455,7 +455,7 @@
 
 
             StructureBuilder &operator=(const StructureBuilder &other) = delete;
-            DerivedPtr MakeBooleans(G4String boolean_name = "");
+            DerivedPtr MakeFinalSolid(G4String boolean_name = "");
             StructureBuilder(const StructureBuilder &other);
 
             StructureBuilder(StructureBuilder &&) noexcept = default;

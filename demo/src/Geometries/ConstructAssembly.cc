@@ -52,7 +52,7 @@ void DetectorConstruction::ConstructAssembly() {
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement()
             // but we can clone only the Final solid, and rebuild LV with new color:
-            ->CloneFinalSolid("blue")
+            ->ForkLogicalVolume("blue")
             ->SetColor(0, 0, 1)
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement();

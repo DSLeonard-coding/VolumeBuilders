@@ -299,7 +299,7 @@ A working example is provided in the demo/src/Geometries and can be run with the
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement()
             // but we can clone only the Final solid, and rebuild LV with new color:
-            ->CloneFinalSolid("blue")
+            ->ForkLogicalVolume("blue")
             ->SetColor(0, 0, 1)
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement();
@@ -429,7 +429,7 @@ But now making a vector of builders or even having base methods accepting a buil
 VolumeBuilderReference is the better solution.  It has a templated ctor (actually calls a templated copy ctor in VolumeBuilder) that takes any builder type and "copies" the internal data by smart pointer reference.  It makes a live view on another buider, but without non-polymorphic SolidBuilder functionality.  There is a common interface, ISolidBuilder, to all builders, and a pointer of this type to the original 
 object is stored in the type-erased VolumeBuilder object.  The data smart pointers are custom and use a linked-tree update system (with the open end linkable from any link, yet sealable to data --as oposed to another link --only once, maintaining  strong logical immutability) to keep the original object synchronized with the type-erased object, so that methods can be called polymorphically on the original object and results are seen in the data of the original objects.
 
-Type-erased object views of course cannot be used to configure builer-specific (non-polymorphic) settings, because those obviously cannot be represented in a type-agnostic way.  However they can call polymorphic methods that are forwarded by VolumeBuilderReference, including SolidConstructor() that knows how to make builder specific solids that have already been configured.  So the only restriction is that builder-specific settings must be configured on the builder-specific (non-type-erased) view of the object (ie, usually before converting to VolumeBuilderReference.   After that, all builders 
+Type-erased object views of course cannot be used to configure builer-specific (non-polymorphic) settings, because those obviously cannot be represented in a type-agnostic way.  However they can call polymorphic methods that are forwarded by VolumeBuilderReference, including SolidConstructor(const G4String &name) that knows how to make builder specific solids that have already been configured.  So the only restriction is that builder-specific settings must be configured on the builder-specific (non-type-erased) view of the object (ie, usually before converting to VolumeBuilderReference.   After that, all builders 
 can be operated on together.
 
 

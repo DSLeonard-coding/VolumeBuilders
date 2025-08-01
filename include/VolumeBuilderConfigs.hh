@@ -39,6 +39,7 @@ namespace DLG4::VolumeBuilders {
         struct BuilderConfigs {
             G4String name{}; // initial solid name
             std::optional<G4double> default_unit;
+            bool reflect_base_solid_z;
             // actually global, but it needs to live somewhere untemplated.
             static G4double global_default_unit;
             // Interface pointer for type erased class access (Copied in linking ctor only)
@@ -61,6 +62,7 @@ namespace DLG4::VolumeBuilders {
         struct BooleanConfigs {
             std::vector<BooleanSolid> booleans;
             G4String boolean_name{};   //derived from name if not explicitly provided.
+            bool reflect_z;
             BooleanConfigs()  = default;
             ~BooleanConfigs() = default;
         };

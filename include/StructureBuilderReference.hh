@@ -56,10 +56,10 @@ namespace DLG4::VolumeBuilders {
                     int> = 0 ) : StructureBuilder<StructureBuilderReference>(other, SET_LINK) {
         }
 
-        void SolidConstructor() override {
-            throw std::runtime_error("Error in StructureBuilderReference::SolidConstructor() "
+        G4VSolid* SolidConstructor(const G4String &name) override {
+            throw std::runtime_error("Error in StructureBuilderReference::SolidConstructor(const G4String &name) "
                                      + this->builder_configs_->name + " \n" +
-                                     "SolidConstructor() is not implemented.");
+                                     "SolidConstructor(const G4String &name) is not implemented.");
         }
 
         StructureBuilderReference(const StructureBuilderReference &other) = default;

@@ -250,8 +250,8 @@ namespace DLG4::VolumeBuilders {
 
     protected:
         ///The polymorphic Solid constructor
-        void SolidConstructor() override {
-            (this->*MakeSolidFunctionPtr_)();
+        G4VSolid* SolidConstructor(const G4String &name) override {
+            return (this->*MakeSolidFunctionPtr_)(name);
         }
 
 
@@ -261,9 +261,9 @@ namespace DLG4::VolumeBuilders {
 
         //These will become public as MakeSolid() in derived classes.
         //RZBuilder(const RZBuilder &other, const G4String &new_name);
-        RZBuilderPtr MakePolycone();
+        G4VSolid* MakePolycone(const G4String &name);
 
-        RZBuilderPtr MakePolyhedra();
+        G4VSolid* MakePolyhedra(const G4String &name);
 
         //There is no MakeCylinder() because it's a special case of Polycone'
 
@@ -276,7 +276,7 @@ namespace DLG4::VolumeBuilders {
         G4double phi_start_deg_{0};
         G4double phi_tot_deg{360};
 
-        RZBuilderPtr (RZBuilder::*MakeSolidFunctionPtr_)() = nullptr;
+        G4VSolid* (RZBuilder::*MakeSolidFunctionPtr_)(const G4String &name) = nullptr;
 
         // plane data:
         int num_planes_{0};

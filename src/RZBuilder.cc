@@ -102,7 +102,7 @@ namespace DLG4::VolumeBuilders {
          if (solid_ptr_) {
             throw std::runtime_error("Error in RZBuilder::ReflectZSolidConfig\"\n"
                 "Cannot flip a solid builder CONFIGURATION, when the solid is already built from it.\n"
-                "Use ReflectZFinalSolidCopy(\"new_name\") or ReflectZBaseSolidCopy(\"new_name\") instead to copy and flip the solid.\n\n");
+                "Use ReflectZFinalSolidCopy(\"new_name\")  instead to copy and flip the solid.\n\n");
         }
         // Mirror z values
         for (int i = 0; i < num_planes_; i++) {
@@ -180,7 +180,7 @@ namespace DLG4::VolumeBuilders {
 
 
 
-    RZBuilderPtr RZBuilder::MakePolycone() {
+    G4VSolid* RZBuilder::MakePolycone(const G4String &name) {
         if (this->solid_ptr_.get() != nullptr) {
             std::string error = "Error in MakePolycone: A solid was already built\n"
                 "You can copy and rename the builder to reset it and build again.";
@@ -193,13 +193,13 @@ namespace DLG4::VolumeBuilders {
         for (int i = 0; i < z_.size(); i++) {
             G4cout << "z: " << z_[i] << " IR: " << IR_[i] << "  OR: " << OR_[i] << G4endl;
         }
-        this->SetSolid(new G4Polycone(
-            GetBuilderName(), phi_start_deg_ * CLHEP::deg, phi_tot_deg * CLHEP::deg, num_planes_, z_.data(), IR_.data(),
-            OR_.data()));
-        return shared_from_this();
+        auto retval = new G4Polycone(
+            name, phi_start_deg_ * CLHEP::deg, phi_tot_deg * CLHEP::deg, num_planes_, z_.data(), IR_.data(),
+            OR_.data());
+        return retval;
     }
 
-    RZBuilderPtr RZBuilder::MakePolyhedra() {
+    G4VSolid* RZBuilder::MakePolyhedra(const G4String &name) {
         if (this->solid_ptr_.get() != nullptr) {
             std::string error = "Error in MakePolyhedra: A solid was already built\n"
                 "You can copy and rename the builder to reset it and build again.";
@@ -212,11 +212,10 @@ namespace DLG4::VolumeBuilders {
         for (int i = 0; i < z_.size(); i++) {
             G4cout << "z: " << z_[i] << " IR: " << IR_[i] << "  OR: " << OR_[i] << G4endl;
         }
-        auto name = GetBuilderName();
-        this->SetSolid(new G4Polyhedra(
+        auto retval = new G4Polyhedra(
             name, phi_start_deg_ * CLHEP::deg, phi_tot_deg * CLHEP::deg, sides_, num_planes_, z_.data(),
-            IR_.data(), OR_.data()));
-        return shared_from_this();
+            IR_.data(), OR_.data());
+        return retval;
     }
 
 

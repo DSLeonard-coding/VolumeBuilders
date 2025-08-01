@@ -156,7 +156,7 @@ namespace DLG4::VolumeBuilders {
 
     protected:
         ///The polymorphic Solid constructor
-        void SolidConstructor() override;
+        G4VSolid* SolidConstructor(const G4String &name) override;
 
     private:
 

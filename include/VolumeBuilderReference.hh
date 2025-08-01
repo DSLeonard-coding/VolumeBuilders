@@ -47,7 +47,7 @@ namespace DLG4::VolumeBuilders {
         friend class i_shared_ptr;
 
     public:
-        void SolidConstructor() override;
+        G4VSolid* SolidConstructor(const G4String &name) override;
 
     private:
         //allow i_shared_ptr access to our converting ctors

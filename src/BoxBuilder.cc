@@ -114,17 +114,17 @@ namespace DLG4::VolumeBuilders {
         set_shared_from_this_enabled(true);
     }
 
-    void BoxBuilder::SolidConstructor() {
+    G4VSolid* BoxBuilder::SolidConstructor(const G4String &name) {
         if (this->solid_ptr_.get() != nullptr) {
             std::string error = "Error in BoxBuilder::SolidConstructor: A solid was already built\n"
                     "You can copy and rename the builder to reset it and build again.";
             throw std::runtime_error(error);
         }
         G4cout << G4endl;
-        G4cout << "New BoxBuilder:" << GetBuilderName()
+        G4cout << "New BoxBuilder:" << GetBuilderName() // lie and use the final transformed name
                 << "x_size: " << x_size_ << " y_size: " << y_size_ << " z_size: " << z_size_ <<
                 G4endl;
         G4cout << "Internal offset: " << this->builder_configs_->internal_offset << G4endl;
-        this->SetSolid(new G4Box(GetBuilderName(), x_size_ / 2.0, y_size_ / 2.0, z_size_ / 2.0));
+        return new G4Box(name, x_size_ / 2.0, y_size_ / 2.0, z_size_ / 2.0);
     }
 }

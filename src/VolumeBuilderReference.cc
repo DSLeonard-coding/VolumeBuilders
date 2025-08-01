@@ -15,13 +15,13 @@
 #include "StructureBuilder.hpp"
 
 namespace DLG4::VolumeBuilders {
-    void VolumeBuilderReference::SolidConstructor() {
+    G4VSolid* VolumeBuilderReference::SolidConstructor(const G4String &name) {
         if (!this->builder_configs_->istructure_ptr) {
-            throw std::runtime_error("Error in VolumeBuilderReference::VolumeBuilderReference::SolidConstructor() \n"
-                                     "In VolumeBuilderReference::VolumeBuilderReference::SolidConstructor(): No solid configuration to construct on"
+            throw std::runtime_error("Error in VolumeBuilderReference::VolumeBuilderReference::SolidConstructor(const G4String &name) \n"
+                                     "In VolumeBuilderReference::VolumeBuilderReference::SolidConstructor(const G4String &name): No solid configuration to construct on"
                                      + this->builder_configs_->name);
         }
-        this->builder_configs_->istructure_ptr->SolidConstructor();
+        return this->builder_configs_->istructure_ptr->SolidConstructor(name);
     }
 
 
