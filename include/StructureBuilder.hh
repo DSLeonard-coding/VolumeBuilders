@@ -103,7 +103,7 @@
              * @param copy_no  no arguments or std::nullopt to leave as auto. Must set on every use to get manual numbering.
              * @param name_override An optional name override for the physical volume.  Leave blank to use auto controls instead.
              * @return A shared pointer to the new builder instance.
-             * @ingroup CopyBuilders
+             * @ingroup Forks
              */
             DerivedPtr ForkForPlacement(
                 std::optional<int> copy_no = std::nullopt
@@ -119,7 +119,7 @@
              *
              * @param new_name The base name for the new builder's logical and physical volumes.
              * @return A shared pointer to the new builder instance.
-             * @ingroup CopyBuilders
+             * @ingroup Forks
              */
             DerivedPtr ForkLogicalVolume(const G4String &new_name);
 
@@ -366,7 +366,8 @@
             DerivedPtr SetAutoCopyNo(bool set);
 
             /**
-             * @defgroup CopyBuilders Builder Copiers
+             * @defgroup Forks Builder Copiers
+             * Copy Builders from various build steps
              */
 
 

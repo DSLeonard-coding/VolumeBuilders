@@ -463,7 +463,10 @@
             DerivedPtr SetAutoCopyNo(bool set);
 
             /**
-             * @defgroup CopyBuilders Builder Copiers
+             * @defgroup Forks Builder Copiers
+             * Copy Builders from various build steps
+             *
+             * These allow you to base placement builders on previously constructed solids etc.
              */
 
 
@@ -473,7 +476,6 @@
             /**
              * Configure final solid to be flipped in z.
              * @ingroup Transforms
-             * @param new_base_name Name for new copy.
             */
             DerivedPtr ReflectZFinalSolid();
 
@@ -483,7 +485,6 @@
              * @see ReflectZFinalSolid() to flip entire solid with or without booleans.
              * @ingroup Transforms
              *
-             * @param new_name
              * @return The same builder (allows chaining)
              */
             DerivedPtr ReflectZBaseSolid();
@@ -499,6 +500,7 @@
              * for Solid-Builder specific needs.
              *
              * @param new_name
+             * @ingroup Forks
              * @return
              */
             virtual DerivedPtr CopyAndReset(const G4String &new_name) const;
@@ -509,7 +511,7 @@
              *
              * @param new_name The base name for the new builder's Geant products.
              * @return A shared pointer to the new builder instance.
-             * @ingroup CopyBuilders
+             * @ingroup Forks
              *
              */
             DerivedPtr ForkFinalSolid(const G4String &new_name);
@@ -525,7 +527,7 @@
              *
              * @param new_name The base name for the new builder's logical and physical volumes.
              * @return A shared pointer to the new builder instance.
-             * @ingroup CopyBuilders
+             * @ingroup Forks
              */
             DerivedPtr ForkLogicalVolume(const G4String &new_name);
 
@@ -543,7 +545,7 @@
              * @param copy_no  no arguments or std::nullopt to leave as auto. Must set on every use to get manual numbering.
              * @param name_override An optional name override for the physical volume.  Leave blank to use auto controls instead.
              * @return A shared pointer to the new builder instance.
-             * @ingroup CopyBuilders
+             * @ingroup Forks
              */
             DerivedPtr ForkForPlacement(
                 std::optional<int> copy_no = std::nullopt
