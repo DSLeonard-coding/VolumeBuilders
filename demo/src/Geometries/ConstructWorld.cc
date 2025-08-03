@@ -28,7 +28,7 @@ void DetectorConstruction::ConstructWorld() {
 
     // now just becomes:
     SetGlobalDefaultUnit(CLHEP::mm);
-    world_phys = CreateBoxBuilder("hallbox",3000,3000,3000)
+    world_phys = CreateCenteredBoxBuilder("hallbox",3000,3000,3000)
         ->SetMaterial(_air)
         ->SetColor(0.8, 0.8, 0.8, 0.1)
         ->SetVisibility(false)

@@ -18,6 +18,7 @@
 #include "VolumeBuilderReference.hh"
 #include "VolumeBuilderTypes.hh"
 #include "StructureBuilderReference.hh"
+#include "Assembly.hh"
 #include <memory>
 
 // this will never be netered because we are ALWAYS entered FROM here:
@@ -183,7 +184,9 @@ namespace DLG4::VolumeBuilders {
         return logicvol_ptr_.get_mutable();
     }
 
-
+    //The separation here was made to allow
+    //the non-fluent _impl calls to be used in ctors, but the new disable_shared_from_this
+    // solves that anyway. These can probably be consolidated now.
     template <typename U>
     DERIVED BASE::SetLogicalVolume(G4LogicalVolume *logical_volume) {
         SetLogicalVolume_impl(logical_volume);
@@ -996,6 +999,26 @@ namespace DLG4::VolumeBuilders {
         return shared_mutable_this(retval); // wrap and return.
     }
 
+    template <typename U>
+    DERIVED BASE::AddTo(BuilderViewList& list) const {
+        list.emplace_back(this->ToBuilderView());
+        auto retval = shared_mutable_this(this);
+        return retval;
+    }
+
+    template <typename U>
+    DERIVED BASE::AddTo(StructureViewList& list) const {
+        list.emplace_back(this->ToStructureView());
+        auto retval = shared_mutable_this(this);
+        return retval;
+    }
+
+    template <typename U>
+    DERIVED BASE::AddTo(AssemblyPtr& assembly) const {
+        assembly->AddStructure(this->ToStructureView());
+        auto retval = shared_mutable_this(this);
+        return retval;
+    }
 
 #undef DERIVED
 #undef BASE

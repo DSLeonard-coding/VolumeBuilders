@@ -37,9 +37,11 @@ void DetectorConstruction::ConstructAssembly() {
     auto assembly = CreateAssembly("example_assembly");
     auto temp = cylinder;
     for (int i = 0; i < 3; i++) {
-        temp = temp->ForkAndReset("part_" + std::to_string(i))
-                ->SetPhysOffset({0, 250. * (i), 0.});
-        assembly->AddStructure(temp);
+        for (int i = 0; i < 3; i++) {
+            temp->ForkAndReset("part_" + std::to_string(i))
+                    ->SetPhysOffset({0, 250. * (i), 0.})
+                    ->AddTo(assembly);
+        }
     }
 
     assembly->SetMother(world_phys)
@@ -48,7 +50,7 @@ void DetectorConstruction::ConstructAssembly() {
             ->ForceSolid(true)
             ->SetPhysOffset({0, 0, -200})
             ->PlaceAndFork()
-            ->SetColor(1, 0, 0) // but the copy still shares logical volume so they are now ALL red.
+            ->SetColor(1, 0, 0) // but the fork still shares logical volume so they are now ALL red.
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement()
             // but we can clone only the Final solid, and rebuild LV with new color:

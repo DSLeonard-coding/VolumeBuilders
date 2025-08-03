@@ -60,7 +60,9 @@
             /// @see VolumeReferencePtr for the common interface.
             using DerivedPtr = SharedPtr<U>;
 
-            // we need access to the other templates for copy
+            // limit public(protected) API by using friendship.
+            // Much of this can't even be handledby protected.
+            // Specifically factories (normal) and the type-erasing pseudo-inheritance (StructureBuilder)
             template <typename>
             friend class VolumeBuilder;
             friend class VolumeBuilderReference;
@@ -68,6 +70,7 @@
             template <typename>
             friend class StructureBuilder;
             friend class StructureBuilderReference;
+            friend FromG4VSolidPtr CreateFromG4VSolid(G4VSolid *solid);
             friend AssemblyPtr CreateAssembly(G4String names);
             friend class RZBuilder;
             friend class BoxBuilder;
@@ -173,21 +176,6 @@
              * These all return the builder for fluent interface.
              */
 
-            /** For advanced use only: Prefer FromG4VSolid(solid) almost always.
-             *
-             * Directly provides the builder a solid. Could be useful after a ForkFinalSolid()
-             * call to apply prior configs to a new custom solid, maybe if doing custom
-             * solid transofrmations.
-             *
-            * Solid can come from a G4VSolid pointer.
-            * THE CALLER SHALL NOT DELETE IT.
-            *
-            * @param solid You can pass another builder containing it
-            *      or a G4VSolid *  (ctor argument for the builder)
-            *
-            * @ingroup LogicalVolumeConfigs
-            */
-            DerivedPtr SetSolid(G4VSolid *solid);
 
             /**@defgroup booleans
              * Define combination another volume with present one,
@@ -589,9 +577,12 @@
              * */
 
             /**
-             * @brief Set the per-Builder default unit for all offsets.
-             * Use DLG4::VolumeBuilders::SetGlobalDefaultUnit() to set a default for all builders.
-             * Or fall back to the initial default of CLHEP::mm.
+             * @brief Set the per-Builder default unit for all later non-factory offsets.
+             * Use DLG4::VolumeBuilders::SetGlobalDefaultUnit() to set a default for all builders,
+             * or fall back to the initial default of CLHEP::mm. \n
+             * - May not apply to values set before this is called. \n
+             * - Does not apply to factory units like CreateCenteredBoxBuilder();\n
+             * But should not be set and changed. Just use it once, early. \n
              * @param unit The unit to set, ex: CLHEP::mm
              * @return The builder (allows chaining)
              * @ingroup Units
@@ -604,7 +595,34 @@
              * @ingroup Units
              */
             G4double GetEffectiveDefaultUnit() const;
+            /** @defgroup Batch collection
+             *  @brief methods to collect builders for batch operation.
+            /**
+             * @brief Add the builder a list for group/batch manipulations
+             *
+             * @param list The list to add to.
+             * @return the builder
+             * @ingroup Batch collection
+             */
+            DerivedPtr AddTo(BuilderViewList& list) const;
 
+            /**
+             * @brief Add the builder a list for group/batch manipulations
+             *
+             * @param list The list to add to.
+             * @return the builder
+             * @ingroup Batch collection
+             */
+            DerivedPtr AddTo(StructureViewList& list) const;
+
+            /**
+             * @brief Add the builder an assembly geometrically joined manipulation.
+             *
+             * @param assembly The assembly to add to.
+             * @return the builder
+             * @ingroup Batch collection
+             */
+            DerivedPtr AddTo(AssemblyPtr& assembly) const;
 
             /**
              * Destructor
@@ -633,6 +651,7 @@
 
 
             VolumeBuilder();
+            DerivedPtr SetSolid(G4VSolid *solid);
 
             DerivedPtr Clone() const {
                 // This call is NOT DIRECTLY polymorphic.  It calls the VolumeBuilder base clone_impl().

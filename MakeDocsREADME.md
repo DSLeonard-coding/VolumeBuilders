@@ -1,7 +1,7 @@
 
 To test docs:
 1) Run MakeDocs.sh
-2) <your-browser-command> docs/html/index.html
+2) \<your-browser-command> docs/html/index.html
 
 To deploy docs:
 

@@ -12,7 +12,13 @@ project(VolumeBuilders LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(demo)
+option(VOLUMEBUILDERS_NO_DEMO "Disable building and installing demo executable" OFF)
+
+add_subdirectory(demo EXCLUDE_FROM_ALL)
+
+if(NOT VOLUMEBUILDERS_NO_DEMO)
+    set_property(TARGET VBDemo PROPERTY EXCLUDE_FROM_ALL FALSE)
+endif()
 
 execute_process(
         COMMAND $ENV{GEANT4_PATH}/bin/geant4-config --cflags

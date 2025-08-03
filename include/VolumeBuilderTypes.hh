@@ -80,11 +80,19 @@ namespace DLG4::VolumeBuilders {
 
     /**
      * @brief a user type to hold many builders
-     * @details Use emplace_back() to add builders to one:
+     * @details You can add to them directly with ->EmplaceBackInto(yourlist)
      * But you should be able to add builders to a vector of, for example,
      * 4LogicalVolume * as well since type converting operators are defined.!!!
      */
     using BuilderViewList = std::vector<BuilderView>;
+
+    /**
+     * @brief a user type to hold many structures
+     * @details You can add to them directly with ->EmplaceBackInto(yourlist)
+     * But you should be able to add builders to a vector of, for example,
+     * 4LogicalVolume * as well since type converting operators are defined.!!!
+     */
+    using StructureViewList = std::vector<StructureView>;
 
     // For the template base class
     template <typename U>

@@ -19,6 +19,7 @@ VolumeBuilders is a fluent-style (ie chained) builder system for simplified and 
 Some benefits/features include:
 - Full doxygen documentation with hover docs and parameter hints, preconfigured for JetBrains clion IDE.
 - Definition of solid planes relative to arbitrary origins simplifies placement/overlap.
+- Easily inter-stackable offset and rotations.
 - Much reduced repetition of units, parameters, types, and variable names
 - Ex: copy and place loops specify only what is changing (position for instance), easing comprehension.  Noise hides bugs.      
 - Far fewer temporary object declarations, 
@@ -57,7 +58,7 @@ A quick but trivial example.... Here is snippet of a typical world volume setup:
 In VolumeBuilder we default rotation, position, mother in this case, and skip all the temporaries and just have:
 ```cpp
     SetGlobalDefaultUnit(CLHEP::mm);
-    world_phys = CreateBoxBuilder("hallbox",3000,3000,3000)
+    world_phys = CreateCenteredBoxBuilder("hallbox",3000,3000,3000)
         ->SetMaterial(_air)
         ->SetColor(0.8, 0.8, 0.8, 0.1)
         ->SetVisibility(false)
@@ -150,7 +151,7 @@ The full ConstructExample1.cc produces:
 
 ## BoxBuilder 
 The ability to define parts with arbitrary z-offset was so useful that it has been added
-to basic box shapes as well, using the \link DLG4::VolumeBuilders::CreateBoxBuilder()  \endlink method.  The example below from
+to basic box shapes as well, using the \link DLG4::VolumeBuilders::CreateCenteredBoxBuilder()  \endlink and related methods.  The example below from
 src/Geometries/ConstructBoxExample.cc demostrates multiple boxes arranged with faces 
 set relative to z=0, including one rotated around its offset center.  Select BoxExample from the demo for the live example:
 
@@ -159,47 +160,88 @@ set relative to z=0, including one rotated around its offset center.  Select Box
     G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
     BuilderViewList builder_list;
     // a small box to mark the world center
-    auto box_part = CreateBoxBuilder(
-        "box_part", // name
-        10,   // x total size
-        10,   // y total size
-        -5,   //  z start
-        10)   //  z change
-            ->SetColor(1,0,0) // red
-            ->SetPhysOffset({0, 0, 0});
-    builder_list.emplace_back(box_part);
+    auto box_part = CreateZDeltaBoxBuilder(
+                        "box_part",     // name
+                        10,             // x total size
+                        10,             // y total size
+                        -5,             //  z start
+                        10)             //  z change
+                    ->SetColor(1, 0, 0) // red
+                    ->SetPhysOffset({0, 0, 0})
+                    ->AddTo(builder_list);
 
     // multiple boxes arranged in y with a z-edged referenced to 0:
-    auto box_part2 = CreateBoxBuilder("box_part2", 100, 100, 0,200)->SetColor(0,1,0); // green
-    builder_list.emplace_back(box_part2);
-    auto box_part3 = CreateBoxBuilder("box_part3", 100, 100, 0, 100)->SetColor(0,.5,.5); // blue-green
-    builder_list.emplace_back(box_part3);
-    auto box_part4 = CreateBoxBuilder("box_part4", 100, 100, 0, 50)->SetColor(0.5,0.7,1); // blue
-    builder_list.emplace_back(box_part4);
-    auto box_part5 = CreateBoxBuilder("box_part4", 100, 100, 50,100)->SetColor(150./255,0,175./255); // purple
-    builder_list.emplace_back(box_part5);
+    CreateZDeltaBoxBuilder("box_part2", 100, 100, 0, 200)->SetColor(0, 1, 0) // green
+                                                         ->AddTo(builder_list);
+    CreateZDeltaBoxBuilder("box_part3", 100, 100, 0, 100)->SetColor(0, .5, .5) // blue-green
+                                                         ->AddTo(builder_list);
+    CreateZDeltaBoxBuilder("box_part4", 100, 100, 0, 50)->SetColor(0.5, 0.7, 1) // blue
+                                                        ->AddTo(builder_list);
+    CreateZDeltaBoxBuilder("box_part4", 100, 100, 50, 100)
+        ->SetColor(150. / 255, 0, 175. / 255) // purple
+        ->AddTo(builder_list);
     // a box rotated around y with its own origin still at the z=0 edge, ie rotated off-center:
-    auto box_part6 = CreateBoxBuilder("box_part4", 100, 100, 0,200)
-            // can set configurations in any order mostly, but can be nice to set many things up front before geometry details:
-            ->SetColor(255/255,165/255,0) // orange
-            ->SetPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg));
-    builder_list.emplace_back(box_part6);
-// arrange all boxes in y and set common properties:
-    double y =0;
-    for (auto &builder: builder_list) {
+    CreateZDeltaBoxBuilder("box_part4", 100, 100, 0, 200)
+        // can set configurations in any order mostly, but can be nice to set many things up front before geometry details:
+        ->SetColor(255. / 255, 165. / 255, 0) // orange
+        ->SetPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
+        ->AddTo(builder_list);
+    // arrange all boxes in y and set common properties:
+    double y = 0;
+    for (auto &builder : builder_list) {
         builder->SetMother(world_phys)
-                ->SetMaterial(_copper)
-                ->ForceSolid(true)
-                ->SetPhysOffset({mm,0, y, 0}) // distribute in y
-                ->MakePlacement();
-        y+=100;
+               ->SetMaterial(_copper)
+               ->ForceSolid(true)
+               ->SetPhysOffset({mm, 0, y, 0}) // distribute in y
+               ->MakePlacement();
+        y += 100;
     }
+
 ```
 This creates the geometry shown below:  
 ![BoxExample\.png](docs/images/BoxExample_resized.png "BoxExample_resized.png")  
 The blocks are face aligned without needing to shift them by half-lengths. And the orange block is rotated about offset origin on its face.
 
-A traditional centered-only [CreateBoxBuilder()](DLG4::VolumeBuilders::CreateBoxBuilder())  overload (but with full sizes, not half) is also included as well as one that can be offset in all three axes. See **[Factories](@ref Factories)** or auto complete in your IDE for details.
+Many factories (CreateXXX(...)) and setters are provided for flexible defintion allowing arbitrary offsets.  A traditional centered-only [CreateCenteredBoxBuilder()](DLG4::VolumeBuilders::CreateCenteredBoxBuilder())  version (but with full sizes, not half) is also included as well as ones that can be offset in all three axes, defined as edges and deltas, or as two edges, and alternatively through individual single-line X,Y,Z setters of the same variations. As with other methods units are optional with global default fallback. See **[Factories](@ref Factories)** or auto complete in your IDE for details.  Or use a default factory like @ref CreateBoxBuilder("name") with [setters](DLG4::VolumeBuilders::CreateBoxBuilder(const G4String &name).
+
+Here's a clean example from a real simulated sample. This particular sample needed two material densities:
+```
+    G4Material *sample_mat1 = DetectorConstruction::CopyMaterial(_boric_powder, "sample_mat1", .83);
+    G4Material *sample_mat2 = DetectorConstruction::CopyMaterial(_boric_powder, "sample_mat2", .635);
+
+    // center bag
+    double bottom= array_plate_top_z_/mm;
+    pieces.emplace_back (CreateZDeltaBoxBuilder("bags_mid", 276, 300, bottom, 26 ));
+
+    // main +/-x walls, 13 bags each,vertical
+    bottom = array_surround_top_z_ / mm;
+    CreateDeltasBoxBuilder("bags+x", 150, 65, -225, 450, bottom, 280)
+        ->SetMaterial(sample_mat1)->AddTo(pieces);
+    CreateDeltasBoxBuilder("bags-x", -150, -65, -225, 450, bottom, 280)
+        ->SetMaterial(sample_mat1)->AddTo(pieces);
+
+    // main +/-y walls, 5 bags horizontal
+    CreateDeltasBoxBuilder("bags+y1", 150, -230, +175.3, +49.5, bottom, 277)
+        ->SetMaterial(sample_mat2)->AddTo(pieces);
+    CreateDeltasBoxBuilder("bags-y1", 150, -230, -175.3, -49.5, bottom, 277)
+        ->SetMaterial(sample_mat2)->AddTo(pieces);
+
+    // extra +/-y vertical bags
+    CreateDeltasBoxBuilder("bags+y2", -80, -70, +175.3, +49.5, bottom, 180)
+        ->SetMaterial(sample_mat2)->AddTo(pieces);
+    CreateDeltasBoxBuilder("bags-y2", -80, -70, -175.3, -49.5, bottom, 180)
+        ->SetMaterial(sample_mat2)->AddTo(pieces);
+
+    for (auto &piece : pieces) {
+        piece->SetVisibility(true)
+            ->SetColor(white)
+            ->ForceSolid(true)
+            ->SetMother(AirshieldPhys_)
+            ->MakePlacement();
+    }
+```
+This uses the x,delta_x,y,delta_y,z,delta_z version of CreateBoxBuilder and uses list for setting common properties and placing.  Note that because the boxes have built-in offsets, no furhter positioning is needed.  These offsets are at the solid level, so the center of the solid is still at (0,0) and further rotations work accordingly, swinging the box around the origin as is in the first example.  
+(CopyMaterial should get moved into VolumeBuilders as a bonus.)
 
 ## Placing and manipulating multiple generic objects:
 
@@ -226,7 +268,7 @@ auto ring_part = CreateFromG4VSolid->Create(some_G4_solid, "ring_part");  // nam
 //  Let's copy it and change a little:    
 auto another_can = ring_part->CopySolidBuilder("another_can")   
     ->SetMother(ring_part)            // accepts a logical physical, or builder (even unbuilt)
-    ->ReflectZFinalSolid("flipped_can")                // and flip it!
+    ->ReflectZFinalSolid()                // and flip it!
     ->SetPhysOffset(1,10,3);                       // uses global units above.
      // Everything builds on-demand, including booleans, logical volumes, even mothers.
      
@@ -253,7 +295,7 @@ for (int i=1; i=10, i++){                         // loop over positions.
 ```
 ## Hierarchical Assemblies as Generic Structures.
 
-Basically, you can add builders and other assemblies (generically called Structures) to assemblies and can adjust and place them as if they were a normal builder!
+Basically, you can add builders and other assemblies (both generically called Structures) to assemblies and can adjust and place the assemblies as if they were normal builders!
 
 Below gives a rough sketch of how to use this.
 
@@ -266,7 +308,7 @@ auto my_assembly = CreateAssembly("assembly1")
     ->SetColor(blue)
     ->MakePlacement();
 ```
-A working example is provided in the demo/src/Geometries and can be run with the "assembly" volume selection on the demo.  The code looks about like this (or some updated version of this):
+A working example is provided in  demo/src/Geometries/ConstructAssembly.cc and can be run with the "assembly" volume selection on the demo.  The code looks about like this (or some updated version of this):
 
 ```cpp
     DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
@@ -284,9 +326,9 @@ A working example is provided in the demo/src/Geometries and can be run with the
     auto assembly = CreateAssembly("example_assembly");
     auto temp = cylinder;
     for (int i = 0; i < 3; i++) {
-        temp = temp->ForkAndReset("part_" + std::to_string(i))
-                ->SetPhysOffset({0, 250. * (i), 0.});
-        assembly->AddStructure(temp);
+        temp->ForkAndReset("part_" + std::to_string(i))
+                ->SetPhysOffset({0, 250. * (i), 0.})
+                ->AddTo(assembly);
     }
 
     assembly->SetMother(world_phys)
@@ -295,7 +337,7 @@ A working example is provided in the demo/src/Geometries and can be run with the
             ->ForceSolid(true)
             ->SetPhysOffset({0, 0, -200})
             ->PlaceAndFork()
-            ->SetColor(1, 0, 0) // but the copy still shares logical volume so they are now ALL red.
+            ->SetColor(1, 0, 0) // but the fork still shares logical volume so they are now ALL red.
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement()
             // but we can clone only the Final solid, and rebuild LV with new color:
@@ -309,9 +351,10 @@ The result looks like:
 
 ![Example1\.png](docs/images/assembly.png "Example1_resized.png")  
 
-A 3-sided polyhedra was defined.   It was positioned along y while adding to an assembly.  The assembly was translated in x and placed, then twice it was rotated 90 degrees around y and placed again.  The last time copies of the logical volumes were made so that their color could be changed independently.
+A 3-sided polyhedra was defined.   It was positioned along y while adding to an assembly.  The assembly was translated in x and placed, then twice it was rotated 90 degrees around y and placed again.  These were done using a "stacked" rotation that stacks the rotation on the prior translation in x.  The last time, copies of the logical volumes were made so that their color could be changed independently.  In this example AddTo(assembly) was used, which works with assemblies and BuilderViewList.  But you can also use assembly->AddStructure(temp) as convenient.
 
 All commands that work to manipulate logical volumes work on assemblies, including things like ForceSolid, etc.  Even auto numbering and naming should work in some way, although it is in development.  Note that Logical Volume properties like VisAtt do not affect physics and are left mutable for now even after constructing the logical volume.  Because changing these does not force a copy of the logical volume, the changes apply to all prior and future copied of the logical volume, just as in vanilla Geant4.
+
 
 ## Using unemplemented Geant4 features and gradual adoption
 
@@ -350,7 +393,20 @@ These are all the products presently produced by the builder.
 ```
 All base class or polymorphic products should be listed (as seen above) in the IVolumeBuilder.hh base interface class header.  Typically the only products you are required to explicitly make are Placements (ie physical volumes).  Everything else will be constructed automatically when needed. 
 
-However, methods like MakeSolid() do exist and can serve to enforce finalization of build-stage configuratoins and show intent to do so. The build system has a kind of immutability.  Once a product is made, it cannot be rebuilt without first using a copy&rename method such ->CopyLogicVolBuilder("newname")->SetMateria(...)->....  Thus, calling MakeLogicalVolume() can serve to enforce  that a particular version of the logicalvolume, the variable it's possibly assigned to, and all the requirements for it (ex: Solid) are not modified later in the code before being built, improving clarity and review and reducing mistakes. 
+However, methods like MakeSolid() do exist and can serve to enforce finalization of build-stage configuratoins and show intent to do so. 
+
+The build system has a kind of immutability.  Once a product is made, it cannot be rebuilt with that builder.
+Calling MakeLogicalVolume() can serve to enforce  that a particular version of a logicalvolume, the variable it's possibly assigned to, and all the requirements for it (ex: Solid) are not modified later in the code before being built, improving clarity and review and reducing mistakes.
+
+### Forking
+
+ As stated, builders can only build a product once, but the buidler can be forked with a method such as  ForkLogicalVolume("newname")->SetMateria(...)->....  These copy the builder with build products built up to one step before the the product to be forked.  They also rename the builder so that new products derived from those get corresponding unique derived names, separate from those made with the original builder.  So 
+```
+auto builder = CreateCenteredBoxBuilder("name",1.,1.,1)->...->MakePlacement()->ForkLogicalVolume("newname")->MakeLogicalVolume(); 
+```
+Will result in one Solid named "name" and two logicalVolumes based on it named "name_L" and "newname_L"  (we also already made a placement named_P). For now, uniqueness is only enforced on physical volume (Placement) name/copy_no combinations, via a global name registry. 
+
+
 
 ### G4 interoperability:
 Some of this is covered in the previous sectgion.
@@ -371,7 +427,7 @@ return the same builder type as derived classes.  This though means there is not
 Instead VolumeBuilder has custom data-sharing type-erasure classes that behave exactly like polymorphic base pointers.  **For simple
 cases, the user can simply use the factories and call chained methods on them, as in the examples above.**
 
-However, different buidlers may use different factories, so as you put a few in (emplace_back) a **[BuilderViewList](@ref DLG4::VolumeBuilders::BuilderViewList) (a std::vector\<[BuilderView](@ref DLG4::VolumeBuilders::BuilderView))>) to loop over, you are using the BuilderView base (itself technically a factory wrapped in a smart pointer constructor, but never mind).  This is effectively a base pointer view on the orginal objects with (mostly) common and (a little) polymorphic functionality.  It lacks detailed builder-specific methods for configuring the radius of the base solid for example, but retains boolean and logical volume configs and placement, and even, polymorphically, MakeSolid()
+However, different buidlers may use different factories, so as you put a few in (list.push_back(builder) or builder->AddTo(list) a **[BuilderViewList](@ref DLG4::VolumeBuilders::BuilderViewList) (a std::vector\<[BuilderView](@ref DLG4::VolumeBuilders::BuilderView))>) to loop over, you are using the BuilderView base (itself technically a factory wrapped in a smart pointer constructor, but never mind).  This is effectively a base pointer view on the orginal objects with (mostly) common and (a little) polymorphic functionality.  It lacks detailed builder-specific methods for configuring the radius of the base solid for example, but retains boolean and logical volume configs and placement, and even, polymorphically, MakeSolid()
 
 But we can go a step farther and make a "structure" view, where both builders and assemblies (of builders and other assemblies)
 can be manipulated with a partial set of methods, specifically LogicalVolume setters like SetVissAtt, and offset, rotation and placment commands.
@@ -449,7 +505,9 @@ This allow VBR to be used as a flexible parameter type to get a builder with a s
 
 ## Coding hindsight, and a novel(?) fluent design for C++?
 
-This type erased CRTP method is nice to avoid boilerplate wrappers, but it's a bit abstract and wasn't simple to get right. The common types are actually concrete builders that can be constructed from other builders by linking to their data.  Getting views, cloning, and (limited) polymorphism right isn't trivial.  C# experience inspired another train of thought, a CRTP base method with a common interface method with common return types.  C# effectively exposes the CRTP method on the concrete object and the interface method on an interface view. Both methods are definable in the CRTP base class and the interface method would typically delegate to the concrete method and implicitly cast the return type. MUCH searching and AI querying (which presumably knows common patterns) could not get at a way to overcome that in C++, a templated return type class cannot inherit methods from a common interface with a single return type.  The overwhelmingly common solution was to use type erasure (of more complex forms than used here)  The solution I finally realized from C# is..._don't_ inherit those methods:  Hide them!  You can have IBuilder and IBuilderImpl with IBuilder return types.  IBuilderImpl can be templated on the concrete type (IBuilderImpl<ConcreteBuilder>) but still have IBuilder return types so can still inherit from IBuilder.  BuilderBase<ConcreteBuilder> (the usual CRTP base) inherits from IBuilderImp<ConcreteBuilder> (and thus is an untemplated IBuilder too), but you leave IBuilderImpl _methods_ NON-VIRTUAL so BuilderBase<ConcreteBuilder> _hides_ them instead of inheriting from them.  This is what allows the BuilderBase to have templated return type and the interface to not.    IBuilderImpl<ConcreteBuilder> then knows the templated class and can delegate to the templated BuilderBase<ConcreteBuilder> functions with thin wrappers just like C# interface methods would.  Finally ConcreteBuilder inherits from BuidlerBase<ConcreteBuilder>.  You have fully polymorphic IBuilder views. This creates a little boiler plate for the wrappers, just as in C# (and is quite a bit less syntactically idiomatic than in C#), but it creates a straight-forward hierarchy that is expandable (to include say... StructureBuidler directly in the hierarchy), and eliminates a lot of conversion ctors and view links.  About the only downside is the compiler does not fully enforce that a hiding method is defined.  But explicit delegation solves this, much as explicit interface implementation does in C#.  If the impl method delegates, the hiding method must exist to compile.
+This type-erased CRTP method is nice to avoid boilerplate wrappers, but it's a bit abstract and wasn't simple to get right. The common types are actually concrete builders that can be constructed from other builders by linking to their data.  Getting views, cloning, and (limited) polymorphism right isn't trivial.  
+
+My C# experience inspired another train of thought, a CRTP base method with a common interface method with common return types.  C# effectively exposes the CRTP method on the concrete object and the interface method on an interface view. Both methods are definable in the CRTP base class and the interface method would typically delegate to the concrete method and implicitly cast the return type. MUCH searching and AI querying (which presumably knows common patterns) could not get at a way to overcome that, in C++, a templated return type class cannot inherit methods from a common interface with a single return type.  The overwhelmingly common solution was to use type erasure (of more complex forms than used here)  The solution I finally realized from C# is..._don't_ inherit those methods:  Hide them!  You can have IBuilder and IBuilderImpl with IBuilder return types.  IBuilderImpl can be templated on the concrete type (IBuilderImpl<ConcreteBuilder>) but still have IBuilder return types so can still inherit from IBuilder.  BuilderBase<ConcreteBuilder> (the usual CRTP base) inherits from IBuilderImp<ConcreteBuilder> (and thus is an untemplated IBuilder too), but you leave IBuilderImpl _methods_ NON-VIRTUAL so BuilderBase<ConcreteBuilder> _hides_ them instead of inheriting from them.  This is what allows the BuilderBase to have templated return type and the interface to not.    IBuilderImpl<ConcreteBuilder> then knows the templated class and can delegate to the templated BuilderBase<ConcreteBuilder> functions with thin wrappers just like C# interface methods would.  Finally ConcreteBuilder inherits from BuidlerBase<ConcreteBuilder>.  You have fully polymorphic IBuilder views. This creates a little boiler plate for the wrappers, just as in C# (and is quite a bit less syntactically idiomatic than in C#), but it creates a straight-forward hierarchy that is expandable (to include say... StructureBuidler directly in the hierarchy), and eliminates a lot of conversion ctors and view links.  About the only other downside is the compiler does not fully enforce that a hiding method is defined.  But explicit delegation solves this, much as explicit interface implementation does in C#.  If the impl method delegates, the hiding method must exist to compile.
 
 
 Hindsight is 20/20.  From my searching, this is NOT a common idiom and it even took a lot of coercing and even arguing to get AI to generate an example of it, because it had no familiarity with the pattern, but rather knew only of reasons to not expect it could work, or diverted to other patterns that missed the point.  I can't say this pattern doesn't exist or that it's the best, but it's not in wide enough use for (free) AI to recognize or even easily "comprehend" it.

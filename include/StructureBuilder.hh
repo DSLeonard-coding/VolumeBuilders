@@ -394,15 +394,16 @@
 
 
             /**
-             * @brief Set the per-structure default unit for all offsets.
-             * Use SetGlobalDefaultUnit() to set a default for all builders.
-             * Or fall back to the initial default of CLHEP::mm.
-             * It's perfectly safe to mix across hierarchy levels.
-             * Internally all values are stored and converted with units applied.
-             * @param unit The unit to set, ex: CLHEP::mm
-             * @return The builder (allows chaining)
-             */
-
+               * @brief Set the per-Structure default unit for all later non-factory offsets.
+               * Use DLG4::VolumeBuilders::SetGlobalDefaultUnit() to set a default for all builders,
+               * or fall back to the initial default of CLHEP::mm. \n
+               * - May not apply to values set before this is called. \n
+               * - Does not apply to factory units like CreateCenteredBoxBuilder();\n
+               * But should not be set and changed. Just use it once, early. \n
+               * @param unit The unit to set, ex: CLHEP::mm
+               * @return The builder (allows chaining)
+               * @ingroup Units
+               */
             DerivedPtr SetDefaultUnit(G4double unit);
 
             /**

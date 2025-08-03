@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
+message(STATUS "=== VBDemo CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+message(STATUS "=== VBDemo CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
+message(STATUS "=== VBDemo CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, e.g. -DCMAKE_BUILD_TYPE= Debug or Release or maybe FORCE")
 endif()
@@ -23,12 +27,12 @@ file(GLOB_RECURSE SRC_FILES1 FOLLOW_SYMLINKS ${base_path}/src/*.cc)
 set(SRC_FILES ${SRC_FILES1})
 #list(FILTER SRC_FILES EXCLUDE REGEX ".*/linked/.*")
 message(STATUS "Found source files: ${SRC_FILES}")
-add_executable(Demo ${SRC_FILES})
-set_target_properties(Demo PROPERTIES EXCLUDE_FROM_ALL TRUE)
+add_executable(VBDemo ${SRC_FILES})
+set_target_properties(VBDemo PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
-install(TARGETS Demo
-        RUNTIME DESTINATION ${Demo_path}/bin
-)
+#install(TARGETS Demo
+#        RUNTIME DESTINATION ${Demo_path}/bin
+#)
 
 # Set environment variables for ROOT and Geant4 paths
 set(GEANT4_PATH "$ENV{GEANT4_PATH}")
@@ -36,14 +40,14 @@ set(ROOTSYS "$ENV{ROOTSYS}")
 
 
 # --- Include directories (as in Makefile) ---
-target_include_directories(Demo PRIVATE
+target_include_directories(VBDemo PRIVATE
         ${base_path}
         ${base_path}/include
         ${base_path}/../include
 )
 
 # --- Compile options common to all builds ---
-target_compile_options(Demo PRIVATE
+target_compile_options(VBDemo PRIVATE
         -mfpmath=sse
         -fPIC
         ${OPTIONS}
@@ -57,7 +61,7 @@ target_compile_options(Demo PRIVATE
         -fno-math-errno
 )
 
-target_compile_options(Demo PRIVATE
+target_compile_options(VBDemo PRIVATE
         $<$<CONFIG:Debug>:-g -O0>
         $<$<CONFIG:Release>:-O0 -DNDEBUG>
 )
@@ -68,7 +72,7 @@ execute_process(
         OUTPUT_VARIABLE GIT_DESCRIBE
         OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-target_compile_definitions(Demo PRIVATE GIT_DESCRIBE="${GIT_DESCRIBE}")
+target_compile_definitions(VBDemo PRIVATE GIT_DESCRIBE="${GIT_DESCRIBE}")
 
 
 # --- Get ROOT and Geant4 cflags and parse them ---
@@ -101,8 +105,8 @@ foreach(flag ${ROOT_CONFIG_CFLAGS_RAW} ${GEANT4_CONFIG_CFLAGS_RAW})
 endforeach()
 
 # Add extracted include directories and compile definitions
-target_include_directories(Demo PRIVATE ${CONFIG_INCLUDE_DIRS})
-target_compile_definitions(Demo PRIVATE ${CONFIG_DEFINITIONS})
+target_include_directories(VBDemo PRIVATE ${CONFIG_INCLUDE_DIRS})
+target_compile_definitions(VBDemo PRIVATE ${CONFIG_DEFINITIONS})
 
 
 # --- Get ROOT and Geant4 linker flags ---
@@ -123,6 +127,7 @@ separate_arguments(GEANT4_CONFIG_LIBS_RAW)
 message(STATUS "GEANT4 LIBS RAW: ${GEANT4_CONFIG_LIBS_RAW}")
 
 
+
 # --- Explicitly find system visualization and GUI libraries ---
 # This is crucial. Even if geant4-config lists -lG4OpenGL,
 # libG4OpenGL.so has its own dependencies (like Qt5OpenGL, X11 libs)
@@ -134,7 +139,7 @@ find_package(X11 REQUIRED) # X11 generally brings in Xext, Xmu, SM, ICE, Xt.
 
 
 # --- Link libraries ---
-target_link_libraries(Demo PRIVATE
+target_link_libraries(VBDemo PRIVATE
         VolumeBuilders
         ${ROOT_CONFIG_LIBS_RAW}
         ${GEANT4_CONFIG_LIBS_RAW}
@@ -156,7 +161,7 @@ target_link_libraries(Demo PRIVATE
 
 
 # --- Additional linker flags (rpath as in Makefile) ---
-target_link_options(Demo PRIVATE
+target_link_options(VBDemo PRIVATE
         -Wl,-rpath,$ENV{ROOTSYS}/lib
         -Wl,-rpath,$ENV{GEANT4_PATH}/lib
 )
@@ -167,10 +172,10 @@ add_custom_target(autoincludes
         WORKING_DIRECTORY ${base_path}
         COMMENT "Running build-autoincludes script"
 )
-add_dependencies(Demo autoincludes)
+add_dependencies(VBDemo autoincludes)
 
 # Set output directory for the executable
-set_target_properties(Demo PROPERTIES
+set_target_properties(VBDemo PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
