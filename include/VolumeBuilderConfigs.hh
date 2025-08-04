@@ -123,5 +123,4 @@ namespace DLG4::VolumeBuilders {
 
 }
 #endif //VOLUMEBUIDERTYPES_HH
-//TODO  pass down parent name..
-// Implement auto parent name incrementing?
+//TODO Implement auto parent name incrementing?

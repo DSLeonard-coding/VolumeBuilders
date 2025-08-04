@@ -1025,5 +1025,4 @@ namespace DLG4::VolumeBuilders {
 } // namespace DLG4::VolumeBuilders
 
 #endif  //VOLUMEMAKER_HPP
-//TODO  MakeBoolean to work with final solid as booleans solid.
 //TODO Check release build for -g omission.
