@@ -55,8 +55,12 @@ A quick but trivial example.... Here is snippet of a typical world volume setup:
         new G4PVPlacement(0, zero_shift, logiHall, "world", NULL, false, 0);
     world_phys = physHall;
 ```
-In VolumeBuilder we default rotation, position, mother in this case, and skip all the temporaries and just have:
+In VolumeBuilder we default rotation, position, mother in this case, and skip all the temporaries and just have:  
+
 ```cpp
+    #includ <VolumeBuilderIncludes.hh>
+    using namespace DLG4::VolumeBuilders;
+    
     SetGlobalDefaultUnit(CLHEP::mm);
     world_phys = CreateCenteredBoxBuilder("hallbox",3000,3000,3000)
         ->SetMaterial(_air)
@@ -65,13 +69,127 @@ In VolumeBuilder we default rotation, position, mother in this case, and skip al
         ->GetPlacement();
 ```
 
-## Examples with RZBuilder
+## BoxBuilder
 
-VolumeBuilder was originally made as helper utilities for defintions of RZ solids, a powerful alternative to simple cones.   So let's start examples using RZBuilder factories.
+Well, that's cute, but too simple. Let's size __and position__ a few boxes. 
 
-RZ solids are nice because they allow defining the z planes of a solid in relation to any fixed z position, including one outside of the solid itself.  For example, the coordinate center can be on the object end face instead of its center.  Then several objects can be positioned with all edges relative to that face, without need for half-length and overlap calculations.  This can eliminating an easy source of bugs and difficult review.
+VolumeBuilders originally started as a wrapper for G4Polyhedra and G4Polycone.  Those geometries allow defining arbitrary z-offsets for the planes so the center need not be at zero.
 
-The RZBuilder class in VolumeBuilders leverages this functionality.  The AddPlane method configures a DLG4::VolumeBuilders::RZPlane (A VolumeBuilder) to allow easily adding planes individually.  Units can be set globally ([DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::cm)](@ref DLG4::VolumeBuilders::SetGlobalDefaultUnit())), per builder (from solid to placement), per solid, per vector, or per value (by setting units to 1).  This also avoids misakes and review in calculations, and awkward variable names like: EC_flange_top_z_mm_no_unit, preventing ommissions or double application of units, which can cause silent bugs.
+The ability to define parts with arbitrary z-offset was so useful that it has been added
+to basic box shapes as well, using the \link DLG4::VolumeBuilders::CreateCenteredBoxBuilder()  \endlink and related methods.  
+
+
+Here's a clean example from a real simulated sample. 
+```cpp
+    DLG4::VolumeBuilders::SetGlobalDefaultUnit(mm);
+    double bottom= array_plate_top_z_/mm;
+    CreateZDeltaBoxBuilder("bags_mid", 300, 276, bottom, 24.5 )->AddTo(pieces);
+
+    // main +/-x walls, 13 bags each,vertical
+    bottom = array_surround_top_z_/mm;
+    CreateDeltasBoxBuilder("bags+x",  -225, 450, 150, 65, bottom, 200)->AddTo(pieces);
+    CreateDeltasBoxBuilder("bags-x", -225, 450, -150, -65, bottom, 200)->AddTo(pieces);
+                                      // x,   dx ,  y  , dy , z     , dz
+    // main +/-y walls, 5 bags horizontal
+    CreateDeltasBoxBuilder("bags+y1", +175.3, +49.5, 150, -233, bottom, 198)->AddTo(pieces);
+    CreateDeltasBoxBuilder("bags-y1", -175.3, -49.5, 150, -233, bottom, 198)->AddTo(pieces);
+
+    // extra +/-y vertical bags
+    CreateDeltasBoxBuilder("bags+y2", +175.3, +41.0, -83, -67, bottom, 165)->AddTo(pieces);
+    CreateDeltasBoxBuilder("bags-y2", -175.3, -41.0, -83, -67, bottom, 165)->AddTo(pieces);
+
+    for (auto &piece : pieces) {
+        piece->SetVisibility(true)
+            ->SetMaterial(sample_mat)
+            ->SetColor(white)
+            ->SetAlpha(0.5)
+            ->ForceSolid(true)
+            ->SetMother(AirshieldPhys_)
+            ->MakePlacement();
+    }
+```
+Here is a (possibly older) version of the same code opened in Clion using included configuration with live method documentation and with parameter hinting toggled on (double tap and hold cntrl in my key bindings):  
+ ![sample_code\.png](docs/images/boric_capture_box_and_parameter_hints.png "sample_code.png")
+
+And here is the geometry it makes, a powder sample measured on the CUP CAGe detector:  
+![powder_sample\.png](docs/images/Boric_bags_vis.png "sample_powder.png")
+
+The code is self-explanatory. The logical and physical volumes are named with "_L" and "_P" extensions, and copy_numbers are incremented automatically by default (or explicitly provided) when relevant. 
+
+### Units
+Units can be set globally as above ([DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::cm)](@ref DLG4::VolumeBuilders::SetGlobalDefaultUnit())), per builder (from solid to placement), per solid, per vector, or per value (by setting units to 1).  This also avoids many mistakes relating to failure to multiply units or double multiplying in calculations.  
+
+### Offset solids
+
+The code above uses the x,delta_x,y,delta_y,z,delta_z version of CreateBoxBuilder(), allowing offset solids, and uses list (pieces) for setting common properties and placing.  
+
+VolumeBuilder started as simple wrappers for G4Polycone and G4polyhedra.  Those geometries allow setting arbitrary z-values for faces or planes, so the z center need not be at zero or even within the object.  It allows defining several pieces with faces having absolute references from the start so that no offsets are needed when placing them, avoiding half-length overlap calculations, etc.  The author liked it so much that it has been implented in standard box shapes, as seen above, and even in x and y too. 
+
+Note that because the boxes have built-in offsets, often no furhter positioning is needed. These offsets are at the solid level, so just like an offset boolean solid, the center of the solid is still at (0,0) and rotations apply around the orgin.  
+The internal offset is intrinsic to VolumeBuilders, and can be exposed on any new Builders. Another advantage of using internal offsets without placement positioning is objects with shapes that interfere in reality can be subtracted as they sit, without calculating relative boolean coordinates separately from placement coordinates.  Part defintion defines both placement and overlap, and subtraction is just A->Subtract(B).
+
+### CopyMaterial
+Note: The CopyMaterial wrapper is a conveince method to duplicate materials with new names and desities.  It should be included with VolumeBuilders soon.
+
+### BoxBuilder Demo example
+
+The following example is included as src/Geometries/ConstructBoxExample.cc  It multiple boxes arranged with faces set relative to z=0, including one rotated around its offset center.  Select BoxExample from the demo for the live example:
+```cpp
+    DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm);     // set a global unit
+    G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
+    BuilderViewList builder_list;
+    // a small box to mark the world center
+    auto box_part = CreateZDeltaBoxBuilder(
+                        "box_part",     // name
+                        10,             // x total size
+                        10,             // y total size
+                        -5,             //  z start
+                        10)             //  z change
+                    ->SetColor(1, 0, 0) // red
+                    ->SetPhysOffset({0, 0, 0})
+                    ->AddTo(builder_list);
+
+    // multiple boxes arranged in y with a z-edged referenced to 0:
+    CreateZDeltaBoxBuilder("box_part2", 100, 100, 0, 200)->SetColor(0, 1, 0) // green
+                                                         ->AddTo(builder_list);
+    CreateZDeltaBoxBuilder("box_part3", 100, 100, 0, 100)->SetColor(0, .5, .5) // blue-green
+                                                         ->AddTo(builder_list);
+    CreateZDeltaBoxBuilder("box_part4", 100, 100, 0, 50)->SetColor(0.5, 0.7, 1) // blue
+                                                        ->AddTo(builder_list);
+    CreateZDeltaBoxBuilder("box_part4", 100, 100, 50, 100)
+        ->SetColor(150. / 255, 0, 175. / 255) // purple
+        ->AddTo(builder_list);
+    // a box rotated around y with its own origin still at the z=0 edge, ie rotated off-center:
+    CreateZDeltaBoxBuilder("box_part4", 100, 100, 0, 200)
+        // can set configurations in any order mostly, but can be nice to set many things up front before geometry details:
+        ->SetColor(255. / 255, 165. / 255, 0) // orange
+        ->SetPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
+        ->AddTo(builder_list);
+    // arrange all boxes in y and set common properties:
+    double y = 0;
+    for (auto &builder : builder_list) {
+        builder->SetMother(world_phys)
+               ->SetMaterial(_copper)
+               ->ForceSolid(true)
+               ->SetPhysOffset({mm, 0, y, 0}) // distribute in y
+               ->MakePlacement();
+        y += 100;
+    }
+
+```
+This creates the geometry shown below:  
+![BoxExample\.png](docs/images/BoxExample_resized.png "BoxExample_resized.png")  
+The blocks are face aligned without needing to shift them by half-lengths. And the orange block is rotated about offset origin on its face.
+
+Many factories (CreateXXX(...)) and setters are provided for flexible defintion allowing arbitrary offsets.  A traditional centered-only [CreateCenteredBoxBuilder()](DLG4::VolumeBuilders::CreateCenteredBoxBuilder())  version (but with full sizes, not half) is also included as well as ones that can be offset in all three axes, defined as edges and deltas, or as two edges, and alternatively through individual single-line X,Y,Z setters of the same variations. As with other methods units are optional with global default fallback. See **[Factories](@ref Factories)** or auto complete in your IDE for details.  Or use a default factory like @ref CreateBoxBuilder("name") with [setters](DLG4::VolumeBuilders::CreateBoxBuilder(const G4String &name).
+
+## More in-depth with RZBuilder examples
+
+VolumeBuilder was originally made as helper utilities for defintions of RZ solids, a powerful alternative to simple cones.   
+
+Again, RZ solids were the original inspiration for offset solids and RZBuilder retains the ability to define arbitrary z-offsets for the faces.
+
+The AddPlane method configures a DLG4::VolumeBuilders::RZPlane (A VolumeBuilder) to allow easily adding planes individually.  
 
 example:
 ```cpp
@@ -149,99 +267,7 @@ The full ConstructExample1.cc produces:
 ![Example1\.png](docs/images/Example1.png "Example1_resized.png")  
 
 
-## BoxBuilder 
-The ability to define parts with arbitrary z-offset was so useful that it has been added
-to basic box shapes as well, using the \link DLG4::VolumeBuilders::CreateCenteredBoxBuilder()  \endlink and related methods.  The example below from
-src/Geometries/ConstructBoxExample.cc demostrates multiple boxes arranged with faces 
-set relative to z=0, including one rotated around its offset center.  Select BoxExample from the demo for the live example:
 
-```cpp
-    DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm);     // set a global unit
-    G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
-    BuilderViewList builder_list;
-    // a small box to mark the world center
-    auto box_part = CreateZDeltaBoxBuilder(
-                        "box_part",     // name
-                        10,             // x total size
-                        10,             // y total size
-                        -5,             //  z start
-                        10)             //  z change
-                    ->SetColor(1, 0, 0) // red
-                    ->SetPhysOffset({0, 0, 0})
-                    ->AddTo(builder_list);
-
-    // multiple boxes arranged in y with a z-edged referenced to 0:
-    CreateZDeltaBoxBuilder("box_part2", 100, 100, 0, 200)->SetColor(0, 1, 0) // green
-                                                         ->AddTo(builder_list);
-    CreateZDeltaBoxBuilder("box_part3", 100, 100, 0, 100)->SetColor(0, .5, .5) // blue-green
-                                                         ->AddTo(builder_list);
-    CreateZDeltaBoxBuilder("box_part4", 100, 100, 0, 50)->SetColor(0.5, 0.7, 1) // blue
-                                                        ->AddTo(builder_list);
-    CreateZDeltaBoxBuilder("box_part4", 100, 100, 50, 100)
-        ->SetColor(150. / 255, 0, 175. / 255) // purple
-        ->AddTo(builder_list);
-    // a box rotated around y with its own origin still at the z=0 edge, ie rotated off-center:
-    CreateZDeltaBoxBuilder("box_part4", 100, 100, 0, 200)
-        // can set configurations in any order mostly, but can be nice to set many things up front before geometry details:
-        ->SetColor(255. / 255, 165. / 255, 0) // orange
-        ->SetPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
-        ->AddTo(builder_list);
-    // arrange all boxes in y and set common properties:
-    double y = 0;
-    for (auto &builder : builder_list) {
-        builder->SetMother(world_phys)
-               ->SetMaterial(_copper)
-               ->ForceSolid(true)
-               ->SetPhysOffset({mm, 0, y, 0}) // distribute in y
-               ->MakePlacement();
-        y += 100;
-    }
-
-```
-This creates the geometry shown below:  
-![BoxExample\.png](docs/images/BoxExample_resized.png "BoxExample_resized.png")  
-The blocks are face aligned without needing to shift them by half-lengths. And the orange block is rotated about offset origin on its face.
-
-Many factories (CreateXXX(...)) and setters are provided for flexible defintion allowing arbitrary offsets.  A traditional centered-only [CreateCenteredBoxBuilder()](DLG4::VolumeBuilders::CreateCenteredBoxBuilder())  version (but with full sizes, not half) is also included as well as ones that can be offset in all three axes, defined as edges and deltas, or as two edges, and alternatively through individual single-line X,Y,Z setters of the same variations. As with other methods units are optional with global default fallback. See **[Factories](@ref Factories)** or auto complete in your IDE for details.  Or use a default factory like @ref CreateBoxBuilder("name") with [setters](DLG4::VolumeBuilders::CreateBoxBuilder(const G4String &name).
-
-Here's a clean example from a real simulated sample. This particular sample needed two material densities:
-```
-    G4Material *sample_mat1 = DetectorConstruction::CopyMaterial(_boric_powder, "sample_mat1", .83);
-    G4Material *sample_mat2 = DetectorConstruction::CopyMaterial(_boric_powder, "sample_mat2", .635);
-
-    // center bag
-    double bottom= array_plate_top_z_/mm;
-    pieces.emplace_back (CreateZDeltaBoxBuilder("bags_mid", 276, 300, bottom, 26 ));
-
-    // main +/-x walls, 13 bags each,vertical
-    bottom = array_surround_top_z_ / mm;
-    CreateDeltasBoxBuilder("bags+x", 150, 65, -225, 450, bottom, 280)
-        ->SetMaterial(sample_mat1)->AddTo(pieces);
-    CreateDeltasBoxBuilder("bags-x", -150, -65, -225, 450, bottom, 280)
-        ->SetMaterial(sample_mat1)->AddTo(pieces);
-
-    // main +/-y walls, 5 bags horizontal
-    CreateDeltasBoxBuilder("bags+y1", 150, -230, +175.3, +49.5, bottom, 277)
-        ->SetMaterial(sample_mat2)->AddTo(pieces);
-    CreateDeltasBoxBuilder("bags-y1", 150, -230, -175.3, -49.5, bottom, 277)
-        ->SetMaterial(sample_mat2)->AddTo(pieces);
-
-    // extra +/-y vertical bags
-    CreateDeltasBoxBuilder("bags+y2", -80, -70, +175.3, +49.5, bottom, 180)
-        ->SetMaterial(sample_mat2)->AddTo(pieces);
-    CreateDeltasBoxBuilder("bags-y2", -80, -70, -175.3, -49.5, bottom, 180)
-        ->SetMaterial(sample_mat2)->AddTo(pieces);
-
-    for (auto &piece : pieces) {
-        piece->SetVisibility(true)
-            ->SetColor(white)
-            ->ForceSolid(true)
-            ->SetMother(AirshieldPhys_)
-            ->MakePlacement();
-    }
-```
-This uses the x,delta_x,y,delta_y,z,delta_z version of CreateBoxBuilder and uses list for setting common properties and placing.  Note that because the boxes have built-in offsets, no furhter positioning is needed.  These offsets are at the solid level, so the center of the solid is still at (0,0) and further rotations work accordingly, swinging the box around the origin as is in the first example.  
-(CopyMaterial should get moved into VolumeBuilders as a bonus.)
 
 ## Placing and manipulating multiple generic objects:
 
@@ -355,6 +381,15 @@ A 3-sided polyhedra was defined.   It was positioned along y while adding to an 
 
 All commands that work to manipulate logical volumes work on assemblies, including things like ForceSolid, etc.  Even auto numbering and naming should work in some way, although it is in development.  Note that Logical Volume properties like VisAtt do not affect physics and are left mutable for now even after constructing the logical volume.  Because changing these does not force a copy of the logical volume, the changes apply to all prior and future copied of the logical volume, just as in vanilla Geant4.
 
+## Forking builders (ex: Multiple logical volumes from one solid)
+
+As stated, builders can only build a product once, but the buidler can be forked with a method such as  ForkLogicalVolume("newname")->SetMateria(...)->....  These copy the builder with build products built up to one step before the the product to be forked.  They also rename the builder so that new products derived from those get corresponding unique derived names, separate from those made with the original builder.  So
+```
+auto builder = CreateCenteredBoxBuilder("name",1.,1.,1)->...->MakePlacement()->ForkLogicalVolume("newname")->MakeLogicalVolume(); 
+```
+Will result in one Solid named "name" and two logicalVolumes based on it named "name_L" and "newname_L"  (we also already made a placement named_P). For now, uniqueness is only enforced on physical volume (Placement) name/copy_no combinations, via a global name registry.
+
+
 
 ## Using unemplemented Geant4 features and gradual adoption
 
@@ -398,22 +433,15 @@ However, methods like MakeSolid() do exist and can serve to enforce finalization
 The build system has a kind of immutability.  Once a product is made, it cannot be rebuilt with that builder.
 Calling MakeLogicalVolume() can serve to enforce  that a particular version of a logicalvolume, the variable it's possibly assigned to, and all the requirements for it (ex: Solid) are not modified later in the code before being built, improving clarity and review and reducing mistakes.
 
-### Forking
-
- As stated, builders can only build a product once, but the buidler can be forked with a method such as  ForkLogicalVolume("newname")->SetMateria(...)->....  These copy the builder with build products built up to one step before the the product to be forked.  They also rename the builder so that new products derived from those get corresponding unique derived names, separate from those made with the original builder.  So 
-```
-auto builder = CreateCenteredBoxBuilder("name",1.,1.,1)->...->MakePlacement()->ForkLogicalVolume("newname")->MakeLogicalVolume(); 
-```
-Will result in one Solid named "name" and two logicalVolumes based on it named "name_L" and "newname_L"  (we also already made a placement named_P). For now, uniqueness is only enforced on physical volume (Placement) name/copy_no combinations, via a global name registry. 
-
-
-
 ### G4 interoperability:
 Some of this is covered in the previous sectgion.
 
 Moreover you can pass a builder directly to any method taking G4VSolid (passes FinalSolid) including booleans if any) G4LogicalVolume and G4VPhysicalVolume without calling getters explictly.  Of course calling  builder->GetLogicalVolume() or similar can add clarity of intent and overload safety.
 
 Any time you call a Get, or pass to a parameter taking a product, the product and any of its requirements (even its mother logical_volume) will be auto-built, sealing those stages of configuration until a copy is made.
+
+
+
 
 ## A more comprehensive overview of the builders:
 
