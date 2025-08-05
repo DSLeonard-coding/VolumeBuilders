@@ -33,7 +33,7 @@
         /// @ingroup products
         virtual G4VPhysicalVolume* GetPlacement() = 0;
         /// @ingroup products
-        virtual G4Transform3D GetPhysTransform() const = 0;
+        [[nodiscard]] virtual G4Transform3D GetPhysTransform() const = 0;
 
     public:
         virtual ~IVolumeBuilder() = default;

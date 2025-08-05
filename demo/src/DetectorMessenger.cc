@@ -10,20 +10,17 @@
 #include "DetectorConstruction.hh"
 
 #include "G4UIcmdWithAString.hh"
-#include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIdirectory.hh"
 #include "G4ios.hh"
 #include "globals.hh"
 
-#include <stdlib.h>   // for strtol
-#include "fstream"    // for file streams
 #include <sstream>  // string streams.
 
 DetectorMessenger::DetectorMessenger(DetectorConstruction *Detector)
 :
         Detector(Detector) {
     // the Detector directory
-    G4UIdirectory *DetectorDir = new G4UIdirectory("/detGeometry/");
+    const auto DetectorDir = new G4UIdirectory("/detGeometry/");
     DetectorDir->SetGuidance("Control the detector geometry options.");
 
     // the select command
@@ -46,14 +43,13 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction *Detector)
     DetGeometryOptCmd->SetParameter(new G4UIparameter("opt", 's', true));
 }
 
-DetectorMessenger::~DetectorMessenger() {
-}
+DetectorMessenger::~DetectorMessenger() = default;
 
 void DetectorMessenger::
 SetNewValue(G4UIcommand *command, G4String newValues) {
     // GeometrySelectCmd
     if (command == DetGeometrySelectCmd) {
-        if (newValues.length() == 0) {
+        if (newValues.empty()) {
 //D.L simplifies (many things) with map based solutions. Simplifies code elsewhere.
             Detector->ListGeometries();
         } else {
@@ -88,11 +84,11 @@ GetCurrentValue(G4UIcommand *command) {
     // GeometrySelectCmd
     if (command == DetGeometrySelectCmd) {
 //D.L map version:
-        return Detector->GetWhichDetGeometry();
+        return DetectorConstruction::GetWhichDetGeometry();
     }
 
     // invalid command
     else {
-        return G4String("invalid DetectorMessenger \"get\" command");
+        return {"invalid DetectorMessenger \"get\" command"};
     }
 }

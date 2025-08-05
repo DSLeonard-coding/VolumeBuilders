@@ -56,8 +56,7 @@ namespace DLG4::VolumeBuilders {
         }
 
         // Does this need to exist?  Maybe.
-        FromG4VSolid(): VolumeBuilder<FromG4VSolid>() {
-        }
+        FromG4VSolid() {}
     };
 }
 #endif  //FromG4VSolid_HPP

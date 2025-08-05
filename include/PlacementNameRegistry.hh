@@ -10,8 +10,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace DLG4 {
-namespace VolumeBuilders {
+namespace DLG4::VolumeBuilders {
     class PlacementNameRegistry {
         static std::unordered_map<std::string, int> name_counts_;
         static std::mutex registry_mutex_;
@@ -19,19 +18,18 @@ namespace VolumeBuilders {
     public
     :
         static int IncrementNameCount(const std::string &base_name) {
-        std::lock_guard<std::mutex> lock(registry_mutex_);
-        auto retval = ++name_counts_[base_name];
-        return retval;
-    }
+            std::lock_guard<std::mutex> lock(registry_mutex_);
+            auto retval = ++name_counts_[base_name];
+            return retval;
+        }
 
         static int GetNameCount(const std::string &base_name) {
-        std::lock_guard<std::mutex> lock(registry_mutex_);
-        auto it = name_counts_.find(base_name);
-        return (it != name_counts_.end()) ? it->second : 0;
-    }
+            std::lock_guard<std::mutex> lock(registry_mutex_);
+            auto it = name_counts_.find(base_name);
+            return (it != name_counts_.end()) ? it->second : 0;
+        }
     };
 
-} // VolumeBuilders
-} // DLG4
+}
 
 #endif //PLACEMENTNAMEREGISTRY_HH
