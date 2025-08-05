@@ -9,6 +9,8 @@ Then just do
 > make
 ```
 to build the library and   
+
+## Building and running the Demo
 ```
 make VBDemo
 ```
@@ -26,7 +28,9 @@ build options and you should log into your X windows with X.Org, not Wayland (us
 
 The library will be in **build/libVolumeBuilders.a**  and the demo will be in **build/bin/Demo**
 
-The project is also precofigured for building and developing with JetBrains Clion (free version available).   Your vb_user_setup_general.sh must be in your home directory and must have exactly the same file name as shipped in the project root (if it has changed).  Start clion and select File->Open and selec the repository root directory.
+## Development and your own demo
+
+The project is also precofigured for building and developing with JetBrains Clion (free version available).   Your vb_user_setup_general.sh must be in your home directory and must have exactly the same file name as shipped in the project root (if it has changed).  Start Clion and select File->Open and selec the repository root directory.
 
 Now you can build, run, and debug, from the top right toolbar build window. Select VolumeBuilders or Demo from the drop-down and the hammer and play button to build and run or the bug to debug.
 
@@ -35,6 +39,17 @@ In clione Demo is setup to take demo/debug/input.txt as input to
 Demo gui
 ```
 By default it this is setup to run the assembly demo.  
+
+### Adding your own demo geometry
+
+- Navigate to demo/src/Geometries  
+- Then go to File-New-VBDemo Geometry
+- Enter a method name and GEO_NAME key to select your geometry with at startup
+- Enter a material variable name... you can use an existing one in demo/src/Materials.inc, like _copper
+  or use or own and define the material yourself inside the generated .cc file.
+- Press OK, or whatever it is.  
+
+You now have a .cc and a kind of pluggable header.  You may need to refresh the CMake in Tools->CMake.  You may also (or even first) need to run build-autoincludes.sh from /demo or run it through the build configuration toolbar (top-right). Then rebuild the VBDemo commandline target and click play.  You should see your still uncustomized geometry.  
 
 ## Building the library for your project
 
