@@ -62,7 +62,7 @@ namespace DLG4::VolumeBuilders {
         struct BooleanConfigs {
             std::vector<BooleanSolid> booleans;
             G4String boolean_name{};   //derived from name if not explicitly provided.
-            bool reflect_z;
+            bool reflect_z {false};
             BooleanConfigs()  = default;
             ~BooleanConfigs() = default;
         };
