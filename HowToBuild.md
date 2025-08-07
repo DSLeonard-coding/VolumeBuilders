@@ -1,5 +1,9 @@
 ## Building the library 
-Copy the vb_user_setup_general.sh script to your home directory and edit the geant and root paths.  
+This is tested on geant-10.7.4-C++17  (sorry, this could use updating) and root 6.30.04, built with C++17.
+Some minor changes to the code may be necessary for geant4-11.  It's on the todo list but you can try.
+
+Copy the vb_user_setup_general.sh script to your home directory and edit the geant and root paths.  These should point to the top of the install directory for geant, build directory for root, as in the example file.
+
 
 Then just do 
 ```bash

@@ -1,16 +1,16 @@
-[To Doug Leonard's other pages](https://douglas_s_leonard.gitlab.io/pages)
+[To Doug Leonard's other pages](https://douglas_s_leonard.gitlab.io/pages)  
+[[__TOC__]]  
+[TOC]  
 
-
-[TOC]
 #DLG4::VolumeBuilders
 README for VolumeBuilders  code (and readme) Copyright Doug Leonard 2025, All rights reserved.
 
-Distributed under MIT (Expat) license.
-
-[The git code repo](https://gitlab.com/douglas_s_leonard/physics_utilities/VolumeBuilders)
-
-[The Doxygen documentation page (if you're not already there)](https://douglas_s_leonard.gitlab.io/physics_utilities/VolumeBuilders/)
-
+Distributed under MIT (Expat) license.  
+Related Links:  
+- [The git code repo](https://gitlab.com/douglas_s_leonard/physics_utilities/VolumeBuilders)  
+- [The Doxygen documentation page (if you're not already there)](https://douglas_s_leonard.gitlab.io/physics_utilities/VolumeBuilders/)
+- [Build Instructions](HoToBuild.md)  
+- [Documentation Building Instrucstions](MakeDocsREADME.md)
 
 ## Introduction
 
