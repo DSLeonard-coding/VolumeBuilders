@@ -1,10 +1,10 @@
-//HpgeSim geometry include file.  Template by D. Leonard, 2021
-//This file is included into parts of the HpgeSim class files
-//it is not in a standard header format
+//VBDEMO geometry include file.  Template by D. Leonard, 2025
+//This file is included into parts of the VBDemo class files
+//It is not in a standard header format.
 
 #ifdef INCLUDE_SIM_GLOBALS
 //First declare the class functions, whithout class qualifier
-        void ConstructExample1();
+        void Construct${METHOD_NAME}();
 
 //Then declare other class globals defined in the .cc
 //   possibly including materials, but only if defined in the .cc
@@ -14,13 +14,11 @@
 #ifdef INCLUDE_SIM_GEOMETRIES
 //Here, define runtime geometries selections, see existing files for examples.
 //Multiple configurations associated with this file can be defined.
-    Geometries["Example1"] =[](object *c) -> void {
-// Geometries have dependancies and call each other if needed
-//  Implicit dependancies are only set where absolutely required anyway.
+    Geometries["${GEOMETRY_NAME}"] =[](object *c) -> void {
         c->DetGeometryType="demo";
         c->ConstructMaterials();
         c->ConstructWorld();
-        c->ConstructExample1();
+        c->Construct${METHOD_NAME}();
     };
 
 #endif

@@ -6,7 +6,7 @@
 // could have a raw pointer back to them for syntax compatibility at point of use.
 // but for now, just leaving it.
 
-#ifdef INCLUDE_HPGE_GLOBALS
+#ifdef INCLUDE_SIM_GLOBALS
         void ConstructMaterials();
 
         G4Element *_elementTa; //gw

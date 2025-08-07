@@ -60,10 +60,10 @@ protected:
     //        void ConstructMaterials();  // make all needed materials
 
     // Get globals from pluggable includes:
-#           define INCLUDE_HPGE_GLOBALS
+#           define INCLUDE_SIM_GLOBALS
 #           include "include/autoincludes.inc"
 
-#           undef INCLUDE_HPGE_GLOBALS
+#           undef INCLUDE_SIM_GLOBALS
 
 
     /* D.L stores named geometry build sequences */
@@ -81,12 +81,12 @@ public:
 
     void InitializeGeos() {
         // Get geometry definitions from pluggable includes:
-#           define INCLUDE_HPGE_GEOMETRIES
+#           define INCLUDE_SIM_GEOMETRIES
         typedef DetectorConstruction object;
 #           include "include/autoincludes.inc"
 #include "../src/Geometries/ConstructHexPart.inc"
 
-#           undef INCLUDE_HPGE_GEOMETRIES
+#           undef INCLUDE_SIM_GEOMETRIES
     }
 };
 

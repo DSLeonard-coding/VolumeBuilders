@@ -2,7 +2,7 @@
 //This file is included into parts of the HpgeSim class files
 //it is not in a standard header format
 
-#ifdef INCLUDE_HPGE_GLOBALS
+#ifdef INCLUDE_SIM_GLOBALS
 //First declare the class functions, whithout class qualifier
         void ConstructBoxExample();
 
@@ -11,7 +11,7 @@
 
 #endif
 
-#ifdef INCLUDE_HPGE_GEOMETRIES
+#ifdef INCLUDE_SIM_GEOMETRIES
 //Here, define runtime geometries selections, see existing files for examples.
 //Multiple configurations associated with this file can be defined.
     Geometries["BoxExample"] =[](object *c) -> void {

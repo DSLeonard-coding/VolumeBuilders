@@ -8,16 +8,18 @@ docs/latex/**
 
 
 # Ignore other user-specific or temporary files
-.idea/
-!.idea/modules.xml
-!*.iml
-!.idea/misc.xml
-!.idea/compiler.xml
-!.idea/encodings.xml
-# Potentially:
-!.idea/vcs.xml
-!.idea/runConfigurations/
-!.idea/libraries/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/usage.statistics.xml
+.idea/shelf/
+.idea/vcs.xml
+
+# Ignore local history and caches
+.idea/caches/
+.idea/compiler.xml
+.idea/gradle.xml
+.idea/jsLibraryMappings.xml
 
 *.swp
 geotree.txt
