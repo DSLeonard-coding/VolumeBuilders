@@ -740,7 +740,7 @@
 // Private static helper
 // method(s) used by the instance methods
 
-            static void NoNameCheck(std::string name, std::string site){
+            static void NoNameCheck(const std::string &name, const std::string &site){
                 if (name.empty()) {
                     throw std::runtime_error("Error in "+site+ " ,"
                                              "for builder named: " + name + "\n"

@@ -145,14 +145,14 @@ namespace DLG4 {
             return other->GetPhysTransform();
         }
     };
-
-    template <typename _Tp, typename _Up>
-    inline i_shared_ptr<_Tp>
-    i_dynamic_pointer_cast(const i_shared_ptr<_Up> &__r) noexcept {
-        using _Sp = std::shared_ptr<_Tp>;
-        if (auto *__p = dynamic_cast<typename _Sp::element_type *>(__r.get()))
-            return _Sp(__r, __p);
-        return _Sp();
+    template <typename TargetType, typename SourceType>
+    inline i_shared_ptr<TargetType>
+    i_dynamic_pointer_cast(const i_shared_ptr<SourceType>& sourcePtr) noexcept {
+        using SharedPtrToTarget = std::shared_ptr<TargetType>;
+        if (auto* rawPointer = dynamic_cast<typename SharedPtrToTarget::element_type*>(sourcePtr.get())) {
+            return SharedPtrToTarget(sourcePtr, rawPointer);
+        }
+        return SharedPtrToTarget();
     }
 }
 

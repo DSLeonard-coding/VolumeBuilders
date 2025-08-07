@@ -296,7 +296,7 @@
              * @return The Physical volume G4Transform3D with units applied.
              */
             [[nodiscard]] G4Transform3D GetPhysTransform() const {
-                return G4Transform3D(placement_configs_->rotation, placement_configs_->translation);
+                return {placement_configs_->rotation, placement_configs_->translation};
             }
 
 
@@ -423,7 +423,7 @@
 
         protected:
             /// polymorphic access to solid construction
-            virtual G4VSolid* SolidConstructor(const G4String &name) override = 0;
+            G4VSolid* SolidConstructor(const G4String &name) override = 0;
 
         private:
             //Methods with basically protected intent
@@ -444,7 +444,7 @@
                 return retval;
             }
 
-            SharedPtr<IStructureBuilder> clone_impl() const ;
+            SharedPtr<IStructureBuilder> clone_impl() const override;
 
             StructureView ToStructureView() const override ;
 
@@ -506,7 +506,7 @@
 // Nothing below here but  implementation for some private static helper
 // methods used by the instance methods
 
-            static void NoNameCheck(std::string name, std::string site){
+            static void NoNameCheck(const std::string &name, const std::string &site){
                 if (name.empty()) {
                     throw std::runtime_error("Error in "+site+ " ,"
                                              "for builder named: " + name + "\n"

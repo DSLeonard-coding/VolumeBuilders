@@ -16,10 +16,10 @@ class DetectorMessenger: public G4UImessenger
 {
     public:
         DetectorMessenger(DetectorConstruction *Detector);
-        ~DetectorMessenger();
+        ~DetectorMessenger() override;
 
-        void SetNewValue(G4UIcommand *command, G4String newValues);
-        G4String GetCurrentValue(G4UIcommand *command);
+        void SetNewValue(G4UIcommand *command, G4String newValues) override;
+        G4String GetCurrentValue(G4UIcommand *command) override;
 
     private:
         DetectorConstruction *Detector;
@@ -27,7 +27,7 @@ class DetectorMessenger: public G4UImessenger
         G4UIcommand *DetGeometrySelectCmd;
         G4UIcommand *DetGeometryOptCmd;
 
-        class DetectorMessenger *myMessenger;
+        class DetectorMessenger *myMessenger{};
 };
 
 #endif

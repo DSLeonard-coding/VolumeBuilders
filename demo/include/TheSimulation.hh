@@ -28,7 +28,7 @@ public:
         theDetectorConstruction.release();
     }
 
-    void ListGeometries() {
+    void ListGeometries() const {
         theDetectorConstruction->ListGeometries();
     }
 

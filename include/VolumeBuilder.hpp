@@ -37,6 +37,7 @@ namespace DLG4::VolumeBuilders {
 
     // These became trivial, but leaving them for future use.
     inline void VolumeConfigs::copyFrom(const VolumeConfigs &other) {
+        //TODO:  What's this about?
     }
 
     inline
@@ -306,7 +307,7 @@ namespace DLG4::VolumeBuilders {
     template <typename U>
     DERIVED BASE::MakeFinalSolid(G4String boolean_name) {
         this->ValidateForBooleanBuild(STRINGIFY(BASE) "MakeBooleans");
-        if (boolean_name == "") {
+        if (boolean_name.empty()) {
             // may rename unimplemented
             boolean_name = builder_configs_->name;
         }
@@ -322,8 +323,8 @@ namespace DLG4::VolumeBuilders {
         }
         for (size_t i = 0; i < boolean_configs_->booleans.size(); i++) {
             auto boolean = boolean_configs_->booleans[i];
-            bool is_last = (i == (boolean_configs_->booleans.size() - 1)) && !boolean_configs_->reflect_z;
-            int count = i + 1;
+            const bool is_last = (i == (boolean_configs_->booleans.size() - 1)) && !boolean_configs_->reflect_z;
+            const size_t count = i + 1;
             if (boolean_configs_->boolean_name.empty()) {
                 name_temp = builder_configs_->name + "_B" + std::to_string(count);
             }
@@ -506,7 +507,7 @@ namespace DLG4::VolumeBuilders {
         if (placement_configs_->mother) {
             effectiveMotherLogical = placement_configs_->mother->GetLogicalVolume();
         } else {
-            effectiveMotherLogical = NULL; // world placement
+            effectiveMotherLogical = nullptr; // world placement
         }
 
         auto transform = G4Transform3D(placement_configs_->total_rotation,
@@ -762,7 +763,7 @@ namespace DLG4::VolumeBuilders {
             }
         }
         // prepend parent name, if any, for hierarchies
-        if (placement_configs_->parent_name != "") {
+        if (!placement_configs_->parent_name.empty()) {
             base_name = placement_configs_->parent_name + ":" + base_name;
         }
         return base_name;

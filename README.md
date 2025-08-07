@@ -125,8 +125,7 @@ The code above uses the x,delta_x,y,delta_y,z,delta_z version of CreateBoxBuilde
 
 VolumeBuilder started as simple wrappers for G4Polycone and G4polyhedra.  Those geometries allow setting arbitrary z-values for faces or planes, so the z center need not be at zero or even within the object.  It allows defining several pieces with faces having absolute references from the start so that no offsets are needed when placing them, avoiding half-length overlap calculations, etc.  The author liked it so much that it has been implented in standard box shapes, as seen above, and even in x and y too. 
 
-Note that because the boxes have built-in offsets, often no furhter positioning is needed. These offsets are at the solid level, so just like an offset boolean solid, the center of the solid is still at (0,0) and rotations apply around the orgin.  
-The internal offset is intrinsic to VolumeBuilders, and can be exposed on any new Builders. This can sometimes easy boolean operations of parts where they sit, although a more general solution may be in the works for that.
+Note that because the boxes have built-in offsets, often no furhter positioning is needed. These offsets are at the solid level, so just like an offset boolean solid, the center of the solid is still at (0,0) and rotations apply around the orgin.  The internal offset is intrinsic to VolumeBuilders, and can be exposed on any new Builders. This can sometimes ease boolean operations of parts where they sit, although a more general solution may be in the works for that.
 
 ### CopyMaterial
 Note: The CopyMaterial wrapper is a conveince method to duplicate materials with new names and desities.  It should be included with VolumeBuilders soon.

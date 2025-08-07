@@ -270,7 +270,7 @@ namespace DLG4::VolumeBuilders {
         RZBuilder(const RZBuilder &other);
 
 
-        G4double sides_{4}; // only for polyhedra
+        G4int sides_{4}; // only for polyhedra
         // private raw copy ctor
         // values and checks...
         G4double phi_start_deg_{0};
