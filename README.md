@@ -1,6 +1,34 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Introduction](#introduction)
+- [Primary References](#primary-references)
+- [Hello World](#hello-world)
+- [BoxBuilder](#boxbuilder)
+  - [Units](#units)
+  - [Offset solids](#offset-solids)
+  - [CopyMaterial](#copymaterial)
+  - [BoxBuilder Demo example](#boxbuilder-demo-example)
+- [More in-depth with RZBuilder examples](#more-in-depth-with-rzbuilder-examples)
+- [Placing and manipulating multiple generic objects:](#placing-and-manipulating-multiple-generic-objects)
+- [Hierarchical Assemblies as Generic Structures.](#hierarchical-assemblies-as-generic-structures)
+- [Forking builders (ex: Multiple logical volumes from one solid)](#forking-builders-ex-multiple-logical-volumes-from-one-solid)
+- [Using unemplemented Geant4 features and gradual adoption](#using-unemplemented-geant4-features-and-gradual-adoption)
+  - [Geant Products from Builders](#geant-products-from-builders)
+  - [G4 interoperability:](#g4-interoperability)
+- [A more comprehensive overview of the builders:](#a-more-comprehensive-overview-of-the-builders)
+- [Geant complications that VolumeBuilder may Obsolete.](#geant-complications-that-volumebuilder-may-obsolete)
+- [Other thoughts for the future.](#other-thoughts-for-the-future)
+  - [RZBuilder improvements](#rzbuilder-improvements)
+  - [Missing features and roadmap](#missing-features-and-roadmap)
+- [Programming notes](#programming-notes)
+  - [CRTP fluent classes](#crtp-fluent-classes)
+- [Coding hindsight, and a novel(?) fluent design for C++?](#coding-hindsight-and-a-novel-fluent-design-for-c)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 [To Doug Leonard's other pages](https://douglas_s_leonard.gitlab.io/pages)  
-[[__TOC__]]  
-[TOC]  
 
 #DLG4::VolumeBuilders
 README for VolumeBuilders  code (and readme) Copyright Doug Leonard 2025, All rights reserved.
