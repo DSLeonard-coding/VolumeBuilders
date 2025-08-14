@@ -5,7 +5,7 @@
 * Created by Douglas S. Leonard on 6/10/25.  All rights Reserved
 * See related files for license, if any is provided.
 *
-* A transitive, non-owning view of another  Linkable<T> or, as a root link, an owning T copy or non-owning T* view.  Data access is value semantics, immutability control (of the links).
+* A transitive view of another  Linkable<T> or, as a root link, an owning T copy or non-owning T* view.  Data access is value semantics, immutability control (of the links).
 * Every link can be set only once, but once linked the view transitively controls the linked Linkable, including its link command, so it's possible
 * to call Link more than once from a single Linkable but not to relink or to acquire more than one concrete resource.
 
@@ -136,6 +136,7 @@ namespace DLG4 {
         mutable std::vector<Linkable<T> *> backlinks_; // points to things that linked to us.
         mutable Linkable<T> *downlink_ = nullptr;      // points to things we linked to.
         mutable Linkable<T> *rootlink_ = nullptr;
+        static inline std::recursive_mutex s_link_mutex;
 
     public:
         /// Default constructor
@@ -145,17 +146,38 @@ namespace DLG4 {
 
         //destructor
         ~Linkable() {
+            std::lock_guard<std::recursive_mutex> lock(s_link_mutex);
             // remove ourselves from the backlinks of the downlink
             // this prevents corrupt backlink propagation after we are deleted.
             if (downlink_) {
-                std::lock_guard<std::recursive_mutex> lock(s_link_mutex);
                 auto& parent_backlinks = downlink_->backlinks_;
                 auto it = std::remove(parent_backlinks.begin(), parent_backlinks.end(), this);
                 if (it != parent_backlinks.end()) {
                     parent_backlinks.erase(it, parent_backlinks.end());
                 }
             }
+            // remove downlinks from our backlinks
+            // Does this orphan chains?:
+            //  If we have a ref, link to will error anyway
+            //  If we don't have a ref, we just become the root.
+            //  No harm.  Nothing linked, nothing lost.
+            // But backlinks become detatched from each other, have different views.
+            // So relink to the first backlink, making it the root.
+            bool is_first_link = false;
+            Linkable<T> *first_link = nullptr;
+            for (auto* child : backlinks_) {
+                if (child->downlink_ == this) {
+                    if (!is_first_link) {
+                        first_link = child;
+                        child->downlink_ = nullptr;
+                    } else {
+                        child->downlink_ = first_link;
+                    }
+                }
+            }
+            backlinks_.clear(); //if this matters, something is already very wrong.  But it can help unmask that.
         }
+
         /// Copy constructor does deep copy, not link
         /// This is safest and default
         Linkable(const Linkable<T> &other):
@@ -302,7 +324,6 @@ namespace DLG4 {
                 backlink->updateTreeRefs(target_ref);
             }
         }
-        static inline std::recursive_mutex s_link_mutex;
 
         void LinkTreeTo(Linkable<T> &other) {
             std::lock_guard<std::recursive_mutex> lock(s_link_mutex);
