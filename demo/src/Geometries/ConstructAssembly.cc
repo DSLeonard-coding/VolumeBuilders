@@ -37,11 +37,9 @@ void DetectorConstruction::ConstructAssembly() {
     auto assembly = CreateAssembly("example_assembly");
     auto temp = cylinder;
     for (int i = 0; i < 3; i++) {
-        for (int i = 0; i < 3; i++) {
-            temp->ForkAndReset("part_" + std::to_string(i))
-                    ->SetPhysOffset({0, 250. * (i), 0.})
-                    ->AddTo(assembly);
-        }
+        temp->ForkAndReset("part_" + std::to_string(i))
+            ->SetPhysOffset({0, 250. * (i), 0.})
+            ->AddTo(assembly);
     }
 
     assembly->SetMother(world_phys)
