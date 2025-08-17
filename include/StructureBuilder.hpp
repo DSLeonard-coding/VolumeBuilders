@@ -27,14 +27,15 @@ namespace DLG4::VolumeBuilders {
     // }
 
     template <typename U>
-    BASE::StructureBuilder(const StructureBuilder &other): builder_configs_(other.builder_configs_),
-                                                           boolean_configs_(other.boolean_configs_),
-                                                           lv_configs_(other.lv_configs_),
-                                                           placement_configs_(
-                                                               other.placement_configs_) {
+    BASE::StructureBuilder(const StructureBuilder &other) :
+        builder_configs_(other.builder_configs_),
+        boolean_configs_(other.boolean_configs_),
+        lv_configs_(other.lv_configs_),
+        placement_configs_(
+            other.placement_configs_) {
         // avoid masked bugs from stale view:
-        builder_configs_->builder_view=nullptr;
-        builder_configs_->istructure_ptr=nullptr;
+        builder_configs_->builder_view = nullptr;
+        builder_configs_->istructure_ptr = nullptr;
     }
 
 
@@ -327,9 +328,11 @@ namespace DLG4::VolumeBuilders {
             // assembly
             copy->placement_configs_->children.clear();
             for (auto &child : placement_configs_->children) {
-                auto builderview_clone = child->builder_configs_->builder_view->ForkForPlacement(std::nullopt, "",true);
-                auto clone_istructure_view =builderview_clone->builder_configs_->istructure_ptr->ToStructureView();
-                copy->placement_configs_->children.emplace_back( clone_istructure_view );
+                auto builderview_clone = child->builder_configs_->builder_view->ForkForPlacement(
+                    std::nullopt, "", true);
+                auto clone_istructure_view = builderview_clone->builder_configs_->istructure_ptr->
+                                                                ToStructureView();
+                copy->placement_configs_->children.emplace_back(clone_istructure_view);
             }
         }
         return DERIVED(copy);
@@ -345,9 +348,11 @@ namespace DLG4::VolumeBuilders {
             // assembly
             copy->placement_configs_->children.clear();
             for (auto &child : placement_configs_->children) {
-                auto builderview_clone = child->builder_configs_->builder_view->ForkLogicalVolume(new_name);
-                auto clone_istructure_view =builderview_clone->builder_configs_->istructure_ptr->ToStructureView();
-                copy->placement_configs_->children.emplace_back( clone_istructure_view );
+                auto builderview_clone = child->builder_configs_->builder_view->ForkLogicalVolume(
+                    new_name);
+                auto clone_istructure_view = builderview_clone->builder_configs_->istructure_ptr->
+                                                                ToStructureView();
+                copy->placement_configs_->children.emplace_back(clone_istructure_view);
             }
         }
         return DERIVED(copy);
@@ -409,7 +414,7 @@ namespace DLG4::VolumeBuilders {
         // calls the BuilderView copy/convert ctor::
         // presently the i_shared converter only works with l-value.
         std::shared_ptr<U> builder_std_ptr =
-                std::const_pointer_cast<U>(this->shared_from_this());
+            std::const_pointer_cast<U>(this->shared_from_this());
         auto x = DerivedPtr(builder_std_ptr);
         return BuilderView(x);
     }
@@ -419,7 +424,7 @@ namespace DLG4::VolumeBuilders {
     SharedPtr<IStructureBuilder> BASE::clone_impl() const {
         // consider moving this to Assembly derived class since nothing else uses the base implementation.
         const U &derived_ref = static_cast<const U &>(*this); // downcast
-        auto retval = new U(derived_ref);// copy
+        auto retval = new U(derived_ref);                     // copy
         auto shared_ptr = i_shared_ptr<U>(retval);
         BuilderView builder_view = shared_ptr->ToBuilderView();
         builder_view->SetName(this->GetBuilderName());
@@ -429,6 +434,10 @@ namespace DLG4::VolumeBuilders {
         return shared_mutable_this(retval); // wrap and return.
     }
 
+    template <typename U>
+    G4String BASE::GetLogicVolName() const {
+        return this->builder_configs_->builder_view->GetLogicVolName();
+    }
 
 #undef BASE
 #undef DERIVED
