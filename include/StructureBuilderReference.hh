@@ -38,7 +38,7 @@ namespace DLG4::VolumeBuilders {
      * @headerfile StructureBuilder.hh
      * @see VolumeBuilder for inherited methods.
      * */
-    class StructureBuilderReference: public StructureBuilder<StructureBuilderReference> {
+    class StructureBuilderReference final: public StructureBuilder<StructureBuilderReference> {
         template <typename T>
         friend class VolumeBuilder;
         template <typename T>

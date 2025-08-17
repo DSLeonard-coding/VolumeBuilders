@@ -41,7 +41,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     return world_phys;
 }
 
-void DetectorConstruction::ListGeometries() {
+void DetectorConstruction::ListGeometries() const {
     G4cout << "Detector geometries: ";
     for (const auto &geo : Geometries) {
         G4cout << "Registred geometry: " << geo.first << G4endl;
@@ -63,8 +63,7 @@ G4Material* DetectorConstruction::CopyMaterial(G4Material *source, G4String name
 }
 
 G4Material* DetectorConstruction::CopyMaterial(G4Material *source, G4String name) {
-    G4double dens;
-    dens = source->GetDensity();
+    const G4double dens = source->GetDensity();
     G4Material *dest = CopyMaterial(source, name, dens);
     return dest;
 }

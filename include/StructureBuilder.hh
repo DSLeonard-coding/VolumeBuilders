@@ -469,7 +469,6 @@ namespace DLG4::VolumeBuilders {
         // Interface pointer for type erased class access (Copied in linking ctor only)
 
 
-    private:
         //Unsaved data, left out of configs to be reset on all copy operations.
         bool explicit_copyno_set_ = false;
         bool explicit_physical_copy_name_set_ = false;

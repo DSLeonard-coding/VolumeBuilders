@@ -36,6 +36,3 @@ TheSimulation::TheSimulation() {
 
 }
 
-//
-
-#include "../include/TheSimulation.hh"

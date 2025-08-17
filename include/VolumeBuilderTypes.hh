@@ -98,7 +98,6 @@ namespace DLG4::VolumeBuilders {
     template <typename U>
     using VolumeBuilderPtr = SharedPtr<U>;
 
-
     template <typename U>
     using ENABLE_SHARED_WRAPPER = Utilities::disableable_shared_from_this<U>;
 
@@ -110,22 +109,20 @@ namespace DLG4::VolumeBuilders {
      * Can be constructed from 3 values (gets default unit) or 4 values (explicit unit first)
      */
     class Unit3Vec {
-    public:
+      public:
         double x, y, z;
         std::optional<double> units;
 
         // 3-value constructor - no units specified, raw values
-        Unit3Vec(double x, double y, double z)
-            : x(x), y(y), z(z), units(std::nullopt) {
+        Unit3Vec(double x, double y, double z) : x(x), y(y), z(z), units(std::nullopt) {
         }
 
         // 4-value constructor - units specified, scale the values
-        Unit3Vec(double u, double x, double y, double z)
-            : x(x), y(y), z(z), units(u) {
+        Unit3Vec(double u, double x, double y, double z) : x(x), y(y), z(z), units(u) {
         }
 
-        Unit3Vec(double u, const Unitless3Vec &vec)
-            : x(vec.getX()), y(vec.getY()), z(vec.getZ()), units(u) {
+        Unit3Vec(double u, const Unitless3Vec &vec) :
+              x(vec.getX()), y(vec.getY()), z(vec.getZ()), units(u) {
         }
 
         [[nodiscard]] G4ThreeVector apply_units(const double dflt_unit) const {
@@ -147,4 +144,4 @@ namespace DLG4::VolumeBuilders {
         return std::const_pointer_cast<std::remove_const_t<T>>(sp_const);
     }
 }
-#endif //VOLUMEBUILDERTYPES_HH
+#endif  //VOLUMEBUILDERTYPES_HH

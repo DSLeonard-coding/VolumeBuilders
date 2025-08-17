@@ -37,7 +37,7 @@ Distributed under MIT (Expat) license.
 Related Links:  
 - [The git code repo](https://gitlab.com/douglas_s_leonard/physics_utilities/VolumeBuilders)  
 - [The Doxygen documentation page (if you're not already there)](https://douglas_s_leonard.gitlab.io/physics_utilities/VolumeBuilders/)
-- [Build Instructions](HoToBuild.md)  
+- [Build Instructions](HowToBuild.md)  
 - [Documentation Building Instrucstions](MakeDocsREADME.md)
 
 ## Introduction

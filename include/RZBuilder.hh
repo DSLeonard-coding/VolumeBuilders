@@ -127,7 +127,7 @@ namespace DLG4::VolumeBuilders {
      * @headerfile RZBuilder.hh
      * @see VolumeBuilder<U> for inherited methods.
      */
-    class RZBuilder: public VolumeBuilder<RZBuilder> {
+    class RZBuilder final: public VolumeBuilder<RZBuilder> {
     /** @} */
     public:
         friend class VolumeBuilderReference;
@@ -223,7 +223,6 @@ namespace DLG4::VolumeBuilders {
          * You can skin this cat multiple other ways, but this provides options.
          *
          *
-         * @param new_name
          * @return The same builder (allows chaining)
          */
         RZBuilderPtr ReflectZSolidConfig();
@@ -240,7 +239,6 @@ namespace DLG4::VolumeBuilders {
          * \endcode
          * Done.
          * @see ReflectZSolidConfig() for a detailed example of a similar method.
-         * @param new_name Name for new copy.
         */
         RZBuilderPtr FillSolidConfig();
 
@@ -285,7 +283,7 @@ namespace DLG4::VolumeBuilders {
         std::vector<G4double> OR_;
 
         RZBuilder() = default;
-        RZBuilder(RZBuilder &&) noexcept = default;
+        RZBuilder(RZBuilder &&) noexcept = delete;
 
         // RZBuilderPtr Clone() const override {
         //     return RZBuilderPtr(new RZBuilder(*this));

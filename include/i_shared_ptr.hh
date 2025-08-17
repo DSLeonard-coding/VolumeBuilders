@@ -2,11 +2,10 @@
 #define ISHAREDother_HH
 /// @file i_shared_ptr.hh
 ///  @verbatim
-// Created by Douglas S. Leonard on 6/8/25.  All rights Reserved
-//
-// MIT license FOR THIS FILE, may not apply to other files.
-//
-
+/// Created by Douglas S. Leonard on 6/8/25.  All rights Reserved
+///
+/// MIT license FOR THIS FILE, may not apply to other files.
+///
 /// @endverbatim
 
 //#include <atomic>    // for std::atomic
@@ -146,7 +145,7 @@ namespace DLG4 {
         }
     };
     template <typename TargetType, typename SourceType>
-    inline i_shared_ptr<TargetType>
+    i_shared_ptr<TargetType>
     i_dynamic_pointer_cast(const i_shared_ptr<SourceType>& sourcePtr) noexcept {
         using SharedPtrToTarget = std::shared_ptr<TargetType>;
         if (auto* rawPointer = dynamic_cast<typename SharedPtrToTarget::element_type*>(sourcePtr.get())) {

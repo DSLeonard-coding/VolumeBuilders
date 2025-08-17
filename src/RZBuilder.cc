@@ -180,7 +180,7 @@ namespace DLG4::VolumeBuilders {
 
 
 
-    G4VSolid* RZBuilder::MakePolycone(const G4String &name) {
+    G4VSolid* RZBuilder::MakePolycone(const G4String &name) const {
         if (this->solid_ptr_.get() != nullptr) {
             std::string error = "Error in MakePolycone: A solid was already built\n"
                 "You can copy and rename the builder to reset it and build again.";
@@ -199,7 +199,7 @@ namespace DLG4::VolumeBuilders {
         return retval;
     }
 
-    G4VSolid* RZBuilder::MakePolyhedra(const G4String &name) {
+    G4VSolid* RZBuilder::MakePolyhedra(const G4String &name) const {
         if (this->solid_ptr_.get() != nullptr) {
             std::string error = "Error in MakePolyhedra: A solid was already built\n"
                 "You can copy and rename the builder to reset it and build again.";

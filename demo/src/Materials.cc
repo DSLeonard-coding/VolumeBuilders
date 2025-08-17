@@ -616,13 +616,13 @@ void DetectorConstruction::ConstructMaterials()
     G4double abundance;
 
     auto Ca40 = new G4Isotope(name = "Calcium", iz = 20, n = 40, a = 40.078 * g / mole);
-    auto _elementCa = new G4Element(name = "enriched Calsium", symbol = "Ca", nisotope = 1);
+    _elementCa = new G4Element(name = "enriched Calsium", symbol = "Ca", nisotope = 1);
     _elementCa->AddIsotope(Ca40, abundance = 100. * perCent);
 
     // G4Isotope* Mo98 = new G4Isotope(name="Molybdenum98", iz=42, n=98, a=97.9054073*g/mole);
     auto Mo100 =
             new G4Isotope(name = "Molybdenum100", iz = 42, n = 100, a = 99.907477 * g / mole);
-    auto _elementMo =
+    _elementMo =
             new G4Element(name = "enriched Molybdenum", symbol = "Mo", nisotope = 1);
     _elementMo->AddIsotope(Mo100, abundance = 100. * perCent);
 

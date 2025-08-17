@@ -1,3 +1,5 @@
+#ifndef DLG4_STRUCTUREBUILDER_HPP
+#define DLG4_STRUCTUREBUILDER_HPP
 /**
 * @file
 * Created by @author Douglas S. Leonard on @date 6/29/25.  All rights Reserved
@@ -257,6 +259,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::SetCopyNo(G4int pCopyNo) {
+        //TODO FIX THIS
         std::cout << "fixme" << std::endl;
         return this->shared_from_this();
     }
@@ -319,6 +322,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::ForkForPlacement(
+        // TODO review what do with copy_no
         std::optional<int> copy_no, const G4String &name_override) {
         // Polymorphic clone through builder view method.
         auto c1 = this->builder_configs_->builder_view->ForkForPlacement();
@@ -394,7 +398,7 @@ namespace DLG4::VolumeBuilders {
 
 
     template <typename U>
-    void BASE::ValidateForPVBuild(std::string const &site) {
+    void BASE::ValidateForPVBuild(std::string const &site) const {
         builder_configs_->builder_view->ValidateForPVBuild(site);
     }
 
@@ -444,3 +448,4 @@ namespace DLG4::VolumeBuilders {
 }
 
 //reveiw explict name parameter,  copy algorithm, name propogation...
+#endif

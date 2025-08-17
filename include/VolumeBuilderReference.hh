@@ -36,7 +36,7 @@ namespace DLG4::VolumeBuilders {
      * @headerfile VolumeBuilderReference.hh
      * @see VolumeBuilder for inherited methods.
      */
-    class VolumeBuilderReference: public VolumeBuilder<VolumeBuilderReference> {
+    class VolumeBuilderReference final: public VolumeBuilder<VolumeBuilderReference> {
         template <typename T>
         friend class VolumeBuilder;
         friend AssemblyPtr CreateAssembly(G4String name);

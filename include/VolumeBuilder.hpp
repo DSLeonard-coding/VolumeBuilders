@@ -36,7 +36,7 @@ namespace DLG4::VolumeBuilders {
     //First: non-templated implementations
 
     // These became trivial, but leaving them for future use.
-    inline void VolumeConfigs::copyFrom(const VolumeConfigs &other) {
+    inline void VolumeConfigs::copyFrom(const VolumeConfigs &other)  {
         //TODO:  What's this about?
     }
 
@@ -96,7 +96,7 @@ namespace DLG4::VolumeBuilders {
     //  If we put all our data in a common base class, we wouldn't need to
     // template this.  Is that better?  Enh... Whatever.
     template <typename U>
-    template <typename T, typename std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>>
+    template <typename T, std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>>
     DLG4::VolumeBuilders::VolumeBuilder<U>::VolumeBuilder(
         const SharedPtr<T> &other,
         SET_LINK_TYPE) : builder_configs_(other->builder_configs_,SET_LINK),

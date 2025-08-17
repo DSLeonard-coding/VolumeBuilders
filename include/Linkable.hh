@@ -163,11 +163,10 @@ namespace DLG4 {
             //  No harm.  Nothing linked, nothing lost.
             // But backlinks become detatched from each other, have different views.
             // So relink to the first backlink, making it the root.
-            bool is_first_link = false;
             Linkable<T> *first_link = nullptr;
             for (auto* child : backlinks_) {
                 if (child->downlink_ == this) {
-                    if (!is_first_link) {
+                    if (bool is_first_link = false; !is_first_link) {
                         first_link = child;
                         child->downlink_ = nullptr;
                     } else {

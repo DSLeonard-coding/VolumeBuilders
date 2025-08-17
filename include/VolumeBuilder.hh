@@ -696,7 +696,6 @@
             void StoreBuilderView(const BuilderView &builder_view);
 
 
-        private:
             //Unsaved data, left out of configs to be reset on all copy operations.
             bool explicit_copyno_set_             = false;
             bool explicit_physical_copy_name_set_ = false;

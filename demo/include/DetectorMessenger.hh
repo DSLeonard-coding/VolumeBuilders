@@ -12,7 +12,7 @@ class G4UIcmdWithAString;
 class G4UIcmdWith3VectorAndUnit;
 class DetectorConstruction;
 
-class DetectorMessenger: public G4UImessenger
+class DetectorMessenger final: public G4UImessenger
 {
     public:
         DetectorMessenger(DetectorConstruction *Detector);
@@ -27,7 +27,7 @@ class DetectorMessenger: public G4UImessenger
         G4UIcommand *DetGeometrySelectCmd;
         G4UIcommand *DetGeometryOptCmd;
 
-        class DetectorMessenger *myMessenger{};
+        DetectorMessenger *myMessenger{};
 };
 
 #endif

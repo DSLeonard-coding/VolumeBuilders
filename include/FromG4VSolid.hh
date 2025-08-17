@@ -32,7 +32,7 @@ namespace DLG4::VolumeBuilders {
      * @see VolumeBuilder for inherited methods.
      * @ingroup Builders
      */
-    class FromG4VSolid: public VolumeBuilder<FromG4VSolid> {
+    class FromG4VSolid final: public VolumeBuilder<FromG4VSolid> {
         friend class VolumeBuilder<FromG4VSolid>;
         friend class VolumeBuilderReference;
         friend FromG4VSolidPtr CreateFromG4VSolidBuider(G4VSolid *solid);

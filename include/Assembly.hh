@@ -43,7 +43,7 @@ namespace DLG4::VolumeBuilders {
      * @see StructureBuilder for inherited methods.
      * @ingroup Builders
      * */
-    class Assembly: public StructureBuilder<Assembly> {
+    class Assembly final: public StructureBuilder<Assembly> {
         template <typename T>
         friend class VolumeBuilder;
         template <typename T>

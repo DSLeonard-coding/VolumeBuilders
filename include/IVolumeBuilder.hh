@@ -35,7 +35,6 @@
         /// @ingroup products
         [[nodiscard]] virtual G4Transform3D GetPhysTransform() const = 0;
 
-    public:
         virtual ~IVolumeBuilder() = default;
     };
 }

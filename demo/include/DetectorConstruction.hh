@@ -25,7 +25,7 @@
 
 #include "include/autoincludes.inc"
 
-class DetectorConstruction: public G4VUserDetectorConstruction {
+class DetectorConstruction final: public G4VUserDetectorConstruction {
 public:
     // returns a copy of a material
     static G4Material *CopyMaterial(G4Material *source, G4String name);
