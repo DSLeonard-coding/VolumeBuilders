@@ -109,7 +109,7 @@ namespace DLG4::VolumeBuilders {
      * Can be constructed from 3 values (gets default unit) or 4 values (explicit unit first)
      */
     class Unit3Vec {
-      public:
+    public:
         double x, y, z;
         std::optional<double> units;
 
@@ -122,7 +122,7 @@ namespace DLG4::VolumeBuilders {
         }
 
         Unit3Vec(double u, const Unitless3Vec &vec) :
-              x(vec.getX()), y(vec.getY()), z(vec.getZ()), units(u) {
+            x(vec.getX()), y(vec.getY()), z(vec.getZ()), units(u) {
         }
 
         [[nodiscard]] G4ThreeVector apply_units(const double dflt_unit) const {

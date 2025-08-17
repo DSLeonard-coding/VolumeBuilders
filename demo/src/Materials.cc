@@ -3,26 +3,24 @@
 
 using namespace CLHEP;
 
-void DetectorConstruction::ConstructMaterials()
-{
-
-//  DSL copies the material defs up to our level and removes this:
-//   CupDetectorConstruction::ConstructMaterials();
-// Problem1... it called the materials data file (optical properties
-//    for KamLand etc) which we don't need, creating errors if missing.
-// Probelm2... it hides control of these definitions in a library we
-//    don't control, and created warnings if we redfine them.
+void DetectorConstruction::ConstructMaterials() {
+    //  DSL copies the material defs up to our level and removes this:
+    //   CupDetectorConstruction::ConstructMaterials();
+    // Problem1... it called the materials data file (optical properties
+    //    for KamLand etc) which we don't need, creating errors if missing.
+    // Probelm2... it hides control of these definitions in a library we
+    //    don't control, and created warnings if we redfine them.
 
 
-// ... insert  material definitions here
+    // ... insert  material definitions here
 
-//////////////////////////////////
-    G4double a;  // atomic mass
-    G4double z;  // atomic number
+    //////////////////////////////////
+    G4double a; // atomic mass
+    G4double z; // atomic number
     G4String name;
     G4String symbol;
-//////////////////////////////////
-//
+    //////////////////////////////////
+    //
     _elementH = new G4Element(name = "Hydrogen", symbol = "H", z = 1, a = 1.008 * g / mole);
     _elementC = new G4Element(name = "Carbon", symbol = "C", z = 6, a = 12.01 * g / mole);
     _elementN = new G4Element(name = "Nitrogen", symbol = "N", z = 7, a = 14.01 * g / mole);
@@ -49,8 +47,8 @@ void DetectorConstruction::ConstructMaterials()
     _elementZn = new G4Element(name = "Zinc", symbol = "Zn", z = 30, a = 65.38 * g / mole);
     _elementCl = new G4Element(name = "Chlorine", symbol = "Cl", z = 17, a = 35.453 * g / mole);
     _elementMo
-    //    = new G4Element(name="Molybdenum", symbol="Mo",  z=42,  a=100*g/mole);
-    = new G4Element(name = "Molybdenum", symbol = "Mo", z = 42, a = 95.94 * g / mole);
+        //    = new G4Element(name="Molybdenum", symbol="Mo",  z=42,  a=100*g/mole);
+        = new G4Element(name = "Molybdenum", symbol = "Mo", z = 42, a = 95.94 * g / mole);
     _elementSn = new G4Element(name = "Tin", symbol = "Sn", z = 50, a = 118.710 * g / mole);
     _elementGd = new G4Element(name = "Gadolinium", symbol = "Gd", z = 64, a = 157.25 * g / mole);
     _elementS = new G4Element(name = "Sulfur", symbol = "S", z = 16, a = 32.065 * g / mole);
@@ -62,68 +60,68 @@ void DetectorConstruction::ConstructMaterials()
     G4int nelements;
     G4int natoms;
     G4MaterialPropertiesTable *MPT;
-//////////////////////////////////
+    //////////////////////////////////
 
 
-//------------MoO3--------- added by DSL, May 20223
+    //------------MoO3--------- added by DSL, May 20223
 
-    density = 1.3*g / cm3; // a rough figure for powder.
+    density = 1.3 * g / cm3; // a rough figure for powder.
     name = "MoO3";
     nelements = 2;
 
     _MoO3
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     _MoO3->AddElement(_elementMo, natoms = 1);
     _MoO3->AddElement(_elementO, natoms = 3);
 
 
-//------------Gd2O3--------- D.S.L. Aug 2022
+    //------------Gd2O3--------- D.S.L. Aug 2022
 
     // Density is for ideal solid, ie irrelevant actually
     //   will use material copier to adjust for measured value in individual powders
     density = 7.41 * g / cm3;
     nelements = 2;
-    name="Gd2O3";
+    name = "Gd2O3";
 
     _Gd2O3
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     _Gd2O3->AddElement(_elementGd, natoms = 2);
     _Gd2O3->AddElement(_elementO, natoms = 3);
 
-//------------GdSo4--------- D.S.L.'s implementation (no access to old ones)
+    //------------GdSo4--------- D.S.L.'s implementation (no access to old ones)
 
     // not very sure about this density,
     //   will use material copier to adjust for measured value in individual powders
     density = 4.139 * g / cm3;
     nelements = 3;
-    name="GdSO4";
+    name = "GdSO4";
 
     _GdSO4
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     _GdSO4->AddElement(_elementGd, natoms = 1);
     _GdSO4->AddElement(_elementS, natoms = 1);
     _GdSO4->AddElement(_elementO, natoms = 4);
 
-//---------- point source container
+    //---------- point source container
 
     density = 1.38 * g / cm3;
     nelements = 3;
-    name="poly_container";
+    name = "poly_container";
 
     _container
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     _container->AddElement(_elementC, natoms = 10);
     _container->AddElement(_elementH, natoms = 8);
     _container->AddElement(_elementO, natoms = 4);
 
     //---------- point source paper
 
-    name="paper";
+    name = "paper";
     density = 1.5 * g / cm3;
     nelements = 3;
 
     _source_paper
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     _source_paper->AddElement(_elementC, natoms = 6);
     _source_paper->AddElement(_elementH, natoms = 10);
     _source_paper->AddElement(_elementO, natoms = 5);
@@ -171,7 +169,7 @@ void DetectorConstruction::ConstructMaterials()
     nelements = 2;
 
     _tinlead
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     _tinlead->AddElement(_elementSn, natoms = 1);
     _tinlead->AddElement(_elementPb, natoms = 1);
 
@@ -182,7 +180,7 @@ void DetectorConstruction::ConstructMaterials()
     nelements = 2;
 
     tetratex
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     tetratex->AddElement(_elementC, natoms = 2);
     tetratex->AddElement(_elementF, natoms = 4);
 
@@ -193,7 +191,7 @@ void DetectorConstruction::ConstructMaterials()
     nelements = 3;
 
     vikuiti // Mylar -> Polyethiylene terephthalate
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     vikuiti->AddElement(_elementC, natoms = 10);
     vikuiti->AddElement(_elementH, natoms = 8);
     vikuiti->AddElement(_elementO, natoms = 4);
@@ -205,7 +203,7 @@ void DetectorConstruction::ConstructMaterials()
     nelements = 4;
 
     _SiEl // Mylar -> Polyethiylene terephthalate
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     _SiEl->AddElement(_elementC, natoms = 2);
     _SiEl->AddElement(_elementH, natoms = 6);
     _SiEl->AddElement(_elementO, natoms = 1);
@@ -219,7 +217,7 @@ void DetectorConstruction::ConstructMaterials()
     nelements = 1;
 
     _tantalum
-    = new G4Material(name, density, nelements);
+        = new G4Material(name, density, nelements);
     _tantalum->AddElement(_elementTa, natoms = 1);
 
     // --- fused alumina // Su-yeon
@@ -231,7 +229,8 @@ void DetectorConstruction::ConstructMaterials()
         std::stringstream ss(ExtraOpts["Al_dens"]);
         ss >> density;
         density *= g / cm3;
-    } else { //default
+    } else {
+        //default
         density = 3.05084 * g / cm3;
         // Echo command instructions:
         G4cout << "Use:" << G4endl;
@@ -251,8 +250,8 @@ void DetectorConstruction::ConstructMaterials()
     _Al2O3->AddElement(_elementO, natoms = 3);
 
     // --- Air  N=70% O=30% ---------
-    name      = "Air";
-    density   = 1.29e-3 * g / cm3;
+    name = "Air";
+    density = 1.29e-3 * g / cm3;
     nelements = 2;
 
     _air = new G4Material(name, density, nelements);
@@ -260,8 +259,8 @@ void DetectorConstruction::ConstructMaterials()
     _air->AddElement(_elementO, 30 * perCent);
 
     // --- PMT vacuum is very dilute air -------
-    density = 1e-3 * kGasThreshold; // from PhysicalConstants.h
-    G4double temperature = STP_Temperature;      // from PhysicalConstants.h
+    density = 1e-3 * kGasThreshold;         // from PhysicalConstants.h
+    G4double temperature = STP_Temperature; // from PhysicalConstants.h
     G4double pressure = STP_Pressure * density / (1.29e-3 * g / cm3);
     PMT_Vac = new G4Material(name = "PMT_Vac", density, 1, kStateGas, temperature, pressure);
     PMT_Vac->AddMaterial(_air, 1.);
@@ -397,7 +396,7 @@ void DetectorConstruction::ConstructMaterials()
 
     // --- Vacuum ------
     a = 4. * g / mole;
-//    density = 0.1786 * mg / cm3;
+    //    density = 0.1786 * mg / cm3;
     density = 0. * mg / cm3;
     _vacuum = new G4Material("HeliumGas", z = 2., a, density, kStateGas, 4.3 * kelvin, 1.e-8 * bar);
 
@@ -527,7 +526,7 @@ void DetectorConstruction::ConstructMaterials()
 
     // Calculate the molecular weight
     mol = _elementC->GetA() * 15 + _elementH->GetA() * 11 + _elementN->GetA() * 1 +
-            _elementO->GetA() * 1;
+          _elementO->GetA() * 1;
     // Allocate memory for a new Material Property Table
     MPT = new G4MaterialPropertiesTable();
     // Fill with the molecular weight
@@ -554,7 +553,7 @@ void DetectorConstruction::ConstructMaterials()
 
     // Calculate the molecular weight
     mol = _elementC->GetA() * 21 + _elementH->GetA() * 15 + _elementN->GetA() * 1 +
-            _elementO->GetA() * 1;
+          _elementO->GetA() * 1;
     // Allocate memory for a new Material Property Table
     MPT = new G4MaterialPropertiesTable();
     // Fill with the molecular weight
@@ -621,9 +620,9 @@ void DetectorConstruction::ConstructMaterials()
 
     // G4Isotope* Mo98 = new G4Isotope(name="Molybdenum98", iz=42, n=98, a=97.9054073*g/mole);
     auto Mo100 =
-            new G4Isotope(name = "Molybdenum100", iz = 42, n = 100, a = 99.907477 * g / mole);
+        new G4Isotope(name = "Molybdenum100", iz = 42, n = 100, a = 99.907477 * g / mole);
     _elementMo =
-            new G4Element(name = "enriched Molybdenum", symbol = "Mo", nisotope = 1);
+        new G4Element(name = "enriched Molybdenum", symbol = "Mo", nisotope = 1);
     _elementMo->AddIsotope(Mo100, abundance = 100. * perCent);
 
     density = 4.34 * g / cm3;
@@ -777,5 +776,4 @@ void DetectorConstruction::ConstructMaterials()
     _kevlar->AddElement(_elementC, natoms = 14);
     _kevlar->AddElement(_elementO, natoms = 2);
     _kevlar->AddElement(_elementN, natoms = 2);
-
 }

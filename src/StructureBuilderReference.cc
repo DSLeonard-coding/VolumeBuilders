@@ -17,7 +17,6 @@
 
 
 namespace DLG4::VolumeBuilders {
-
     SharedPtr<IStructureBuilder> StructureBuilderReference::clone_impl() const {
         if (builder_configs_->istructure_ptr) {
             // have the erased base clone itself ex: new RZBuilder(*this);  :
@@ -27,10 +26,10 @@ namespace DLG4::VolumeBuilders {
             BuilderView builder_view = copy->ToBuilderView();
             StructureView structure_view = copy->ToStructureView();
             // Then store itself in its new builder (that links to its data).
-            builder_view->StoreIStructurePtr(copy);    // this is the owning copy.
+            builder_view->StoreIStructurePtr(copy); // this is the owning copy.
             //We're storing the view in the builder by writing to the builder through that same view!
             builder_view->StoreBuilderView(builder_view);
-            return structure_view;  // and return the builder
+            return structure_view; // and return the builder
         } else {
             // not sure we should get here:
             auto x = static_cast<SharedPtr<IStructureBuilder>>(shared_mutable_this(this));
@@ -38,14 +37,11 @@ namespace DLG4::VolumeBuilders {
         }
     }
 
-    StructureView StructureBuilderReference::ToStructureView() const  {
+    StructureView StructureBuilderReference::ToStructureView() const {
         // we're already type erased, so just return ourselves.
         auto x = shared_mutable_this(this);
         return x;
     }
-
-
-
 }
 
 //

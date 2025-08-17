@@ -40,8 +40,8 @@ namespace DLG4 {
 
         //Getting all the ctors to work where needed was admitedly a bit of whack-a-mole.
         //and likely is not optimal:
-        
-        template <typename U, typename = std::enable_if_t<std::is_convertible_v<U *, T *> > >
+
+        template <typename U, typename = std::enable_if_t<std::is_convertible_v<U *, T *>>>
         i_shared_ptr(const std::shared_ptr<U> &ptr) : std::shared_ptr<T>(ptr) {
         }
 
@@ -53,19 +53,20 @@ namespace DLG4 {
         }
 
         // Explicit constructor for std::shared_ptr<const T>
-        i_shared_ptr(const std::shared_ptr<std::remove_const_t<T> > &other)
+        i_shared_ptr(const std::shared_ptr<std::remove_const_t<T>> &other)
             : std::shared_ptr<T>(other) {
         }
 
     private:
-        template<typename U, typename V = T>
-        struct enable_if_abstract : std::enable_if<std::is_abstract<V>::value> {};
+        template <typename U, typename V = T>
+        struct enable_if_abstract: std::enable_if<std::is_abstract<V>::value> {
+        };
 
     public:
         // Template constructor from i_shared_ptr<U> where T is abstract (move version)
         template <typename U>
         i_shared_ptr(i_shared_ptr<U> &&other,
-                     typename enable_if_abstract<U>::type* = nullptr)
+            typename enable_if_abstract<U>::type * = nullptr)
             : std::shared_ptr<T>(std::move(other)) {
         }
 
@@ -84,7 +85,7 @@ namespace DLG4 {
         };
 
         template <typename U>
-        struct is_exact_std_shared_ptr<std::shared_ptr<U> >: std::true_type {
+        struct is_exact_std_shared_ptr<std::shared_ptr<U>>: std::true_type {
         };
 
         template <typename Y>
@@ -92,16 +93,16 @@ namespace DLG4 {
         };
 
         template <typename Z>
-        struct is_exact_i_shared_ptr<i_shared_ptr<Z> >: std::true_type {
+        struct is_exact_i_shared_ptr<i_shared_ptr<Z>>: std::true_type {
         };
 
     public:
         template <typename First, typename... Rest,
             typename = std::enable_if_t<
-                !std::is_same_v<std::decay_t<First>, i_shared_ptr<T> >
-                && !is_exact_std_shared_ptr<std::decay_t<First> >::value
+                !std::is_same_v<std::decay_t<First>, i_shared_ptr<T>>
+                && !is_exact_std_shared_ptr<std::decay_t<First>>::value
                 //&&  !is_exact_i_shared_ptr<std::decay_t<First>>::value
-            > >
+            >>
         i_shared_ptr(First &&first, Rest &&... rest)
             : std::shared_ptr<T>(new T(std::forward<First>(first), std::forward<Rest>(rest)...)) {
         }
@@ -112,7 +113,7 @@ namespace DLG4 {
         }
 
         template <typename X = T, typename = std::enable_if_t<std::is_base_of_v<
-            VolumeBuilders::IVolumeBuilder, X> > >
+            VolumeBuilders::IVolumeBuilder, X>>>
         operator G4VSolid *() {
             auto other = static_cast<VolumeBuilders::IVolumeBuilder *>(this->get());
             return other->GetFinalSolid();
@@ -120,7 +121,7 @@ namespace DLG4 {
 
         /// @ingroup products
         template <typename X = T, typename = std::enable_if_t<std::is_base_of_v<
-            VolumeBuilders::IVolumeBuilder, X> > >
+            VolumeBuilders::IVolumeBuilder, X>>>
         operator G4LogicalVolume *() {
             auto other = static_cast<VolumeBuilders::IVolumeBuilder *>(this->get());
             return other->GetLogicalVolume();
@@ -128,7 +129,7 @@ namespace DLG4 {
 
         /// @ingroup products
         template <typename X = T, typename = std::enable_if_t<std::is_base_of_v<
-            VolumeBuilders::IVolumeBuilder, X> > >
+            VolumeBuilders::IVolumeBuilder, X>>>
         operator G4VPhysicalVolume *() {
             auto other = static_cast<VolumeBuilders::IVolumeBuilder *>(this->get());
             return other->GetPlacement();
@@ -136,19 +137,21 @@ namespace DLG4 {
 
         /// @ingroup products
         template <typename X = T, typename = std::enable_if_t<std::is_base_of_v<
-            VolumeBuilders::IVolumeBuilder, X> > >
+            VolumeBuilders::IVolumeBuilder, X>>>
         operator G4Transform3D() const {
             static_assert(std::is_base_of_v<VolumeBuilders::IVolumeBuilder, X>,
-                    "T must derive from IVolumeBuilder");
+                "T must derive from IVolumeBuilder");
             auto other = static_cast<const VolumeBuilders::IVolumeBuilder *>(this->get());
             return other->GetPhysTransform();
         }
     };
+
     template <typename TargetType, typename SourceType>
     i_shared_ptr<TargetType>
-    i_dynamic_pointer_cast(const i_shared_ptr<SourceType>& sourcePtr) noexcept {
+    i_dynamic_pointer_cast(const i_shared_ptr<SourceType> &sourcePtr) noexcept {
         using SharedPtrToTarget = std::shared_ptr<TargetType>;
-        if (auto* rawPointer = dynamic_cast<typename SharedPtrToTarget::element_type*>(sourcePtr.get())) {
+        if (auto *rawPointer = dynamic_cast<typename SharedPtrToTarget::element_type *>(sourcePtr.
+            get())) {
             return SharedPtrToTarget(sourcePtr, rawPointer);
         }
         return SharedPtrToTarget();

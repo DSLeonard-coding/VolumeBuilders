@@ -20,7 +20,7 @@ void DetectorConstruction::ConstructAssembly() {
         return;
     }
     firstcall = false;
-    //clang-format on
+    //@formatter:on
 
     DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
@@ -29,10 +29,10 @@ void DetectorConstruction::ConstructAssembly() {
     G4double some_reference;
 
     auto cylinder = CreatePolyhedraBuilder("part", 3)
-            //clang-format off
+            //@formatter:off
             ->AddPlane(p.IR = 40       , p.OR = 50 , p.z = 0 )
             ->AddPlane(p.IR            , p.OR                   , p.z -= 100 );
-    //clang-format on
+    //@formatter:on
 
     auto assembly = CreateAssembly("example_assembly");
     auto temp = cylinder;
@@ -57,4 +57,3 @@ void DetectorConstruction::ConstructAssembly() {
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement();
 }
-

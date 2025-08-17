@@ -41,9 +41,11 @@ namespace DLG4::VolumeBuilders {
     }
 
 
-    BoxBuilderPtr CreateDeltasBoxBuilder(const G4double unit, const G4String &name, const G4double edge_x,
+    BoxBuilderPtr CreateDeltasBoxBuilder(const G4double unit, const G4String &name,
+        const G4double edge_x,
         const G4double x_delta,
-        const G4double edge_y, const G4double y_delta, const G4double edge_z, const G4double z_delta) {
+        const G4double edge_y, const G4double y_delta, const G4double edge_z,
+        const G4double z_delta) {
         auto object = BoxBuilderPtr(new BoxBuilder(name));
         object->SetXEdgeDelta(unit, edge_x, x_delta)
               ->SetYEdgeDelta(unit, edge_y, y_delta)
@@ -51,7 +53,8 @@ namespace DLG4::VolumeBuilders {
         return object;
     }
 
-    BoxBuilderPtr CreateDeltasBoxBuilder(const G4String &name, const G4double edge_x, const G4double x_delta,
+    BoxBuilderPtr CreateDeltasBoxBuilder(const G4String &name, const G4double edge_x,
+        const G4double x_delta,
         const G4double edge_y,
         const G4double y_delta, const G4double edge_z, const G4double z_delta) {
         auto object = BoxBuilderPtr(new BoxBuilder(name));
@@ -61,7 +64,8 @@ namespace DLG4::VolumeBuilders {
         return object;
     }
 
-    BoxBuilderPtr CreateZDeltaBoxBuilder(const G4double unit, const G4String &name, const G4double x_full_size,
+    BoxBuilderPtr CreateZDeltaBoxBuilder(const G4double unit, const G4String &name,
+        const G4double x_full_size,
         const G4double y_full_size,
         const G4double edge_z, const G4double z_delta) {
         if (x_full_size <= 0 || y_full_size <= 0) {
@@ -116,8 +120,10 @@ namespace DLG4::VolumeBuilders {
               ->SetZSize(z_full_size);
         return object;
     }
-    BoxBuilderPtr CreateEdgesBoxBuilder(const G4String &name, const G4double x_edge1, const G4double x_edge2, const G4double y_edge1,
-                                        const G4double y_edge2, const G4double z_edge1, const G4double z_edge2) {
+
+    BoxBuilderPtr CreateEdgesBoxBuilder(const G4String &name, const G4double x_edge1,
+        const G4double x_edge2, const G4double y_edge1,
+        const G4double y_edge2, const G4double z_edge1, const G4double z_edge2) {
         auto object = BoxBuilderPtr(new BoxBuilder(name));
         object->SetXEdges(x_edge1, x_edge2)
               ->SetYEdges(y_edge1, y_edge2)
@@ -125,14 +131,17 @@ namespace DLG4::VolumeBuilders {
         return object;
     }
 
-    BoxBuilderPtr CreateEdgesBoxBuilder(const G4double unit, const G4String &name, const G4double x_edge1, const G4double x_edge2,
-                                        const G4double y_edge1, const G4double y_edge2, const G4double z_edge1, const G4double z_edge2) {
+    BoxBuilderPtr CreateEdgesBoxBuilder(const G4double unit, const G4String &name,
+        const G4double x_edge1, const G4double x_edge2,
+        const G4double y_edge1, const G4double y_edge2, const G4double z_edge1,
+        const G4double z_edge2) {
         auto object = BoxBuilderPtr(new BoxBuilder(name));
         object->SetXEdges(unit, x_edge1, x_edge2)
               ->SetYEdges(unit, y_edge1, y_edge2)
               ->SetZEdges(unit, z_edge1, z_edge2);
         return object;
     }
+
     BoxBuilderPtr BoxBuilder::SetXSizeDimensioned(const G4double size) {
         x_size_ = size;
         return shared_from_this();
@@ -148,7 +157,8 @@ namespace DLG4::VolumeBuilders {
         return shared_from_this();
     }
 
-    BoxBuilderPtr BoxBuilder::SetInternalOffsetDimensioned(const G4double x, const G4double y, const G4double z) {
+    BoxBuilderPtr BoxBuilder::SetInternalOffsetDimensioned(const G4double x, const G4double y,
+        const G4double z) {
         this->builder_configs_->internal_offset = G4ThreeVector(x, y, z);
         PropagateTransform();
         return shared_from_this();
@@ -191,7 +201,8 @@ namespace DLG4::VolumeBuilders {
         return SetZEdgeDelta(this->GetEffectiveDefaultUnit(), z_edge, z_delta);
     }
 
-    BoxBuilderPtr BoxBuilder::SetInternalOffset(const G4double x, const G4double y, const G4double z) {
+    BoxBuilderPtr BoxBuilder::SetInternalOffset(const G4double x, const G4double y,
+        const G4double z) {
         return SetInternalOffset(this->GetEffectiveDefaultUnit(), x, y, z);
     }
 
@@ -209,7 +220,8 @@ namespace DLG4::VolumeBuilders {
     }
 
     // These methods calculate the size and offset, apply the unit, and then delegate to the Dimensioned setters.
-    BoxBuilderPtr BoxBuilder::SetXEdges(const G4double unit, const G4double x_edge1, const G4double x_edge2) {
+    BoxBuilderPtr BoxBuilder::SetXEdges(const G4double unit, const G4double x_edge1,
+        const G4double x_edge2) {
         G4double size = std::abs(x_edge2 - x_edge1);
         G4double offset = (x_edge1 + x_edge2) / 2.0;
         SetXSizeDimensioned(size * unit);
@@ -220,7 +232,8 @@ namespace DLG4::VolumeBuilders {
             );
     }
 
-    BoxBuilderPtr BoxBuilder::SetYEdges(const G4double unit, const G4double y_edge1, const G4double y_edge2) {
+    BoxBuilderPtr BoxBuilder::SetYEdges(const G4double unit, const G4double y_edge1,
+        const G4double y_edge2) {
         G4double size = std::abs(y_edge2 - y_edge1);
         G4double offset = (y_edge1 + y_edge2) / 2.0;
         SetYSizeDimensioned(size * unit);
@@ -231,7 +244,8 @@ namespace DLG4::VolumeBuilders {
             );
     }
 
-    BoxBuilderPtr BoxBuilder::SetZEdges(const G4double unit, const G4double z_edge1, const G4double z_edge2) {
+    BoxBuilderPtr BoxBuilder::SetZEdges(const G4double unit, const G4double z_edge1,
+        const G4double z_edge2) {
         G4double size = std::abs(z_edge2 - z_edge1);
         G4double offset = (z_edge1 + z_edge2) / 2.0;
         SetZSizeDimensioned(size * unit);
@@ -243,7 +257,8 @@ namespace DLG4::VolumeBuilders {
     }
 
     // These methods calculate the size and offset from an edge and delta, apply the unit, and delegate.
-    BoxBuilderPtr BoxBuilder::SetXEdgeDelta(const G4double unit, const G4double x_edge, const G4double x_delta) {
+    BoxBuilderPtr BoxBuilder::SetXEdgeDelta(const G4double unit, const G4double x_edge,
+        const G4double x_delta) {
         G4double size = std::abs(x_delta);
         G4double offset = x_edge + x_delta / 2.0;
         SetXSizeDimensioned(size * unit);
@@ -254,7 +269,8 @@ namespace DLG4::VolumeBuilders {
             );
     }
 
-    BoxBuilderPtr BoxBuilder::SetYEdgeDelta(const G4double unit, const G4double y_edge, const G4double y_delta) {
+    BoxBuilderPtr BoxBuilder::SetYEdgeDelta(const G4double unit, const G4double y_edge,
+        const G4double y_delta) {
         G4double size = std::abs(y_delta);
         G4double offset = y_edge + y_delta / 2.0;
         SetYSizeDimensioned(size * unit);
@@ -265,7 +281,8 @@ namespace DLG4::VolumeBuilders {
             );
     }
 
-    BoxBuilderPtr BoxBuilder::SetZEdgeDelta(const G4double unit, const G4double z_edge, const G4double z_delta) {
+    BoxBuilderPtr BoxBuilder::SetZEdgeDelta(const G4double unit, const G4double z_edge,
+        const G4double z_delta) {
         G4double size = std::abs(z_delta);
         G4double offset = z_edge + z_delta / 2.0;
         SetZSizeDimensioned(size * unit);
@@ -276,7 +293,8 @@ namespace DLG4::VolumeBuilders {
             );
     }
 
-    BoxBuilderPtr BoxBuilder::SetInternalOffset(const G4double unit, const G4double x, const G4double y, const G4double z) {
+    BoxBuilderPtr BoxBuilder::SetInternalOffset(const G4double unit, const G4double x,
+        const G4double y, const G4double z) {
         return SetInternalOffsetDimensioned(x * unit, y * unit, z * unit);
     }
 

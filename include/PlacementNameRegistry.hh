@@ -29,7 +29,6 @@ namespace DLG4::VolumeBuilders {
             return (it != name_counts_.end()) ? it->second : 0;
         }
     };
-
 }
 
 #endif //PLACEMENTNAMEREGISTRY_HH

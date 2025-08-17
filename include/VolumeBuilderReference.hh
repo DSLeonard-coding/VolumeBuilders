@@ -40,14 +40,14 @@ namespace DLG4::VolumeBuilders {
         template <typename T>
         friend class VolumeBuilder;
         friend AssemblyPtr CreateAssembly(G4String name);
-        template<typename T>
+        template <typename T>
         friend class StructureBuilder;
 
         template <typename T>
         friend class i_shared_ptr;
 
     public:
-        G4VSolid* SolidConstructor(const G4String &name) override;
+        G4VSolid *SolidConstructor(const G4String &name) override;
 
     private:
         //allow i_shared_ptr access to our converting ctors
@@ -63,7 +63,7 @@ namespace DLG4::VolumeBuilders {
          */
         template <typename T>
         VolumeBuilderReference(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
-                std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>  = 0) : VolumeBuilder<
+            std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>  = 0) : VolumeBuilder<
             VolumeBuilderReference>(other, SET_LINK) {
         }
 

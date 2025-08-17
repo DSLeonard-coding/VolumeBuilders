@@ -27,37 +27,35 @@
 #include "VolumeBuilderTypes.hh"
 
 
+namespace DLG4::VolumeBuilders {
+    /// a non-fluent polymorphic class to access the derived solid-builder from a base reference:
+    /// This gets used by VolumeBuiderReference to store pointers to derived methods.
 
-    namespace DLG4::VolumeBuilders {
-        /// a non-fluent polymorphic class to access the derived solid-builder from a base reference:
-        /// This gets used by VolumeBuiderReference to store pointers to derived methods.
+    /// a non-fluent polymorphic class to access the derived solid-builder from a base reference:
+    /// This gets used by VolumeBuiderReference to store pointers to derived methods.
+    class IStructureBuilder {
+    protected:
+        friend class VolumeBuilderReference;    // for tye erasing polymorphism
+        friend class StructureBuilderReference; // for tye erasing polymorphism
+        template <typename T>
+        friend class StructureBuilder;
+        friend class Assembly;
+        virtual G4VSolid *SolidConstructor(const G4String &name) = 0;
+        virtual ~IStructureBuilder() = default;
+        // clones and returns a base class pointer
+        [[nodiscard]] virtual SharedPtr<IStructureBuilder> clone_impl() const = 0;
+        // Returns a type-erased view ptr.
+        [[nodiscard]] virtual StructureView ToStructureView() const = 0;
+        [[nodiscard]] virtual BuilderView ToBuilderView() const = 0;
+        // store type erased views of underlying objects...
+        // combined with above we can get a view from an object and store the view
+        // in the tye-erased object being copied or constructed.
+    };
 
-        /// a non-fluent polymorphic class to access the derived solid-builder from a base reference:
-        /// This gets used by VolumeBuiderReference to store pointers to derived methods.
-        class IStructureBuilder {
-        protected:
-            friend class VolumeBuilderReference; // for tye erasing polymorphism
-            friend class StructureBuilderReference; // for tye erasing polymorphism
-            template <typename T>
-            friend class StructureBuilder;
-            friend class Assembly;
-            virtual G4VSolid* SolidConstructor(const G4String &name) = 0;
-            virtual ~IStructureBuilder() = default;
-            // clones and returns a base class pointer
-            [[nodiscard]] virtual SharedPtr<IStructureBuilder> clone_impl() const = 0;
-            // Returns a type-erased view ptr.
-            [[nodiscard]] virtual StructureView ToStructureView() const = 0;
-            [[nodiscard]] virtual BuilderView ToBuilderView() const = 0;
-            // store type erased views of underlying objects...
-            // combined with above we can get a view from an object and store the view
-            // in the tye-erased object being copied or constructed.
-        };
-
-        //Just a tag class to mark IStructureBuilders that are also ISolidBuilders
-        class ISolidBuilder : public IStructureBuilder {};
-
-
-    }
+    //Just a tag class to mark IStructureBuilders that are also ISolidBuilders
+    class ISolidBuilder: public IStructureBuilder {
+    };
+}
 
 
 //

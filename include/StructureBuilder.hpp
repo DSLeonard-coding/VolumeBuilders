@@ -398,7 +398,7 @@ namespace DLG4::VolumeBuilders {
 
 
     template <typename U>
-    void BASE::ValidateForPVBuild(std::string const &site) const {
+    void BASE::ValidateForPVBuild(std::string const &site) {
         builder_configs_->builder_view->ValidateForPVBuild(site);
     }
 

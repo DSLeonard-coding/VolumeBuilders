@@ -132,7 +132,7 @@ namespace DLG4 {
     template <typename T>
     class Linkable {
     private:
-        std::shared_ptr<T> ref_ = nullptr;                       // points to the source if any
+        std::shared_ptr<T> ref_ = nullptr;             // points to the source if any
         mutable std::vector<Linkable<T> *> backlinks_; // points to things that linked to us.
         mutable Linkable<T> *downlink_ = nullptr;      // points to things we linked to.
         mutable Linkable<T> *rootlink_ = nullptr;
@@ -150,7 +150,7 @@ namespace DLG4 {
             // remove ourselves from the backlinks of the downlink
             // this prevents corrupt backlink propagation after we are deleted.
             if (downlink_) {
-                auto& parent_backlinks = downlink_->backlinks_;
+                auto &parent_backlinks = downlink_->backlinks_;
                 auto it = std::remove(parent_backlinks.begin(), parent_backlinks.end(), this);
                 if (it != parent_backlinks.end()) {
                     parent_backlinks.erase(it, parent_backlinks.end());
@@ -164,7 +164,7 @@ namespace DLG4 {
             // But backlinks become detatched from each other, have different views.
             // So relink to the first backlink, making it the root.
             Linkable<T> *first_link = nullptr;
-            for (auto* child : backlinks_) {
+            for (auto *child : backlinks_) {
                 if (child->downlink_ == this) {
                     if (bool is_first_link = false; !is_first_link) {
                         first_link = child;
@@ -174,7 +174,8 @@ namespace DLG4 {
                     }
                 }
             }
-            backlinks_.clear(); //if this matters, something is already very wrong.  But it can help unmask that.
+            backlinks_.clear();
+            //if this matters, something is already very wrong.  But it can help unmask that.
         }
 
         /// Copy constructor does deep copy, not link
@@ -185,7 +186,7 @@ namespace DLG4 {
 
         ///The EXPLICIT linking copy ctor
         Linkable(Linkable<T> &other, SET_LINK_TYPE) {
-            ref_=nullptr;
+            ref_ = nullptr;
             LinkTreeTo(other);
         }
 
@@ -240,7 +241,8 @@ namespace DLG4 {
 
         /// Link to an existing T object via pointer (non-owning)
         void LinkToRaw(T *ptr) {
-            auto data = std::shared_ptr<T>(ptr, [](T *) {
+            auto data = std::shared_ptr<T>(ptr, [](T *)
+            {
                 /* do nothing */
             });
             LinkTreeTo(data);
@@ -360,7 +362,8 @@ namespace DLG4 {
                     }
                 } else {
                     // recurse toward root to apply the link there:
-                    if (std::find(downlink_->backlinks_.begin(), downlink_->backlinks_.end(), this) == downlink_->backlinks_.end()) {
+                    if (std::find(downlink_->backlinks_.begin(), downlink_->backlinks_.end(), this)
+                        == downlink_->backlinks_.end()) {
                         downlink_->backlinks_.emplace_back(this);
                     }
                     downlink_->LinkTreeTo(other);

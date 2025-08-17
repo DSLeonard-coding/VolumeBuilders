@@ -371,10 +371,10 @@ A working example is provided in  demo/src/Geometries/ConstructAssembly.cc and c
     G4double some_reference;
 
     auto cylinder = CreatePolyhedraBuilder("part", 3)
-            //clang-format off
+            //@formatter:off
             ->AddPlane(p.IR = 40       , p.OR = 50 , p.z = 0 )
             ->AddPlane(p.IR            , p.OR                   , p.z -= 100 );
-    //clang-format on
+    //@formatter:on
 
     auto assembly = CreateAssembly("example_assembly");
     auto temp = cylinder;

@@ -18,14 +18,17 @@
 using namespace CLHEP;
 using namespace DLG4::VolumeBuilders; // Geometry builder helpers.
 
-void DetectorConstruction::Construct${METHOD_NAME}() {
+void DetectorConstruction::Construct${METHOD_NAME}(
+
+)
+ {
     static bool firstcall = true;
     if (!firstcall) {
         // only run once
         return;
     }
     firstcall = false;
-    
+
     //make a dedicated sample_material for vertex generation.  Can adjust density with optional 3rd parameter
     G4Material *sample_mat = DetectorConstruction::CopyMaterial(${MATERIAL}, "sample_mat");
     G4cout << "now ConstructArrayHexPart()\n" << G4endl;
@@ -43,4 +46,3 @@ void DetectorConstruction::Construct${METHOD_NAME}() {
                     //->SetPhysOffset({mm, 0, 0, 0}) 
                     ->MakePlacement();
 }
-

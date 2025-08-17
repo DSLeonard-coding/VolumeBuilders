@@ -21,7 +21,7 @@ void DetectorConstruction::ConstructBoxExample() {
         return;
     }
     firstcall = false;
-    //clang-format on
+    //@formatter:on
 
     DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
     BuilderViewList builder_list;

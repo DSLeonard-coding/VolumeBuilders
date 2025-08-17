@@ -33,6 +33,4 @@ TheSimulation::TheSimulation() {
         }
     };
     theRunManager->SetUserInitialization(new MinimalPhysicsList());
-
 }
-

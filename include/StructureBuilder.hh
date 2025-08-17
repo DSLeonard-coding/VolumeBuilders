@@ -440,7 +440,7 @@ namespace DLG4::VolumeBuilders {
 
 
         template <typename T, typename std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
-            int> = 0>
+            int>  = 0>
         StructureBuilder(const SharedPtr<T> &other, SET_LINK_TYPE);
 
 

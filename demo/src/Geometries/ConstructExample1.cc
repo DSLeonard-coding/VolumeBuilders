@@ -20,9 +20,9 @@ void DetectorConstruction::ConstructExample1() {
         return;
     }
     firstcall = false;
-    //clang-format on
+    //@formatter:on
 
-    DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::cm);     // set a global unit
+    DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::cm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
     RZPlane p;
     p.unit = mm; // see prior note.
@@ -30,7 +30,7 @@ void DetectorConstruction::ConstructExample1() {
 
     // some shape to union onto our main shape:
     auto another_builder_or_geant_solid = CreatePolyconeBuilder("union")
-            //clang-format off
+            //@formatter:off
             ->AddPlane(p.IR = 90       , p.OR = 100*2.0/sqrt(3.) , p.z = -10 )
             ->AddPlane(p.IR            , p.OR                   , p.z -= 15 );
 

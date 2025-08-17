@@ -36,7 +36,7 @@ namespace DLG4::VolumeBuilders {
     //First: non-templated implementations
 
     // These became trivial, but leaving them for future use.
-    inline void VolumeConfigs::copyFrom(const VolumeConfigs &other)  {
+    inline void VolumeConfigs::copyFrom(const VolumeConfigs &other) {
         //TODO:  What's this about?
     }
 
@@ -323,7 +323,8 @@ namespace DLG4::VolumeBuilders {
         }
         for (size_t i = 0; i < boolean_configs_->booleans.size(); i++) {
             auto boolean = boolean_configs_->booleans[i];
-            const bool is_last = (i == (boolean_configs_->booleans.size() - 1)) && !boolean_configs_->reflect_z;
+            const bool is_last = (i == (boolean_configs_->booleans.size() - 1)) && !boolean_configs_
+                                 ->reflect_z;
             const size_t count = i + 1;
             if (boolean_configs_->boolean_name.empty()) {
                 name_temp = builder_configs_->name + "_B" + std::to_string(count);
@@ -915,7 +916,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::ReflectZFinalSolid() {
-        if (final_solid_ptr_ ) {
+        if (final_solid_ptr_) {
             throw std::runtime_error("Error VolumeBuilder::ReflectZFinalSolid,  \n"
                 "The final solid is already built.  \n");
         }
@@ -925,7 +926,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::ReflectZBaseSolid() {
-        if (final_solid_ptr_ ) {
+        if (final_solid_ptr_) {
             throw std::runtime_error("Error VolumeBuilder::ReflectZBaseSolid,  \n"
                 "The base solid is already built.  \n");
         }
@@ -934,17 +935,17 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::MakeSolid(){
-    G4VSolid *solid;
+    DERIVED BASE::MakeSolid() {
+        G4VSolid *solid;
         G4String final_name = GetBuilderName();
-    if (builder_configs_->reflect_base_solid_z) {
-        solid=SolidConstructor(final_name+"_proto_solid");
-        solid= new G4ReflectedSolid(final_name, solid,G4ReflectZ3D(0));
-    } else {
-        solid=SolidConstructor(final_name);
-    }
-    solid_ptr_.LinkToRaw(solid);
-    return this->shared_from_this();
+        if (builder_configs_->reflect_base_solid_z) {
+            solid = SolidConstructor(final_name + "_proto_solid");
+            solid = new G4ReflectedSolid(final_name, solid, G4ReflectZ3D(0));
+        } else {
+            solid = SolidConstructor(final_name);
+        }
+        solid_ptr_.LinkToRaw(solid);
+        return this->shared_from_this();
     }
 
 
@@ -1001,21 +1002,21 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::AddTo(BuilderViewList& list) const {
+    DERIVED BASE::AddTo(BuilderViewList &list) const {
         list.emplace_back(this->ToBuilderView());
         auto retval = shared_mutable_this(this);
         return retval;
     }
 
     template <typename U>
-    DERIVED BASE::AddTo(StructureViewList& list) const {
+    DERIVED BASE::AddTo(StructureViewList &list) const {
         list.emplace_back(this->ToStructureView());
         auto retval = shared_mutable_this(this);
         return retval;
     }
 
     template <typename U>
-    DERIVED BASE::AddTo(AssemblyPtr& assembly) const {
+    DERIVED BASE::AddTo(AssemblyPtr &assembly) const {
         assembly->AddStructure(this->ToStructureView());
         auto retval = shared_mutable_this(this);
         return retval;

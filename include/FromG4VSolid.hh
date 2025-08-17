@@ -40,23 +40,22 @@ namespace DLG4::VolumeBuilders {
     public:
         // No functional public methods.  Only the Factory!
         // Just boilerplate below here:
-//        FromG4VSolid(const FromG4VSolid &other) = delete;
+        //        FromG4VSolid(const FromG4VSolid &other) = delete;
 
-        FromG4VSolid(const FromG4VSolid & other);
+        FromG4VSolid(const FromG4VSolid &other);
         FromG4VSolid &operator=(const FromG4VSolid &other) = delete;
-
-
 
     private:
         //Implement pure vitual SolidConstructor from ISolidBuilder
-        G4VSolid* SolidConstructor(const G4String &name) override {
+        G4VSolid *SolidConstructor(const G4String &name) override {
             throw std::runtime_error(
                 "FromG4VSolid::SolidConstructor(const G4String &name) not implemented.\n"
                 "FromG4VSolid is constructed using prebuilt a G4VSolid pointer.");
         }
 
         // Does this need to exist?  Maybe.
-        FromG4VSolid() {}
+        FromG4VSolid() {
+        }
     };
 }
 #endif  //FromG4VSolid_HPP
