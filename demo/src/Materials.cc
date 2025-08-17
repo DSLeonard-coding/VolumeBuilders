@@ -637,8 +637,8 @@ void DetectorConstruction::ConstructMaterials() {
     //............................... PbMoO4 .............................
     // edited by Mona
     /*
-     G4Isotope* Pb207 = new G4Isotope(name="Lead", iz=82, n=207, a=207.19*g/mole);
-     G4Element* _elementPb = new G4Element(name="enriched Lead", symbol="Pb", nisotope=1);
+     auto Pb207 = new G4Isotope(name="Lead", iz=82, n=207, a=207.19*g/mole);
+     auto _elementPb = new G4Element(name="enriched Lead", symbol="Pb", nisotope=1);
      _elementPb->AddIsotope(Pb207, abundance= 100.*perCent)
 
      density = 6.95*g/cm3;

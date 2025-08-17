@@ -20,6 +20,7 @@ using namespace DLG4::VolumeBuilders; // Geometry builder helpers.
 
 void DetectorConstruction::Construct${METHOD_NAME}(
 
+
 )
  {
     static bool firstcall = true;

@@ -52,7 +52,7 @@ void DetectorConstruction::ListGeometries() const {
 G4Material *DetectorConstruction::CopyMaterial(G4Material *source, G4String name, G4double dens) {
     int ncomponents = 1;
     G4double fractionmass = 100 * perCent;
-    G4Material *dest = new G4Material(name, dens, ncomponents);
+    auto dest = new G4Material(name, dens, ncomponents);
     dest->AddMaterial(source, fractionmass);
     return dest;
 }
