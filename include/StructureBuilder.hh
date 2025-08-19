@@ -115,7 +115,7 @@ namespace DLG4::VolumeBuilders {
          * @return A shared pointer to the new builder instance.
          * @ingroup Forks
          */
-        DerivedPtr ForkLogicalVolume(const G4String &new_name);
+        DerivedPtr ForkForLogicalVolume(const G4String &new_name);
 
 
         /**

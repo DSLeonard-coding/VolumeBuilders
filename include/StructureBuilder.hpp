@@ -343,16 +343,16 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::ForkLogicalVolume(const G4String &new_name) {
+    DERIVED BASE::ForkForLogicalVolume(const G4String &new_name) {
         // Polymorphic clone through builder view method.
-        auto c1 = this->builder_configs_->builder_view->ForkLogicalVolume(new_name);
+        auto c1 = this->builder_configs_->builder_view->ForkForLogicalVolume(new_name);
         auto c2 = c1->builder_configs_->istructure_ptr;
         auto copy = i_dynamic_pointer_cast<U>(c2);
         if (!placement_configs_->is_builder) {
             // assembly
             copy->placement_configs_->children.clear();
             for (auto &child : placement_configs_->children) {
-                auto builderview_clone = child->builder_configs_->builder_view->ForkLogicalVolume(
+                auto builderview_clone = child->builder_configs_->builder_view->ForkForLogicalVolume(
                     new_name);
                 auto clone_istructure_view = builderview_clone->builder_configs_->istructure_ptr->
                                                                 ToStructureView();

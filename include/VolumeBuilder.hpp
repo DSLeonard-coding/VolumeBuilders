@@ -665,8 +665,8 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::ForkFinalSolid(const G4String &new_name) {
-        NoNameCheck(new_name, "ForkFinalSolid");
+    DERIVED BASE::ForkForFinalSolid(const G4String &new_name) {
+        NoNameCheck(new_name, "ForkForFinalSolid");
         if (!solid_ptr_) {
             MakeSolid();
         }
@@ -679,8 +679,8 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::ForkLogicalVolume(const G4String &new_name) {
-        NoNameCheck(new_name, "ForkLogicalVolume");
+    DERIVED BASE::ForkForLogicalVolume(const G4String &new_name) {
+        NoNameCheck(new_name, "ForkForLogicalVolume");
         if (!final_solid_ptr_ && placement_configs_->is_builder) {
             [[maybe_unused]] auto discard = GetFinalSolid();
         }
