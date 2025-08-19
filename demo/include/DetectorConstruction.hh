@@ -49,7 +49,7 @@ public:
         whichDetGeometry = w;
     }
 
-    void ListGeometries();
+    void ListGeometries() const;
 
 protected:
     // a map containing any values provided for extra commands.
