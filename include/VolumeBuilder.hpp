@@ -96,7 +96,7 @@ namespace DLG4::VolumeBuilders {
     //  If we put all our data in a common base class, we wouldn't need to
     // template this.  Is that better?  Enh... Whatever.
     template <typename U>
-    template <typename T, typename std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>>
+    template <typename T, std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>>
     DLG4::VolumeBuilders::VolumeBuilder<U>::VolumeBuilder(
         const SharedPtr<T> &other,
         SET_LINK_TYPE) : builder_configs_(other->builder_configs_,SET_LINK),
@@ -323,7 +323,8 @@ namespace DLG4::VolumeBuilders {
         }
         for (size_t i = 0; i < boolean_configs_->booleans.size(); i++) {
             auto boolean = boolean_configs_->booleans[i];
-            const bool is_last = (i == (boolean_configs_->booleans.size() - 1)) && !boolean_configs_->reflect_z;
+            const bool is_last = (i == (boolean_configs_->booleans.size() - 1)) && !boolean_configs_
+                                 ->reflect_z;
             const size_t count = i + 1;
             if (boolean_configs_->boolean_name.empty()) {
                 name_temp = builder_configs_->name + "_B" + std::to_string(count);
@@ -664,8 +665,8 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::ForkFinalSolid(const G4String &new_name) {
-        NoNameCheck(new_name, "ForkFinalSolid");
+    DERIVED BASE::ForkForFinalSolid(const G4String &new_name) {
+        NoNameCheck(new_name, "ForkForFinalSolid");
         if (!solid_ptr_) {
             MakeSolid();
         }
@@ -678,8 +679,8 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::ForkLogicalVolume(const G4String &new_name) {
-        NoNameCheck(new_name, "ForkLogicalVolume");
+    DERIVED BASE::ForkForLogicalVolume(const G4String &new_name) {
+        NoNameCheck(new_name, "ForkForLogicalVolume");
         if (!final_solid_ptr_ && placement_configs_->is_builder) {
             [[maybe_unused]] auto discard = GetFinalSolid();
         }
@@ -915,7 +916,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::ReflectZFinalSolid() {
-        if (final_solid_ptr_ ) {
+        if (final_solid_ptr_) {
             throw std::runtime_error("Error VolumeBuilder::ReflectZFinalSolid,  \n"
                 "The final solid is already built.  \n");
         }
@@ -925,7 +926,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::ReflectZBaseSolid() {
-        if (final_solid_ptr_ ) {
+        if (final_solid_ptr_) {
             throw std::runtime_error("Error VolumeBuilder::ReflectZBaseSolid,  \n"
                 "The base solid is already built.  \n");
         }
@@ -934,17 +935,17 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::MakeSolid(){
-    G4VSolid *solid;
+    DERIVED BASE::MakeSolid() {
+        G4VSolid *solid;
         G4String final_name = GetBuilderName();
-    if (builder_configs_->reflect_base_solid_z) {
-        solid=SolidConstructor(final_name+"_proto_solid");
-        solid= new G4ReflectedSolid(final_name, solid,G4ReflectZ3D(0));
-    } else {
-        solid=SolidConstructor(final_name);
-    }
-    solid_ptr_.LinkToRaw(solid);
-    return this->shared_from_this();
+        if (builder_configs_->reflect_base_solid_z) {
+            solid = SolidConstructor(final_name + "_proto_solid");
+            solid = new G4ReflectedSolid(final_name, solid, G4ReflectZ3D(0));
+        } else {
+            solid = SolidConstructor(final_name);
+        }
+        solid_ptr_.LinkToRaw(solid);
+        return this->shared_from_this();
     }
 
 
@@ -1001,21 +1002,21 @@ namespace DLG4::VolumeBuilders {
     }
 
     template <typename U>
-    DERIVED BASE::AddTo(BuilderViewList& list) const {
+    DERIVED BASE::AddTo(BuilderViewList &list) const {
         list.emplace_back(this->ToBuilderView());
         auto retval = shared_mutable_this(this);
         return retval;
     }
 
     template <typename U>
-    DERIVED BASE::AddTo(StructureViewList& list) const {
+    DERIVED BASE::AddTo(StructureViewList &list) const {
         list.emplace_back(this->ToStructureView());
         auto retval = shared_mutable_this(this);
         return retval;
     }
 
     template <typename U>
-    DERIVED BASE::AddTo(AssemblyPtr& assembly) const {
+    DERIVED BASE::AddTo(AssemblyPtr &assembly) const {
         assembly->AddStructure(this->ToStructureView());
         auto retval = shared_mutable_this(this);
         return retval;

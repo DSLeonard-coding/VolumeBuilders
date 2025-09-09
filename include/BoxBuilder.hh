@@ -31,7 +31,7 @@ namespace DLG4::VolumeBuilders {
 
     /** @addtogroup Factories  Volume/Structure Builder Factories
      *  @brief Factories for creating VolumeBuilder and StructureBuilder objects.
-     *  @{ */
+     *  @{
     /**
 
 
@@ -203,7 +203,7 @@ namespace DLG4::VolumeBuilders {
      * @see VolumeBuilder<U> for inherited methods.
      * @ingroup Builders
      */
-    class BoxBuilder: public VolumeBuilder<BoxBuilder> {
+    class BoxBuilder final: public VolumeBuilder<BoxBuilder> {
     public:
         friend class VolumeBuilderReference;
         friend class VolumeBuilder<BoxBuilder>; // shouldn't be needed, maybe isn't now.
@@ -288,7 +288,7 @@ namespace DLG4::VolumeBuilders {
 
 
         BoxBuilder() = default;
-        BoxBuilder(BoxBuilder &&) noexcept = default;
+        BoxBuilder(BoxBuilder &&) noexcept = delete;
 
         // BoxBuilderPtr Clone() const override {
         //     return BoxBuilderPtr(new BoxBuilder(*this));

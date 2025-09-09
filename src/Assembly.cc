@@ -15,7 +15,8 @@
 
 namespace DLG4::VolumeBuilders {
     Assembly::Assembly(const Assembly &other) :
-        StructureBuilder<Assembly>(other) { // Call base class copy constructor
+        StructureBuilder<Assembly>(other) {
+        // Call base class copy constructor
         set_shared_from_this_enabled(false);
         set_shared_from_this_enabled(true);
     }
@@ -34,7 +35,7 @@ namespace DLG4::VolumeBuilders {
         // ... and viewed through a reduced StructureView interface:
         object->SetName(name);
         auto return_obj = AssemblyPtr(object);
-        return  return_obj;
+        return return_obj;
 
         // This let's us reuse builder methods!
     }
@@ -43,7 +44,6 @@ namespace DLG4::VolumeBuilders {
         this->placement_configs_->children.emplace_back(other);
         return this->shared_from_this();
     }
-
 }
 
 //

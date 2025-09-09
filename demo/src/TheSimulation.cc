@@ -33,9 +33,4 @@ TheSimulation::TheSimulation() {
         }
     };
     theRunManager->SetUserInitialization(new MinimalPhysicsList());
-
 }
-
-//
-
-#include "../include/TheSimulation.hh"

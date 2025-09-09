@@ -37,7 +37,7 @@ Distributed under MIT (Expat) license.
 Related Links:  
 - [The git code repo](https://gitlab.com/douglas_s_leonard/physics_utilities/VolumeBuilders)  
 - [The Doxygen documentation page (if you're not already there)](https://douglas_s_leonard.gitlab.io/physics_utilities/VolumeBuilders/)
-- [Build Instructions](HoToBuild.md)  
+- [Build Instructions](HowToBuild.md)  
 - [Documentation Building Instrucstions](MakeDocsREADME.md)
 
 ## Introduction
@@ -371,10 +371,10 @@ A working example is provided in  demo/src/Geometries/ConstructAssembly.cc and c
     G4double some_reference;
 
     auto cylinder = CreatePolyhedraBuilder("part", 3)
-            //clang-format off
+            //@formatter:off
             ->AddPlane(p.IR = 40       , p.OR = 50 , p.z = 0 )
             ->AddPlane(p.IR            , p.OR                   , p.z -= 100 );
-    //clang-format on
+    //@formatter:on
 
     auto assembly = CreateAssembly("example_assembly");
     auto temp = cylinder;
@@ -394,7 +394,7 @@ A working example is provided in  demo/src/Geometries/ConstructAssembly.cc and c
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement()
             // but we can clone only the Final solid, and rebuild LV with new color:
-            ->ForkLogicalVolume("blue")
+            ->ForkForLogicalVolume("blue")
             ->SetColor(0, 0, 1)
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement();
@@ -410,9 +410,9 @@ All commands that work to manipulate logical volumes work on assemblies, includi
 
 ## Forking builders (ex: Multiple logical volumes from one solid)
 
-As stated, builders can only build a product once, but the buidler can be forked with a method such as  ForkLogicalVolume("newname")->SetMateria(...)->....  These copy the builder with build products built up to one step before the the product to be forked.  They also rename the builder so that new products derived from those get corresponding unique derived names, separate from those made with the original builder.  So
+As stated, builders can only build a product once, but the buidler can be forked with a method such as  ForkForLogicalVolume("newname")->SetMateria(...)->....  These copy the builder with build products built up to one step before the the product to be forked.  They also rename the builder so that new products derived from those get corresponding unique derived names, separate from those made with the original builder.  So
 ```
-auto builder = CreateCenteredBoxBuilder("name",1.,1.,1)->...->MakePlacement()->ForkLogicalVolume("newname")->MakeLogicalVolume(); 
+auto builder = CreateCenteredBoxBuilder("name",1.,1.,1)->...->MakePlacement()->ForkForLogicalVolume("newname")->MakeLogicalVolume(); 
 ```
 Will result in one Solid named "name" and two logicalVolumes based on it named "name_L" and "newname_L"  (we also already made a placement named_P). For now, uniqueness is only enforced on physical volume (Placement) name/copy_no combinations, via a global name registry.
 

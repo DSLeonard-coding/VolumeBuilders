@@ -21,10 +21,9 @@ void DetectorConstruction::ConstructBoxExample() {
         return;
     }
     firstcall = false;
-    //clang-format on
+    //@formatter:on
 
     DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
-    G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
     BuilderViewList builder_list;
     // a small box to mark the world center
     auto box_part = CreateZDeltaBoxBuilder(

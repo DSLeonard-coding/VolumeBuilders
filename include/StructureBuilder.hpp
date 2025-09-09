@@ -1,3 +1,5 @@
+#ifndef DLG4_STRUCTUREBUILDER_HPP
+#define DLG4_STRUCTUREBUILDER_HPP
 /**
 * @file
 * Created by @author Douglas S. Leonard on @date 6/29/25.  All rights Reserved
@@ -27,14 +29,15 @@ namespace DLG4::VolumeBuilders {
     // }
 
     template <typename U>
-    BASE::StructureBuilder(const StructureBuilder &other): builder_configs_(other.builder_configs_),
-                                                           boolean_configs_(other.boolean_configs_),
-                                                           lv_configs_(other.lv_configs_),
-                                                           placement_configs_(
-                                                               other.placement_configs_) {
+    BASE::StructureBuilder(const StructureBuilder &other) :
+        builder_configs_(other.builder_configs_),
+        boolean_configs_(other.boolean_configs_),
+        lv_configs_(other.lv_configs_),
+        placement_configs_(
+            other.placement_configs_) {
         // avoid masked bugs from stale view:
-        builder_configs_->builder_view=nullptr;
-        builder_configs_->istructure_ptr=nullptr;
+        builder_configs_->builder_view = nullptr;
+        builder_configs_->istructure_ptr = nullptr;
     }
 
 
@@ -256,6 +259,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::SetCopyNo(G4int pCopyNo) {
+        //TODO FIX THIS
         std::cout << "fixme" << std::endl;
         return this->shared_from_this();
     }
@@ -318,6 +322,7 @@ namespace DLG4::VolumeBuilders {
 
     template <typename U>
     DERIVED BASE::ForkForPlacement(
+        // TODO review what do with copy_no
         std::optional<int> copy_no, const G4String &name_override) {
         // Polymorphic clone through builder view method.
         auto c1 = this->builder_configs_->builder_view->ForkForPlacement();
@@ -327,27 +332,31 @@ namespace DLG4::VolumeBuilders {
             // assembly
             copy->placement_configs_->children.clear();
             for (auto &child : placement_configs_->children) {
-                auto builderview_clone = child->builder_configs_->builder_view->ForkForPlacement(std::nullopt, "",true);
-                auto clone_istructure_view =builderview_clone->builder_configs_->istructure_ptr->ToStructureView();
-                copy->placement_configs_->children.emplace_back( clone_istructure_view );
+                auto builderview_clone = child->builder_configs_->builder_view->ForkForPlacement(
+                    std::nullopt, "", true);
+                auto clone_istructure_view = builderview_clone->builder_configs_->istructure_ptr->
+                                                                ToStructureView();
+                copy->placement_configs_->children.emplace_back(clone_istructure_view);
             }
         }
         return DERIVED(copy);
     }
 
     template <typename U>
-    DERIVED BASE::ForkLogicalVolume(const G4String &new_name) {
+    DERIVED BASE::ForkForLogicalVolume(const G4String &new_name) {
         // Polymorphic clone through builder view method.
-        auto c1 = this->builder_configs_->builder_view->ForkLogicalVolume(new_name);
+        auto c1 = this->builder_configs_->builder_view->ForkForLogicalVolume(new_name);
         auto c2 = c1->builder_configs_->istructure_ptr;
         auto copy = i_dynamic_pointer_cast<U>(c2);
         if (!placement_configs_->is_builder) {
             // assembly
             copy->placement_configs_->children.clear();
             for (auto &child : placement_configs_->children) {
-                auto builderview_clone = child->builder_configs_->builder_view->ForkLogicalVolume(new_name);
-                auto clone_istructure_view =builderview_clone->builder_configs_->istructure_ptr->ToStructureView();
-                copy->placement_configs_->children.emplace_back( clone_istructure_view );
+                auto builderview_clone = child->builder_configs_->builder_view->ForkForLogicalVolume(
+                    new_name);
+                auto clone_istructure_view = builderview_clone->builder_configs_->istructure_ptr->
+                                                                ToStructureView();
+                copy->placement_configs_->children.emplace_back(clone_istructure_view);
             }
         }
         return DERIVED(copy);
@@ -409,7 +418,7 @@ namespace DLG4::VolumeBuilders {
         // calls the BuilderView copy/convert ctor::
         // presently the i_shared converter only works with l-value.
         std::shared_ptr<U> builder_std_ptr =
-                std::const_pointer_cast<U>(this->shared_from_this());
+            std::const_pointer_cast<U>(this->shared_from_this());
         auto x = DerivedPtr(builder_std_ptr);
         return BuilderView(x);
     }
@@ -419,7 +428,7 @@ namespace DLG4::VolumeBuilders {
     SharedPtr<IStructureBuilder> BASE::clone_impl() const {
         // consider moving this to Assembly derived class since nothing else uses the base implementation.
         const U &derived_ref = static_cast<const U &>(*this); // downcast
-        auto retval = new U(derived_ref);// copy
+        auto retval = new U(derived_ref);                     // copy
         auto shared_ptr = i_shared_ptr<U>(retval);
         BuilderView builder_view = shared_ptr->ToBuilderView();
         builder_view->SetName(this->GetBuilderName());
@@ -429,9 +438,14 @@ namespace DLG4::VolumeBuilders {
         return shared_mutable_this(retval); // wrap and return.
     }
 
+    template <typename U>
+    G4String BASE::GetLogicVolName() const {
+        return this->builder_configs_->builder_view->GetLogicVolName();
+    }
 
 #undef BASE
 #undef DERIVED
 }
 
 //reveiw explict name parameter,  copy algorithm, name propogation...
+#endif

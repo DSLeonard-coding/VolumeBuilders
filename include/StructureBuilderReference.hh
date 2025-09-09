@@ -38,7 +38,7 @@ namespace DLG4::VolumeBuilders {
      * @headerfile StructureBuilder.hh
      * @see VolumeBuilder for inherited methods.
      * */
-    class StructureBuilderReference: public StructureBuilder<StructureBuilderReference> {
+    class StructureBuilderReference final: public StructureBuilder<StructureBuilderReference> {
         template <typename T>
         friend class VolumeBuilder;
         template <typename T>
@@ -52,14 +52,15 @@ namespace DLG4::VolumeBuilders {
 
         template <typename T>
         StructureBuilderReference(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
-                std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
-                    int> = 0 ) : StructureBuilder<StructureBuilderReference>(other, SET_LINK) {
+            std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
+                int>  = 0) : StructureBuilder<StructureBuilderReference>(other, SET_LINK) {
         }
 
-        G4VSolid* SolidConstructor(const G4String &name) override {
-            throw std::runtime_error("Error in StructureBuilderReference::SolidConstructor(const G4String &name) "
-                                     + this->builder_configs_->name + " \n" +
-                                     "SolidConstructor(const G4String &name) is not implemented.");
+        G4VSolid *SolidConstructor(const G4String &name) override {
+            throw std::runtime_error(
+                "Error in StructureBuilderReference::SolidConstructor(const G4String &name) "
+                + this->builder_configs_->name + " \n" +
+                "SolidConstructor(const G4String &name) is not implemented.");
         }
 
         StructureBuilderReference(const StructureBuilderReference &other) = default;

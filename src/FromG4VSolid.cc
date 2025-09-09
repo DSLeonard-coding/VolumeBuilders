@@ -30,15 +30,14 @@ namespace DLG4::VolumeBuilders {
     }
 
 
-
     //Private default copy ctor.
     //This is used by clone methods of concrete classes
     FromG4VSolid::FromG4VSolid(const FromG4VSolid &other) :
-        VolumeBuilder<FromG4VSolid>(other){ // Call base class copy constructor
+        VolumeBuilder<FromG4VSolid>(other) {
+        // Call base class copy constructor
         set_shared_from_this_enabled(false);
         SetName(other.GetBuilderName());
         solid_ptr_.Link(other.solid_ptr_);
         set_shared_from_this_enabled(true);
     }
-
 }

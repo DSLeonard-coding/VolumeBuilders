@@ -17,7 +17,7 @@
 namespace DLG4::VolumeBuilders {
     template <typename T>
     class VolumeBuilder;
-//    class StructureBuilder;
+    //    class StructureBuilder;
 
     /**
      * @brief Assembly of strucures, ie builders and/or other assemblies
@@ -43,7 +43,7 @@ namespace DLG4::VolumeBuilders {
      * @see StructureBuilder for inherited methods.
      * @ingroup Builders
      * */
-    class Assembly: public StructureBuilder<Assembly> {
+    class Assembly final: public StructureBuilder<Assembly> {
         template <typename T>
         friend class VolumeBuilder;
         template <typename T>
@@ -55,20 +55,20 @@ namespace DLG4::VolumeBuilders {
     public:
         AssemblyPtr AddStructure(const StructureView &other);
 
-
     private:
         //ctor used by factory.  Will construct an assembly from a builder actually.
         template <typename T>
         Assembly(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
-        std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
-            int> = 0 ) : StructureBuilder<Assembly>(other, SET_LINK) {
+            std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
+                int>  = 0) : StructureBuilder<Assembly>(other, SET_LINK) {
         }
 
         [[noreturn]]
-        G4VSolid* SolidConstructor(const G4String &name) override {
-            throw std::runtime_error("Error in StructureBuilderReference::SolidConstructor(const G4String &name) "
-                                     + this->builder_configs_->name + " \n" +
-                                     "SolidConstructor(const G4String &name) is not implemented.");
+        G4VSolid *SolidConstructor(const G4String &name) override {
+            throw std::runtime_error(
+                "Error in StructureBuilderReference::SolidConstructor(const G4String &name) "
+                + this->builder_configs_->name + " \n" +
+                "SolidConstructor(const G4String &name) is not implemented.");
         }
 
         template <typename T>

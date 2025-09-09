@@ -12,22 +12,21 @@ class G4UIcmdWithAString;
 class G4UIcmdWith3VectorAndUnit;
 class DetectorConstruction;
 
-class DetectorMessenger: public G4UImessenger
-{
-    public:
-        DetectorMessenger(DetectorConstruction *Detector);
-        ~DetectorMessenger() override;
+class DetectorMessenger final: public G4UImessenger {
+public:
+    DetectorMessenger(DetectorConstruction *Detector);
+    ~DetectorMessenger() override;
 
-        void SetNewValue(G4UIcommand *command, G4String newValues) override;
-        G4String GetCurrentValue(G4UIcommand *command) override;
+    void SetNewValue(G4UIcommand *command, G4String newValues) override;
+    G4String GetCurrentValue(G4UIcommand *command) override;
 
-    private:
-        DetectorConstruction *Detector;
+private:
+    DetectorConstruction *Detector;
 
-        G4UIcommand *DetGeometrySelectCmd;
-        G4UIcommand *DetGeometryOptCmd;
+    G4UIcommand *DetGeometrySelectCmd;
+    G4UIcommand *DetGeometryOptCmd;
 
-        class DetectorMessenger *myMessenger{};
+    DetectorMessenger *myMessenger{};
 };
 
 #endif

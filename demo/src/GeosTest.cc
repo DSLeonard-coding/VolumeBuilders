@@ -1,4 +1,4 @@
-/**@file sim.cc
+/**@file GeosTest.cc
   Simulation main program (sim.cc)
  This version is a complete rewrite by D.S. Leonard 2021.
 
@@ -42,19 +42,32 @@ inline void read_init_vis_mac(G4UImanager *theUI) {
 
 
 int main(int argc, char **argv) {
-// DL adds this straight from git now so we can know the exact commit:
-    G4cout << "This is VolumeBuilder Demo git version string: " << STRINGIZE(GIT_DESCRIBE) << G4endl;
-    if ((argc == 1)) {
+    // DL adds this straight from git now so we can know the exact commit:
+    G4cout << "This is VolumeBuilder Demo git version string: " << STRINGIZE(GIT_DESCRIBE) <<
+        G4endl;
+    if (argc == 1) {
         G4cout << G4endl;
         G4cout << "    Usage:" << G4endl;
-        G4cout << "    " << argv[0] << "                                        : Show usage." << G4endl;
-        G4cout << "    " << argv[0] << " term  [file1.mac] [file2.mac] ...      : Run with terminal UI. Optionally execute macro files." << G4endl;
-        G4cout << "    " << argv[0] << " gui                                    : Run with GUI with prompt for geometry selection." << G4endl;
-        G4cout << "    " << argv[0] << " gui  file1.mac [file2.mac] ...         : Run with GUI. Optionally execute macro files." << G4endl;
-        G4cout << "    " << argv[0] << " <file1.mac> [file2.mac] ...            : Execute macro file(s) in batch mode"       <<G4endl;
-        G4cout << "    " << argv[0] << " geos                                   : List registered geometries. " << G4endl;
+        G4cout << "    " << argv[0] << "                                        : Show usage." <<
+            G4endl;
+        G4cout << "    " << argv[0] <<
+            " term  [file1.mac] [file2.mac] ...      : Run with terminal UI. Optionally execute macro files."
+            << G4endl;
+        G4cout << "    " << argv[0] <<
+            " gui                                    : Run with GUI with prompt for geometry selection."
+            << G4endl;
+        G4cout << "    " << argv[0] <<
+            " gui  file1.mac [file2.mac] ...         : Run with GUI. Optionally execute macro files."
+            << G4endl;
+        G4cout << "    " << argv[0] <<
+            " <file1.mac> [file2.mac] ...            : Execute macro file(s) in batch mode" <<
+            G4endl;
+        G4cout << "    " << argv[0] <<
+            " geos                                   : List registered geometries. " << G4endl;
         G4cout << G4endl;
-        G4cout << "    The term and gui options both load init_vis.mac 1st, if available, if and only if files are specified"       <<G4endl;
+        G4cout <<
+            "    The term and gui options both load init_vis.mac 1st, if available, if and only if files are specified"
+            << G4endl;
         G4cout << G4endl;
         return 0;
     }
@@ -73,11 +86,11 @@ int main(int argc, char **argv) {
     G4UImanager *theUI = G4UImanager::GetUIpointer();
 
     // interactive or batch according to command-line args
-    bool terminal=false;
-    bool gui=false;
-    bool readmacs=false;
-    int  firstmac=2;
-    G4UIsession *theSession;
+    bool terminal = false;
+    bool gui = false;
+    bool readmacs = false;
+    int firstmac = 2;
+    G4UIsession *theSession = nullptr;
     std::unique_ptr<G4UIterminal> theTerminal;
     std::unique_ptr<G4UIExecutive> theGui;
     if ((strcmp(argv[1], "term") == 0)) {
@@ -86,20 +99,20 @@ int main(int argc, char **argv) {
         theSession = theTerminal.get();
         read_init_vis_mac(theUI);
         terminal = true;
-        if (argc >2) {
+        if (argc > 2) {
             readmacs = true;
         }
     } else if (strcmp(argv[1], "gui") == 0) {
         // Gui requested, args may follow:
         theGui.reset(new G4UIExecutive(argc, argv));
         read_init_vis_mac(theUI);
-        theSession=theGui->GetSession();
+        theSession = theGui->GetSession();
         gui = true;
-//        if ((argc > 2) && (theGui->IsGUI())) {
-          if (argc > 2) {
+        //        if ((argc > 2) && (theGui->IsGUI())) {
+        if (argc > 2) {
             readmacs = true;
         }
-    } else if (strcmp(argv[1], "geos") == 0 ) {
+    } else if (strcmp(argv[1], "geos") == 0) {
         // list geometries
         the_sim.ListGeometries();
         return 0;
@@ -118,16 +131,21 @@ int main(int argc, char **argv) {
     }
     if (gui) {
         // Get the value of the XDG_SESSION_TYPE environment variable
-        const char* session_type = std::getenv("XDG_SESSION_TYPE");
-
-        if (session_type != nullptr) {
-            std::string session_type_str(session_type);
-            if (session_type_str == "wayland") {
-                std::cerr << "ERROR: You are currently running a Wayland graphical session." << std::endl;
-                std::cerr << "       Geant4's Qt visualization (OGLIQt/OGLSQt) may experience graphical corruption or issues on Wayland." << std::endl;
-                std::cerr << "       Please log out and select an 'Xorg' or 'X11' session at the login screen \n "
-                "                             (e.g., 'Ubuntu on Xorg' in settings wheel on ubuntu after selecting a user)." << std::endl;
-                return 1;
+        {
+            const char *session_type = std::getenv("XDG_SESSION_TYPE");
+            if (session_type != nullptr) {
+                if (std::string session_type_str(session_type); session_type_str == "wayland") {
+                    std::cerr << "ERROR: You are currently running a Wayland graphical session." <<
+                        std::endl;
+                    std::cerr <<
+                        "       Geant4's Qt visualization (OGLIQt/OGLSQt) may experience graphical corruption or issues on Wayland."
+                        << std::endl;
+                    std::cerr <<
+                        "       Please log out and select an 'Xorg' or 'X11' session at the login screen \n "
+                        "                             (e.g., 'Ubuntu on Xorg' in settings wheel on ubuntu after selecting a user)."
+                        << std::endl;
+                    return 1;
+                }
             }
         }
         if (!readmacs) {
@@ -143,14 +161,13 @@ int main(int argc, char **argv) {
             theUI->ApplyCommand("/vis/ASCIITree/verbose 16");
             theUI->ApplyCommand("/vis/drawTree world");
         }
-
     }
-    if (gui||terminal) {
-        theSession->SessionStart();
+    if (gui || terminal) {
+        if (theSession) {
+            theSession->SessionStart();
+        } else {
+            throw std::logic_error("This is a bug in GeoTest.cc\n");
+        }
     }
     return 0;
 }
-
-
-
-

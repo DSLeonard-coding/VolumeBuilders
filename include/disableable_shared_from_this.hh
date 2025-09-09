@@ -17,7 +17,6 @@
 #define DELAYEDENABLESHAREDFROMTHIS_HH
 
 namespace DLG4::Utilities {
-
     /***
  *@class DLG4::Utilities::disableable_shared_from_this
  *@brief  A dis-armable shared_from_this()
@@ -32,10 +31,10 @@ namespace DLG4::Utilities {
 * Warning... you still have the limitation that you cannot CHAIN calls before the the pointer is set.
 */
     template <typename T>
-    class disableable_shared_from_this : public std::enable_shared_from_this<T> {
+    class disableable_shared_from_this: public std::enable_shared_from_this<T> {
     protected:
         // Default to true for normal shared_from_this() behavior
-        std::atomic<bool> is_enabled_ {true};
+        std::atomic<bool> is_enabled_{true};
 
         disableable_shared_from_this() = default;
         virtual ~disableable_shared_from_this() = default;
@@ -61,9 +60,7 @@ namespace DLG4::Utilities {
         void set_shared_from_this_enabled(bool enabled) {
             is_enabled_ = enabled;
         }
-
     };
-
 }
 
 #endif //ARMSHAREDFROMTHIS_HH

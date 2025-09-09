@@ -42,7 +42,7 @@ void DetectorConstruction::ConstructHexPart() {
                       ->SetColor(0.8, 0.45, 0.45, 1)
                       ->ForceSolid(true)
                       ->SetDefaultUnit(CLHEP::mm)
-            //clang-format off
+            //@formatter:off
               ->AddPlane(p.IR = 0,  p.OR = 110.0 / 2.0, p.z = 0)
               ->AddPlane(p.IR,      p.OR,               p.z += sample_thickness_mm);
 
@@ -51,13 +51,13 @@ void DetectorConstruction::ConstructHexPart() {
     auto filler_id = CreatePolyconeBuilder("filler_cu_id") // will be unioned to hex_filler.
                 ->AddPlane(p.IR = 0,    p.OR = 85 / 2.0,    p.z = -0.1)
                 ->AddPlane(p.IR,        p.OR,               p.z += sample_thickness_mm+0.1);
-    //clang-format on
+    //@formatter:on
 
     hex_filler->AddSubtraction(filler_id)
               ->SetBooleanName("hex_insert");
 
 
     hex_filler
-                     ->SetMother(world_phys)
-                     ->PlaceAndFork();
+        ->SetMother(world_phys)
+        ->PlaceAndFork();
 }

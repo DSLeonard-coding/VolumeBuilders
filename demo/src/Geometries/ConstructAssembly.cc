@@ -20,7 +20,7 @@ void DetectorConstruction::ConstructAssembly() {
         return;
     }
     firstcall = false;
-    //clang-format on
+    //@formatter:on
 
     DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
@@ -29,19 +29,17 @@ void DetectorConstruction::ConstructAssembly() {
     G4double some_reference;
 
     auto cylinder = CreatePolyhedraBuilder("part", 3)
-            //clang-format off
+            //@formatter:off
             ->AddPlane(p.IR = 40       , p.OR = 50 , p.z = 0 )
             ->AddPlane(p.IR            , p.OR                   , p.z -= 100 );
-    //clang-format on
+    //@formatter:on
 
     auto assembly = CreateAssembly("example_assembly");
     auto temp = cylinder;
     for (int i = 0; i < 3; i++) {
-        for (int i = 0; i < 3; i++) {
-            temp->ForkAndReset("part_" + std::to_string(i))
-                    ->SetPhysOffset({0, 250. * (i), 0.})
-                    ->AddTo(assembly);
-        }
+        temp->ForkAndReset("part_" + std::to_string(i))
+            ->SetPhysOffset({0, 250. * (i), 0.})
+            ->AddTo(assembly);
     }
 
     assembly->SetMother(world_phys)
@@ -54,9 +52,8 @@ void DetectorConstruction::ConstructAssembly() {
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement()
             // but we can clone only the Final solid, and rebuild LV with new color:
-            ->ForkLogicalVolume("blue")
+            ->ForkForLogicalVolume("blue")
             ->SetColor(0, 0, 1)
             ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
             ->MakePlacement();
 }
-

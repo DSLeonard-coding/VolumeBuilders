@@ -42,21 +42,23 @@ namespace DLG4::VolumeBuilders {
      *  Overloads make this not strictly needed.
      *  */
     struct RZPlane {
-        G4double unit;          // unit
-        G4double IR;           // inner radius
-        G4double OR;           // outer radius
+        G4double unit; // unit
+        G4double IR;   // inner radius
+        G4double OR;   // outer radius
         G4double z;
         RZPlane() = default;
+
         RZPlane(G4double u, G4double ir, G4double or_, G4double z_)
-     : unit(u), IR(ir), OR(or_), z(z_) {}
+            : unit(u), IR(ir), OR(or_), z(z_) {
+        }
     };
 
     /**
      * RZPlane for use with global or preset units.
      * */
     struct RZPlaneUnitless {
-        G4double IR{0};           // inner radius
-        G4double OR{0};           // outer radius
+        G4double IR{0}; // inner radius
+        G4double OR{0}; // outer radius
         G4double z{0};
     };
 
@@ -73,15 +75,15 @@ namespace DLG4::VolumeBuilders {
      * @addtogroup Factories  Builder/Structure Factories
      * @details Factories for creating VolumeBuilder and StructureBuilder objects.
      *  @{ */
-     /**
-     * @brief Create a builder for associated IR,OR,Z defined object.
-     * @param name  Base name to derive geometry object names from.
-     * @param phi_start  Optional Start angle
-     * @param phi_tot  Optional Total degrees
-     * @param sides Optional number of sides, for CreatePoyhedra only, (can set it later, dflt = 4 )
-     * @return The builder.  Set configurations and then call .MakeSolid() and .MakeLogicalVolume() on it.
-     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
-     */
+    /**
+    * @brief Create a builder for associated IR,OR,Z defined object.
+    * @param name  Base name to derive geometry object names from.
+    * @param phi_start  Optional Start angle
+    * @param phi_tot  Optional Total degrees
+    * @param sides Optional number of sides, for CreatePoyhedra only, (can set it later, dflt = 4 )
+    * @return The builder.  Set configurations and then call .MakeSolid() and .MakeLogicalVolume() on it.
+    *     See VolumeBuilder for inherited public methods including Union/Subtraction.
+    */
     RZBuilderPtr CreatePolyhedraBuilder(
         const G4String &name, int sides, G4double phi_start = 0., G4double phi_tot = 360);
 
@@ -127,23 +129,23 @@ namespace DLG4::VolumeBuilders {
      * @headerfile RZBuilder.hh
      * @see VolumeBuilder<U> for inherited methods.
      */
-    class RZBuilder: public VolumeBuilder<RZBuilder> {
-    /** @} */
+    class RZBuilder final: public VolumeBuilder<RZBuilder> {
+        /** @} */
     public:
         friend class VolumeBuilderReference;
         friend class VolumeBuilder<RZBuilder>; // shouldn't be needed, maybe isn't now.
         template <typename T>
-        friend class i_shared_ptr;             // needed in principle, but maybe not for this class.
+        friend class i_shared_ptr; // needed in principle, but maybe not for this class.
 
         // Friend all the factories.  Keeping them external is easier for users, but more boilerplate.
         friend RZBuilderPtr CreatePolyhedraBuilder(
-            const G4String &name, int sides, G4double phi_start, G4double phi_tot );
+            const G4String &name, int sides, G4double phi_start, G4double phi_tot);
         friend RZBuilderPtr CreatePolyconeBuilder(const G4String &name, G4double phi_start,
-            G4double phi_tot );
-        friend RZBuilderPtr CreateCylinderBuilder(G4double unit, const G4String &name ,
-            G4double endz, G4double height, G4double OR, G4double IR );
+            G4double phi_tot);
+        friend RZBuilderPtr CreateCylinderBuilder(G4double unit, const G4String &name,
+            G4double endz, G4double height, G4double OR, G4double IR);
         friend RZBuilderPtr CreateCylinderBuilder(const G4String &name,
-            G4double endz, G4double height, G4double OR, G4double IR );
+            G4double endz, G4double height, G4double OR, G4double IR);
 
         /** @defgroup RZBuilder RZbuilder Configurations
          * Solid Configurations for RZBuiler
@@ -184,20 +186,20 @@ namespace DLG4::VolumeBuilders {
          * Adds multiple RZ planes each defining one unit,IR,OR,Z set in the volume design
          * @param planes {{unit,IR, OR, Z},{unit,IR,OR,Z},...}, unit ex: CLHEP::mm
          */
-        RZBuilderPtr AddPlanes(const std::vector<RZPlane>& planes);
+        RZBuilderPtr AddPlanes(const std::vector<RZPlane> &planes);
         /**
          * Adds multiple planes each defining one IR,OR,Z triplet in the volume design
          * Uses preset unit from default (mm) or SetUnit(unit);
          * @param planes {{IR, OR, Z},{IR,OR,Z},...}
          */
-        RZBuilderPtr AddPlanes(const std::vector<RZPlaneUnitless>& planes);
+        RZBuilderPtr AddPlanes(const std::vector<RZPlaneUnitless> &planes);
         /**
          * Adds multiple planes each defining one IR,OR,Z triplet in the volume design
          * Uses preset unit from default (mm) or SetUnit(unit);
          * @param unit The unit to use for THESE planes only (ex: CLHEP::mm)
          * @param planes {{IR, OR, Z},{IR,OR,Z},...}
          */
-        RZBuilderPtr AddPlanes(G4double unit, const std::vector<RZPlaneUnitless>& planes);
+        RZBuilderPtr AddPlanes(G4double unit, const std::vector<RZPlaneUnitless> &planes);
 
         /**
          * Flip Solid Configuration.
@@ -223,7 +225,6 @@ namespace DLG4::VolumeBuilders {
          * You can skin this cat multiple other ways, but this provides options.
          *
          *
-         * @param new_name
          * @return The same builder (allows chaining)
          */
         RZBuilderPtr ReflectZSolidConfig();
@@ -240,20 +241,17 @@ namespace DLG4::VolumeBuilders {
          * \endcode
          * Done.
          * @see ReflectZSolidConfig() for a detailed example of a similar method.
-         * @param new_name Name for new copy.
         */
         RZBuilderPtr FillSolidConfig();
-
 
 
         /** @}*/
 
     protected:
         ///The polymorphic Solid constructor
-        G4VSolid* SolidConstructor(const G4String &name) override {
+        G4VSolid *SolidConstructor(const G4String &name) override {
             return (this->*MakeSolidFunctionPtr_)(name);
         }
-
 
     private:
         explicit RZBuilder(const G4String &name, G4double init_phi_start = 0.,
@@ -261,9 +259,9 @@ namespace DLG4::VolumeBuilders {
 
         //These will become public as MakeSolid() in derived classes.
         //RZBuilder(const RZBuilder &other, const G4String &new_name);
-        G4VSolid* MakePolycone(const G4String &name);
+        G4VSolid *MakePolycone(const G4String &name);
 
-        G4VSolid* MakePolyhedra(const G4String &name);
+        G4VSolid *MakePolyhedra(const G4String &name);
 
         //There is no MakeCylinder() because it's a special case of Polycone'
 
@@ -276,7 +274,7 @@ namespace DLG4::VolumeBuilders {
         G4double phi_start_deg_{0};
         G4double phi_tot_deg{360};
 
-        G4VSolid* (RZBuilder::*MakeSolidFunctionPtr_)(const G4String &name) = nullptr;
+        G4VSolid * (RZBuilder::*MakeSolidFunctionPtr_)(const G4String &name) = nullptr;
 
         // plane data:
         int num_planes_{0};
@@ -285,7 +283,7 @@ namespace DLG4::VolumeBuilders {
         std::vector<G4double> OR_;
 
         RZBuilder() = default;
-        RZBuilder(RZBuilder &&) noexcept = default;
+        RZBuilder(RZBuilder &&) noexcept = delete;
 
         // RZBuilderPtr Clone() const override {
         //     return RZBuilderPtr(new RZBuilder(*this));
