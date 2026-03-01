@@ -19,7 +19,9 @@
 #include "VolumeBuilder.hh"
 #include "ISolidBuilder.hh"
 
-namespace DLG4::VolumeBuilders {
+namespace VB=DLG4::VolumeBuilders;
+using namespace VB;
+namespace DLG4::VolumeBuilders::_internals_ {
     template <typename T>
     class VolumeBuilder;
     class RZBuilder;
@@ -39,7 +41,7 @@ namespace DLG4::VolumeBuilders {
     class VolumeBuilderReference final: public VolumeBuilder<VolumeBuilderReference> {
         template <typename T>
         friend class VolumeBuilder;
-        friend AssemblyPtr CreateAssembly(G4String name);
+        friend AssemblyPtr VB::CreateAssembly(G4String name);
         template <typename T>
         friend class StructureBuilder;
 

@@ -35,8 +35,10 @@
 #include <memory>
 #include <stdexcept>
 //#include "StructureBuilder.hh"
+#include <BuilderFactories.hh>
 
-namespace DLG4::VolumeBuilders {
+
+namespace DLG4::VolumeBuilders::_internals_ {
     /**
      *     *@class StructureBuilder
      * @brief A type-erased (data shared view) view of a builder or
@@ -64,7 +66,7 @@ namespace DLG4::VolumeBuilders {
         friend class VolumeBuilder;
         friend class StructureBuilderReference;
         friend class Assembly;
-        friend AssemblyPtr CreateAssembly(G4String name);
+        friend AssemblyPtr VB::CreateAssembly(G4String name);
         template <typename>
         friend class StructureBuilder;
         //allow i_shared_ptr access to our converting ctors

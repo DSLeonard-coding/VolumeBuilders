@@ -14,7 +14,7 @@
 #include "StructureBuilderReference.hh"
 #include "StructureBuilder.hpp"
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
     G4VSolid *VolumeBuilderReference::SolidConstructor(const G4String &name) {
         if (!this->builder_configs_->istructure_ptr) {
             throw std::runtime_error(

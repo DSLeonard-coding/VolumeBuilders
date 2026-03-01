@@ -14,7 +14,7 @@
 #include <VolumeBuilderTypes.hh>
 
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
     template <typename T>
     class VolumeBuilder;
     //    class StructureBuilder;

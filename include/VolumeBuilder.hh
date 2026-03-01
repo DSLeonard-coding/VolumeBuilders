@@ -36,13 +36,15 @@
 #include <mutex>
 #include <memory>
 #include <unordered_map>
+#include "Assembly.hh"
+
 //#include "VolumeBuilderReference.hh"
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
+
     class VolumeBuilderReference;
     template <typename U>
     class VolumeBuilder;
-
 
     /** @brief VolumeBuilder: Common functionality for volume builder classes.
     * @details Includes material and attribute setting, and union/subtraction methods.
@@ -71,8 +73,8 @@ namespace DLG4::VolumeBuilders {
         template <typename>
         friend class StructureBuilder;
         friend class StructureBuilderReference;
-        friend FromG4VSolidPtr CreateFromG4VSolid(G4VSolid *solid);
-        friend AssemblyPtr CreateAssembly(G4String names);
+        friend FromG4VSolidPtr VB::CreateFromG4VSolid(G4VSolid *solid);
+        friend AssemblyPtr VB::CreateAssembly(G4String names);
         friend class RZBuilder;
         friend class BoxBuilder;
         friend class FromG4VSolid;
