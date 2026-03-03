@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="VBDemo gui &lt; debug/input.txt" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="gui" REDIRECT_INPUT="true" REDIRECT_INPUT_PATH="input.txt" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$ProjectFileDir$/demo/debug" PASS_PARENT_ENVS_2="true" ENVFILE="${HOME}/vb_user_setup_general.sh" PROJECT_NAME="VolumeBuilders" TARGET_NAME="VBDemo" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="VolumeBuilders" RUN_TARGET_NAME="VBDemo">
+  <configuration default="false" name="VBDemo gui &lt; debug/input.txt" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="gui" REDIRECT_INPUT="true" REDIRECT_INPUT_PATH="input.txt" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$ProjectFileDir$/demo/debug" PASS_PARENT_ENVS_2="true" ENVFILE="${HOME}/vb_user_setup.sh" PROJECT_NAME="VolumeBuilders" TARGET_NAME="VBDemo" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="VolumeBuilders" RUN_TARGET_NAME="VBDemo">
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
     </method>

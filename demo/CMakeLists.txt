@@ -1,22 +1,46 @@
+#Modular cern CMake, D.S. Leonard 2026 MIT
+#See DSLeonard_cmake subtree repo on DSLeonard's gitlab.
 cmake_minimum_required(VERSION 3.15)
 message(STATUS "=== VBDemo CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 message(STATUS "=== VBDemo CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
 message(STATUS "=== VBDemo CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, e.g. -DCMAKE_BUILD_TYPE= Debug or Release or maybe FORCE")
+set(SETUP_FILE "vb_user_setup.sh")
+set(SETUP_SCRIPT "$ENV{HOME}/${SETUP_FILE}")
+set(DSL_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/DSL/")
+include("${DSL_CMAKE_PATH}/cern/Geant4_Target.cmake")
+include("${DSL_CMAKE_PATH}/cern/ROOT_Target.cmake")
+include("${DSL_CMAKE_PATH}/utils/Setup_Paths.cmake")
+
+# Set a default build type if none is specified (e.g., when building from command line)
+# This is important for consistent behavior.
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(STATUS "No build type specified, defaulting to Release.")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
+    # Set the property for the cache entry
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo")
 endif()
 message(STATUS "CMAKE_BUILD_TYPE is: ${CMAKE_BUILD_TYPE}")
 
-project(Demo CXX)
+# For C++ flags:
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g" CACHE STRING "Flags used by the C++ compiler for profiling builds." FORCE)
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g" CACHE STRING "Flags used by the C++ compiler for profiling builds." FORCE)
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG" CACHE STRING "Flags used by the C++ compiler for release builds." FORCE)
+
+# For C flags
+#set(CMAKE_C_FLAGS_RELEASE "-O3 " CACHE STRING "Flags used by the C compiler for release builds." FORCE)
+#...
+set(MAIN_EXE "VBDemo")
+project(${MAIN_EXE} CXX)
+
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(OPTIONS -DG4VIS_USE )
 
 # --- Directory variables as in Makefile ---
-set(Demo_path ${CMAKE_CURRENT_SOURCE_DIR})
-set(base_path ${Demo_path})
+set(MAIN_EXE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+set(base_path ${MAIN_EXE_PATH})
 #add_subdirectory(../ ../build)
 
 # --- Source files ---
@@ -27,27 +51,25 @@ file(GLOB_RECURSE SRC_FILES1 FOLLOW_SYMLINKS ${base_path}/src/*.cc)
 set(SRC_FILES ${SRC_FILES1})
 #list(FILTER SRC_FILES EXCLUDE REGEX ".*/linked/.*")
 message(STATUS "Found source files: ${SRC_FILES}")
-add_executable(VBDemo ${SRC_FILES})
-set_target_properties(VBDemo PROPERTIES EXCLUDE_FROM_ALL TRUE)
+add_executable(${MAIN_EXE} ${SRC_FILES})
+set_target_properties(${MAIN_EXE} PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
 #install(TARGETS Demo
 #        RUNTIME DESTINATION ${Demo_path}/bin
 #)
 
-# Set environment variables for ROOT and Geant4 paths
-set(GEANT4_PATH "$ENV{GEANT4_PATH}")
-set(ROOTSYS "$ENV{ROOTSYS}")
+
 
 
 # --- Include directories (as in Makefile) ---
-target_include_directories(VBDemo PRIVATE
+target_include_directories(${MAIN_EXE} PRIVATE
         ${base_path}
         ${base_path}/include
         ${base_path}/../include
 )
 
 # --- Compile options common to all builds ---
-target_compile_options(VBDemo PRIVATE
+target_compile_options(${MAIN_EXE} PRIVATE
         -mfpmath=sse
         -fPIC
         ${OPTIONS}
@@ -61,10 +83,12 @@ target_compile_options(VBDemo PRIVATE
         -fno-math-errno
 )
 
-target_compile_options(VBDemo PRIVATE
-        $<$<CONFIG:Debug>:-g -O0>
-        $<$<CONFIG:Release>:-O0 -DNDEBUG>
-)
+#This is done with CMAKE_CXX_FLAGS_<BUILD_TYPE> now:
+#target_compile_options(${MAIN_EXE} PRIVATE
+#        $<$<CONFIG:Debug>:-g -O0>
+#        $<$<CONFIG:Release>:-O0 -DNDEBUG>
+#)
+
 # --- Get git describe ---
 execute_process(
         COMMAND git describe --dirty --always
@@ -72,59 +96,13 @@ execute_process(
         OUTPUT_VARIABLE GIT_DESCRIBE
         OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-target_compile_definitions(VBDemo PRIVATE GIT_DESCRIBE="${GIT_DESCRIBE}")
+target_compile_definitions(${MAIN_EXE} PRIVATE GIT_DESCRIBE="${GIT_DESCRIBE}")
 
 
-# --- Get ROOT and Geant4 cflags and parse them ---
-execute_process(
-        COMMAND ${ROOTSYS}/bin/root-config --cflags
-        OUTPUT_VARIABLE ROOT_CONFIG_CFLAGS_RAW
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-separate_arguments(ROOT_CONFIG_CFLAGS_RAW)
-message(STATUS "ROOT CFLAGS RAW: ${ROOT_CONFIG_CFLAGS_RAW}")
 
-execute_process(
-        COMMAND ${GEANT4_PATH}/bin/geant4-config --cflags
-        OUTPUT_VARIABLE GEANT4_CONFIG_CFLAGS_RAW
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-message(STATUS "GEANT4 CFLAGS RAW: ${GEANT4_CONFIG_CFLAGS_RAW}")
-separate_arguments(GEANT4_CONFIG_CFLAGS_RAW)
-
-# Extract -I and -D flags from ROOT and Geant4 config outputs
-set(CONFIG_INCLUDE_DIRS "")
-set(CONFIG_DEFINITIONS "")
-
-foreach(flag ${ROOT_CONFIG_CFLAGS_RAW} ${GEANT4_CONFIG_CFLAGS_RAW})
-    if(flag MATCHES "^-I(.+)")
-        list(APPEND CONFIG_INCLUDE_DIRS "${CMAKE_MATCH_1}")
-    elseif(flag MATCHES "^-D(.+)")
-        list(APPEND CONFIG_DEFINITIONS "${CMAKE_MATCH_1}")
-    endif()
-endforeach()
 
 # Add extracted include directories and compile definitions
-target_include_directories(VBDemo PRIVATE ${CONFIG_INCLUDE_DIRS})
-target_compile_definitions(VBDemo PRIVATE ${CONFIG_DEFINITIONS})
-
-
-# --- Get ROOT and Geant4 linker flags ---
-execute_process(
-        COMMAND $ENV{ROOTSYS}/bin/root-config --libs
-        OUTPUT_VARIABLE ROOT_CONFIG_LIBS_RAW
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-separate_arguments(ROOT_CONFIG_LIBS_RAW)
-message(STATUS "ROOT LIBS RAW: ${ROOT_CONFIG_LIBS_RAW}")
-
-execute_process(
-        COMMAND $ENV{GEANT4_PATH}/bin/geant4-config --libs
-        OUTPUT_VARIABLE GEANT4_CONFIG_LIBS_RAW
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-separate_arguments(GEANT4_CONFIG_LIBS_RAW)
-message(STATUS "GEANT4 LIBS RAW: ${GEANT4_CONFIG_LIBS_RAW}")
+#target_include_directories(${MAIN_EXE} PRIVATE ${Geant4_INCLUDE_DIRS}  ${ROOT_INCLUDE_DIRS})
 
 
 
@@ -139,10 +117,10 @@ find_package(X11 REQUIRED) # X11 generally brings in Xext, Xmu, SM, ICE, Xt.
 
 
 # --- Link libraries ---
-target_link_libraries(VBDemo PRIVATE
+target_link_libraries(${MAIN_EXE} PRIVATE
         VolumeBuilders
-        ${ROOT_CONFIG_LIBS_RAW}
-        ${GEANT4_CONFIG_LIBS_RAW}
+        ROOT_Target
+        Geant4_Target
         # Link explicit CMake targets for system libraries.
         # This provides the necessary -L and -l flags, and handles transitive deps.
         Qt5::Core
@@ -160,24 +138,41 @@ target_link_libraries(VBDemo PRIVATE
 )
 
 
-# --- Additional linker flags (rpath as in Makefile) ---
-target_link_options(VBDemo PRIVATE
-        -Wl,-rpath,$ENV{ROOTSYS}/lib
-        -Wl,-rpath,$ENV{GEANT4_PATH}/lib
+# --- Probably Obsolete:
+target_link_options(${MAIN_EXE} PRIVATE
+        -Wl,-rpath,${ROOTSYS}/lib
+        -Wl,-rpath,${GEANT4_PATH}/lib
 )
 
 # Custom target for autoincludes script
-add_custom_target(autoincludes
+add_custom_target(${MAIN_EXE}_autoincludes
         COMMAND bash ${base_path}/build-autoincludes
         WORKING_DIRECTORY ${base_path}
         COMMENT "Running build-autoincludes script"
 )
-add_dependencies(VBDemo autoincludes)
+add_dependencies(${MAIN_EXE} ${MAIN_EXE}_autoincludes)
 
 # Set output directory for the executable
-set_target_properties(VBDemo PROPERTIES
+set_target_properties(${MAIN_EXE} PROPERTIES
+        BUILD_WITH_INSTALL_RPATH TRUE
+        INSTALL_RPATH "${ROOTSYS}/lib;${GEANT4_PATH}/lib"
+        INSTALL_RPATH_USE_LINK_PATH TRUE
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+)
+
+get_directory_property(hasParent PARENT_DIRECTORY)
+if (hasParent)
+    # We're being built as part of a larger project
+set_target_properties(${MAIN_EXE} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
+else ()
+    # We're being built standalone
+    set_target_properties(${MAIN_EXE} PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
+    )
+    message(STATUS "Stand-alone ${MAIN_EXE} build")
+endif ()
 
 # Set default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
@@ -185,8 +180,8 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Set RPATH for installation and build tree
-set(CMAKE_INSTALL_RPATH
-        "${ROOTSYS}/lib"
-        "${GEANT4_PATH}/lib"
-)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+#set(CMAKE_INSTALL_RPATH
+#        "${ROOTSYS}/lib"
+#        "${GEANT4_PATH}/lib"
+#)
+#set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
