@@ -5,6 +5,8 @@ message(STATUS "=== VBDemo CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 message(STATUS "=== VBDemo CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
 message(STATUS "=== VBDemo CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
+project(VBDemo CXX)
+
 set(SETUP_FILE "vb_user_setup.sh")
 set(SETUP_SCRIPT "$ENV{HOME}/${SETUP_FILE}")
 set(DSL_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/DSL/")
@@ -30,46 +32,31 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG" CACHE STRING "Flags used by the C++ c
 # For C flags
 #set(CMAKE_C_FLAGS_RELEASE "-O3 " CACHE STRING "Flags used by the C compiler for release builds." FORCE)
 #...
-set(MAIN_EXE "VBDemo")
-project(${MAIN_EXE} CXX)
 
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(OPTIONS -DG4VIS_USE )
 
-# --- Directory variables as in Makefile ---
-set(MAIN_EXE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-set(base_path ${MAIN_EXE_PATH})
-#add_subdirectory(../ ../build)
 
 # --- Source files ---
 file(GLOB_RECURSE SRC_FILES1 FOLLOW_SYMLINKS ${base_path}/src/*.cc)
-#file(GLOB_RECURSE SRC_FILES2 FOLLOW_SYMLINKS ${base_path}/../subtrees/VolumeBuilder/src/*.cc)
-#file(GLOB_RECURSE SRC_FILES2 FOLLOW_SYMLINKS)
-#set(SRC_FILES ${SRC_FILES1} ${SRC_FILES2})
+
 set(SRC_FILES ${SRC_FILES1})
-#list(FILTER SRC_FILES EXCLUDE REGEX ".*/linked/.*")
+
 message(STATUS "Found source files: ${SRC_FILES}")
-add_executable(${MAIN_EXE} ${SRC_FILES})
-set_target_properties(${MAIN_EXE} PROPERTIES EXCLUDE_FROM_ALL TRUE)
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
-#install(TARGETS Demo
-#        RUNTIME DESTINATION ${Demo_path}/bin
-#)
-
-
-
-
-# --- Include directories (as in Makefile) ---
-target_include_directories(${MAIN_EXE} PRIVATE
+# --- Include directories
+target_include_directories(${PROJECT_NAME} PRIVATE
         ${base_path}
         ${base_path}/include
         ${base_path}/../include
 )
 
 # --- Compile options common to all builds ---
-target_compile_options(${MAIN_EXE} PRIVATE
+target_compile_options(${PROJECT_NAME} PRIVATE
         -mfpmath=sse
         -fPIC
         ${OPTIONS}
@@ -84,7 +71,7 @@ target_compile_options(${MAIN_EXE} PRIVATE
 )
 
 #This is done with CMAKE_CXX_FLAGS_<BUILD_TYPE> now:
-#target_compile_options(${MAIN_EXE} PRIVATE
+#target_compile_options(${PROJECT_NAME} PRIVATE
 #        $<$<CONFIG:Debug>:-g -O0>
 #        $<$<CONFIG:Release>:-O0 -DNDEBUG>
 #)
@@ -96,18 +83,15 @@ execute_process(
         OUTPUT_VARIABLE GIT_DESCRIBE
         OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-target_compile_definitions(${MAIN_EXE} PRIVATE GIT_DESCRIBE="${GIT_DESCRIBE}")
+target_compile_definitions(${PROJECT_NAME} PRIVATE GIT_DESCRIBE="${GIT_DESCRIBE}")
 
 
 
-
-# Add extracted include directories and compile definitions
-#target_include_directories(${MAIN_EXE} PRIVATE ${Geant4_INCLUDE_DIRS}  ${ROOT_INCLUDE_DIRS})
 
 
 
 # --- Explicitly find system visualization and GUI libraries ---
-# This is crucial. Even if geant4-config lists -lG4OpenGL,
+# Even if geant4-config lists -lG4OpenGL,
 # libG4OpenGL.so has its own dependencies (like Qt5OpenGL, X11 libs)
 # that CMake needs to be aware of for correct linking, especially transitively.
 find_package(Qt5 COMPONENTS Core Gui Widgets OpenGL REQUIRED)
@@ -117,7 +101,7 @@ find_package(X11 REQUIRED) # X11 generally brings in Xext, Xmu, SM, ICE, Xt.
 
 
 # --- Link libraries ---
-target_link_libraries(${MAIN_EXE} PRIVATE
+target_link_libraries(${PROJECT_NAME} PRIVATE
         VolumeBuilders
         ROOT_Target
         Geant4_Target
@@ -139,21 +123,21 @@ target_link_libraries(${MAIN_EXE} PRIVATE
 
 
 # --- Probably Obsolete:
-target_link_options(${MAIN_EXE} PRIVATE
+target_link_options(${PROJECT_NAME} PRIVATE
         -Wl,-rpath,${ROOTSYS}/lib
         -Wl,-rpath,${GEANT4_PATH}/lib
 )
 
 # Custom target for autoincludes script
-add_custom_target(${MAIN_EXE}_autoincludes
+add_custom_target(${PROJECT_NAME}_autoincludes
         COMMAND bash ${base_path}/build-autoincludes
         WORKING_DIRECTORY ${base_path}
         COMMENT "Running build-autoincludes script"
 )
-add_dependencies(${MAIN_EXE} ${MAIN_EXE}_autoincludes)
+add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_autoincludes)
 
 # Set output directory for the executable
-set_target_properties(${MAIN_EXE} PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
         BUILD_WITH_INSTALL_RPATH TRUE
         INSTALL_RPATH "${ROOTSYS}/lib;${GEANT4_PATH}/lib"
         INSTALL_RPATH_USE_LINK_PATH TRUE
@@ -163,15 +147,15 @@ set_target_properties(${MAIN_EXE} PROPERTIES
 get_directory_property(hasParent PARENT_DIRECTORY)
 if (hasParent)
     # We're being built as part of a larger project
-set_target_properties(${MAIN_EXE} PROPERTIES
+set_target_properties(${PROJECT_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 else ()
     # We're being built standalone
-    set_target_properties(${MAIN_EXE} PROPERTIES
+    set_target_properties(${PROJECT_NAME} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
     )
-    message(STATUS "Stand-alone ${MAIN_EXE} build")
+    message(STATUS "Stand-alone ${PROJECT_NAME} build")
 endif ()
 
 # Set default build type if not specified
@@ -179,9 +163,3 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-# Set RPATH for installation and build tree
-#set(CMAKE_INSTALL_RPATH
-#        "${ROOTSYS}/lib"
-#        "${GEANT4_PATH}/lib"
-#)
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
