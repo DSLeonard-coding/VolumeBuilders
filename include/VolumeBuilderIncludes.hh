@@ -1,13 +1,15 @@
 #pragma once
 /*
- * SimUtilities.hh
+ * VolumeBuildersIncludes.hh
  *
  *  Created on: Jun 4, 2025
- *      Author: osboxes
+ *      Author: D.S. Leonard  MIT
+ *
+ *  Primary user hedaer for DLG4::VolumeBuilders
  */
 
-#ifndef HPGESIM_INCLUDE_HPGESIMUTILITIES_HH_
-#define HPGESIM_INCLUDE_HPGESIMUTILITIES_HH_
+#ifndef VOLUME_BUILDER_INCLUDES_HH_
+#define VOLUME_BUILDER_INCLUDES_HH_
 
 #include "VolumeBuilderTypes.hh"
 #include "RZBuilder.hh"
@@ -19,4 +21,4 @@
 #include "FromG4VSolid.hh"
 #include "Assembly.hh"
 
-#endif /* HPGESIM_INCLUDE_HPGESIMUTILITIES_HH_ */
+#endif /* VOLUME_BUILDER_INCLUDES_HH_ */
