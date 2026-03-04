@@ -63,16 +63,16 @@
 #define SET_LINK std::true_type{}
 
 // Geant things need to not be deleted:
-namespace PersistentObjectRegistry {
-    // For Geant, we need things left persistent.
-    // Yes, in header this is multiple "registries" but this is a black hole anyway.
-    inline std::vector<std::shared_ptr<void>> black_hole;
-    inline std::mutex s_registry_mutex;
-}
+namespace DLG4::VolumeBuilders::_internals_ {
+    namespace PersistentObjectRegistry {
+        // For Geant, we need things left persistent.
+        // Yes, in header this is multiple "registries" but this is a black hole anyway.
+        inline std::vector<std::shared_ptr<void>> black_hole;
+        inline std::mutex s_registry_mutex;
+    }
 
-using namespace PersistentObjectRegistry;
+    using namespace PersistentObjectRegistry;
 
-namespace DLG4 {
     // enable a mocked version that helps code analysis, now incomplete though.
     //#define DEBUG
 #ifdef DEBUG
@@ -99,7 +99,8 @@ namespace DLG4 {
             std::cout << "Mock Linkable reset()\n";
         }
 
-        T* get(){ return &T; };
+        T *get() { return &T; };
+
         explicit Linkable(const T &other) : value_(other) {
             std::cout << "Mock Linkable value ctor\n";
         }
@@ -180,7 +181,7 @@ namespace DLG4 {
 
         /// Copy constructor does deep copy, not link
         /// This is safest and default
-        Linkable(const Linkable<T> &other):
+        Linkable(const Linkable<T> &other) :
             ref_(std::make_shared<T>(*other.ref_)) {
         }
 
@@ -274,7 +275,7 @@ namespace DLG4 {
         template <typename... Args,
             std::enable_if_t<
                 !(std::conjunction_v<std::is_same<std::decay_t<Args>, Linkable<T>>...>),
-                int>  = 0>
+                int> = 0>
         void ConstructAndLink(Args &&... args) {
             auto data = std::make_shared<T>(std::forward<Args>(args)...);
             LinkTreeTo(data);

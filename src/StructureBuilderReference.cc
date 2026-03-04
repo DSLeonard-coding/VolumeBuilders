@@ -16,7 +16,7 @@
 #include "StructureBuilder.hpp"
 
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
     SharedPtr<IStructureBuilder> StructureBuilderReference::clone_impl() const {
         if (builder_configs_->istructure_ptr) {
             // have the erased base clone itself ex: new RZBuilder(*this);  :

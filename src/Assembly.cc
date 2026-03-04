@@ -13,15 +13,8 @@
 #include "StructureBuilder.hpp"
 #include "Assembly.hh"
 
+using namespace DLG4::VolumeBuilders::_internals_;
 namespace DLG4::VolumeBuilders {
-    Assembly::Assembly(const Assembly &other) :
-        StructureBuilder<Assembly>(other) {
-        // Call base class copy constructor
-        set_shared_from_this_enabled(false);
-        set_shared_from_this_enabled(true);
-    }
-
-
     AssemblyPtr CreateAssembly(G4String name) {
         // Haha... assemblies actually are builders!!!
         auto object = AssemblyPtr(new Assembly());
@@ -38,6 +31,15 @@ namespace DLG4::VolumeBuilders {
         return return_obj;
 
         // This let's us reuse builder methods!
+    }
+}
+
+namespace DLG4::VolumeBuilders::_internals_ {
+    Assembly::Assembly(const Assembly &other) :
+        StructureBuilder<Assembly>(other) {
+        // Call base class copy constructor
+        set_shared_from_this_enabled(false);
+        set_shared_from_this_enabled(true);
     }
 
     AssemblyPtr Assembly::AddStructure(const StructureView &other) {

@@ -27,7 +27,7 @@
 #include "VolumeBuilderTypes.hh"
 
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
     /// a non-fluent polymorphic class to access the derived solid-builder from a base reference:
     /// This gets used by VolumeBuiderReference to store pointers to derived methods.
 

@@ -16,7 +16,7 @@
 #include <memory>
 
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
 #define BASE StructureBuilder<U>
 #define DERIVED typename BASE::DerivedPtr
 

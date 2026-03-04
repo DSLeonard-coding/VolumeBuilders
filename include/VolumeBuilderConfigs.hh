@@ -21,7 +21,7 @@
 
 #define ONCE_MUTABLE mutable  // for linkable objects
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
     class VolumeBuilderReference;
     template <typename U>
     class VolumeBuilder;
@@ -121,6 +121,11 @@ namespace DLG4::VolumeBuilders {
 
         ~PlacementConfigs() = default;
     };
+}
+
+//Export names
+namespace DLG4::VolumeBuilders {
+    using _internals_::SetGlobalDefaultUnit;
 }
 #endif //VOLUMEBUIDERTYPES_HH
 //TODO Implement auto parent name incrementing?

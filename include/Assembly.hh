@@ -10,22 +10,14 @@
 #include "Linkable.hh"
 #include "i_shared_ptr.hh"
 #include <stdexcept>
-#include <VolumeBuilder.hh>
+//#include <VolumeBuilder.hh>
 #include <VolumeBuilderTypes.hh>
 #include <StructureBuilder.hh>
+#include <BuilderFactories.hh>
 
-namespace DLG4::VolumeBuilders {
-    template <typename T>
-    class VolumeBuilder;
-    //    class StructureBuilder;
+// Factory CreateAssembly moved to BuilderFactories.hh
 
-    /**
-     * @brief Assembly of strucures, ie builders and/or other assemblies
-     * \dotfile builder_graph.dot
-     * @ingroup Factories
-    * */
-    AssemblyPtr CreateAssembly(G4String name);
-
+namespace DLG4::VolumeBuilders::_internals_ {
     /**
      *@class Assembly
      * @brief A type-erased (data shared view) view of a builder or
@@ -48,7 +40,7 @@ namespace DLG4::VolumeBuilders {
         friend class VolumeBuilder;
         template <typename T>
         friend class StructureBuilder;
-        friend AssemblyPtr CreateAssembly(G4String name);
+        friend AssemblyPtr VB::CreateAssembly(G4String name);
 
         friend class i_shared_ptr<Assembly>;
 

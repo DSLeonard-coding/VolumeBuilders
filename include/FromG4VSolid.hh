@@ -11,20 +11,13 @@
 // Only the out-of-class static Factory CreateFromG4VSolid() is exposed.
 // Use it to configure logical volume and placement with VolumeBuilder from a standard G4VSolid.
 /// @endverbatim
-#include "VolumeBuilderTypes.hh"
+#include <VolumeBuilderTypes.hh>
 #include "VolumeBuilder.hh"
+#include <BuilderFactories.hh>
 
-namespace DLG4::VolumeBuilders {
-    class FromG4VSolid;
+// Factory CreateFromG4VSolid moved to BuilderFactories.hh
 
-    /**
-     * @brief Constructor to make a builder from an Existing Geant solid
-     * @param solid G4VSolid pointer
-     * @return
-     * @ingroup Factories
-     * */
-    FromG4VSolidPtr CreateFromG4VSolid(G4VSolid *solid);
-
+namespace DLG4::VolumeBuilders::_internals_ {
 #include <stdexcept>
     /**
      * @brief A solid buider class that just wrap an existing G4VSolid
@@ -35,7 +28,7 @@ namespace DLG4::VolumeBuilders {
     class FromG4VSolid final: public VolumeBuilder<FromG4VSolid> {
         friend class VolumeBuilder<FromG4VSolid>;
         friend class VolumeBuilderReference;
-        friend FromG4VSolidPtr CreateFromG4VSolidBuider(G4VSolid *solid);
+        friend FromG4VSolidPtr VB::CreateFromG4VSolid(G4VSolid *solid);
 
     public:
         // No functional public methods.  Only the Factory!
