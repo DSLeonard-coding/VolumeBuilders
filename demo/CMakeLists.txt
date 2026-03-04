@@ -6,6 +6,7 @@ message(STATUS "=== VBDemo CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}
 message(STATUS "=== VBDemo CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 project(VBDemo CXX)
+set(base_path ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SETUP_FILE "vb_user_setup.sh")
 set(SETUP_SCRIPT "$ENV{HOME}/${SETUP_FILE}")
@@ -40,7 +41,7 @@ set(OPTIONS -DG4VIS_USE )
 
 
 # --- Source files ---
-file(GLOB_RECURSE SRC_FILES1 FOLLOW_SYMLINKS ${base_path}/src/*.cc)
+file(GLOB_RECURSE SRC_FILES1 FOLLOW_SYMLINKS "${base_path}/src/*.cc")
 
 set(SRC_FILES ${SRC_FILES1})
 
@@ -84,10 +85,6 @@ execute_process(
         OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 target_compile_definitions(${PROJECT_NAME} PRIVATE GIT_DESCRIBE="${GIT_DESCRIBE}")
-
-
-
-
 
 
 # --- Explicitly find system visualization and GUI libraries ---
