@@ -21,7 +21,7 @@
 //#define SHARED_WRAPPER  DLG4::i_shared_ptr
 #include <vector>
 #include "i_shared_ptr.hh"
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 
 
 // #define FIXME(msg) static_assert(false, "FIXME: " msg)

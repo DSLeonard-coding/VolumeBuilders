@@ -30,13 +30,12 @@
  * Inherits ability to configure and make the logical volume too.
  *  ... and to add/subtract volumes.
  */
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "VolumeBuilder.hh"
 #include "StructureBuilderReference.hh"
 // ReSharper disable once CppUnusedIncludeDirective
 #include <memory>
 
-using namespace DLG4::VolumeBuilders::_internals_;
 namespace DLG4::VolumeBuilders {
     /**
      * Struct for adding planes to GeantMultiPlane  --DSLeonard 2024

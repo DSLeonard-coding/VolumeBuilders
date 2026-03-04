@@ -9,7 +9,7 @@
 
 #include "RZBuilder.hh"
 #include <string>
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 #include <G4Polycone.hh>
 #include <G4Polyhedra.hh>
 //#include "disableable_shared_from_this.hh"

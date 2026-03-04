@@ -10,7 +10,7 @@
 #include "FromG4VSolid.hh"
 #include "VolumeBuilder.hh"
 #include <string>
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 //#include "disableable_shared_from_this.hh"
 #include "i_shared_ptr.hh"
 #include "StructureBuilder.hh"

@@ -24,7 +24,7 @@
 #include <G4VSolid.hh>
 
 #include "Linkable.hh"
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 
 
 namespace DLG4::VolumeBuilders::_internals_ {

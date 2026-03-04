@@ -7,7 +7,7 @@
 *
 */
 
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "VolumeBuilder.hh"
 #include "VolumeBuilderReference.hh"
 #include "StructureBuilder.hpp"

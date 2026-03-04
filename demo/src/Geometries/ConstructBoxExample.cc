@@ -9,7 +9,7 @@
 
 // ReSharper disable CppExpressionWithoutSideEffects
 #include "DetectorConstruction_includes.hh" // common includes
-#include <VolumeBuilderIncludes.hh>
+#include <VolumeBuilders.hh>
 
 using namespace CLHEP;
 using namespace DLG4::VolumeBuilders; // Geometry builder helpers.

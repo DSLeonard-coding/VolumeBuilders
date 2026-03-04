@@ -225,7 +225,7 @@ The AddPlane method configures a DLG4::VolumeBuilders::RZPlane (A VolumeBuilder)
 
 example:
 ```cpp
-#include <VolumeBuilderIncludes.hh>
+#include <VolumeBuilders.hh>
 //...
 RZPlane p;
 p.unit = mm;  // ACTUALLY DOES NOTHING in this example.  
@@ -264,7 +264,7 @@ But VolumeBuilders does much more, it handles the whole Physical volume build ch
 Here's how we complete the above example to make a physical volume (a Placement).  See demo/src/geometries/ConstructExample1.cc for the complete example and/or run the Demo and select Example 1 to see the build:
 
 ```cpp
-#include <VolumeBuilderIncludes.hh>
+#include <VolumeBuilders.hh>
 //...
 G4Color coppertone(0.72, 0.45, .2);
 RZPlane p;

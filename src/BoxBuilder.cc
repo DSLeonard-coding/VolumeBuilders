@@ -9,7 +9,7 @@
 
 #include "BoxBuilder.hh"
 #include <string>
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 #include <G4Polycone.hh>
 #include <G4Polyhedra.hh>
 //#include "disableable_shared_from_this.hh"
@@ -21,7 +21,7 @@
 
 class G4String;
 using namespace DLG4::Utilities;
-using namespace DLG4::VolumeBuilders;
+using namespace DLG4::VolumeBuilders::_internals_;
 namespace DLG4::VolumeBuilders {
 
 //Geant Box constructing methods //////////////////////////////////////////////////

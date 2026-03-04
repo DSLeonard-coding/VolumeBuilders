@@ -11,7 +11,7 @@
 // Only the out-of-class static Factory CreateFromG4VSolid() is exposed.
 // Use it to configure logical volume and placement with VolumeBuilder from a standard G4VSolid.
 /// @endverbatim
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 #include "VolumeBuilder.hh"
 #include <BuilderFactories.hh>
 

@@ -11,7 +11,7 @@
 #include "i_shared_ptr.hh"
 #include <stdexcept>
 #include <StructureBuilder.hh>
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 
 
 namespace DLG4::VolumeBuilders::_internals_ {

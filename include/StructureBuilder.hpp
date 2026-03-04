@@ -9,7 +9,7 @@
 *
 */
 #include "Linkable.hh"
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "StructureBuilderReference.hh"
 #include "StructureBuilder.hh"
 #include "VolumeBuilderReference.hh"

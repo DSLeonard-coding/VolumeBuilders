@@ -11,7 +11,7 @@
 #ifndef VOLUME_BUILDER_INCLUDES_HH_
 #define VOLUME_BUILDER_INCLUDES_HH_
 
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "RZBuilder.hh"
 #include "BoxBuilder.hh"
 #include "ISolidBuilder.hh"
@@ -20,5 +20,6 @@
 #include "StructureBuilder.hpp"
 #include "FromG4VSolid.hh"
 #include "Assembly.hh"
+#include "BuilderFactories.hh"
 
 #endif /* VOLUME_BUILDER_INCLUDES_HH_ */

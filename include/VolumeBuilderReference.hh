@@ -15,13 +15,15 @@
 #include "Linkable.hh"
 #include "i_shared_ptr.hh"
 #include <stdexcept>
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 #include "VolumeBuilder.hh"
 #include "ISolidBuilder.hh"
+#include <BuilderFactories.hh>
 
-namespace VB=DLG4::VolumeBuilders;
-using namespace VB;
 namespace DLG4::VolumeBuilders::_internals_ {
+    namespace VB=DLG4::VolumeBuilders;
+    using namespace VB;
+
     template <typename T>
     class VolumeBuilder;
     class RZBuilder;

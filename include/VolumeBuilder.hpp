@@ -16,7 +16,7 @@
 #include <G4SubtractionSolid.hh>
 #include "Linkable.hh"
 #include "VolumeBuilderReference.hh"
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "StructureBuilderReference.hh"
 #include "Assembly.hh"
 #include <memory>

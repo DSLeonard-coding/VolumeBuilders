@@ -11,7 +11,7 @@
 #include "i_shared_ptr.hh"
 #include <stdexcept>
 //#include <VolumeBuilder.hh>
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 #include <StructureBuilder.hh>
 #include <BuilderFactories.hh>
 

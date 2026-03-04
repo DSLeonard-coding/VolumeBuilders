@@ -7,7 +7,7 @@
 *
 */
 
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "ISolidBuilder.hh"
 #include "VolumeBuilder.hh"
 #include "VolumeBuilderReference.hh"

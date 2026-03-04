@@ -15,15 +15,13 @@
  * Inherits ability to configure and make the logical volume too.
  *  ... and to add/subtract volumes.
  */
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "VolumeBuilder.hh"
 #include "StructureBuilderReference.hh"
 // ReSharper disable once CppUnusedIncludeDirective
 #include <memory>
 
-using namespace DLG4::VolumeBuilders::_internals_;
 namespace DLG4::VolumeBuilders {
-    using BoxBuilderPtr = SharedPtr<BoxBuilder>;
     // See other Derived classes, or better yet the Factories "Topic" in the Doxygen html manual,
     // For Factories for other types of shapes or sources.
 

@@ -5,8 +5,8 @@
 //
 // Types for VolumeBuilder classes
 
-#ifndef VOLUMEBUILDERTYPES_HH
-#define VOLUMEBUILDERTYPES_HH
+#ifndef VOLUMEBUILDERSTYPES_HH
+#define VOLUMEBUILDERSTYPES_HH
 #include <G4ThreeVector.hh>
 #include <memory>
 #include <optional>
@@ -163,6 +163,8 @@ namespace DLG4::VolumeBuilders {
     using _internals_::BuilderViewList;
     using _internals_::StructureView;
     using _internals_::StructureViewList;
+    using _internals_::Unit3Vec;
+    using _internals_::Unitless3Vec;
 }
 
 namespace DLG4::VolumeBuilders::Builders {
@@ -173,5 +175,6 @@ namespace DLG4::VolumeBuilders::Builders {
     using ::DLG4::VolumeBuilders::_internals_::Assembly;
     using ::DLG4::VolumeBuilders::_internals_::StructureBuilder;
     using ::DLG4::VolumeBuilders::_internals_::VolumeBuilderReference;
+    using ::DLG4::VolumeBuilders::_internals_::StructureBuilderReference;
 }
-#endif  //VOLUMEBUILDERTYPES_HH
+#endif  //VOLUMEBUILDERSTYPES_HH
