@@ -1,7 +1,7 @@
 #include "DetectorConstruction_includes.hh" // common includes
 #include "VolumeBuilders.hh"
 using namespace CLHEP;
-using namespace DLG4::VolumeBuilders; // Geometry builder helpers.
+namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
 void DetectorConstruction::ConstructWorld() {
     static bool firstcall = true;
@@ -27,8 +27,8 @@ void DetectorConstruction::ConstructWorld() {
     //    world_phys = physHall;
 
     // now just becomes:
-    SetGlobalDefaultUnit(CLHEP::mm);
-    world_phys = CreateCenteredBoxBuilder("hallbox", 3000, 3000, 3000)
+    VB::SetGlobalDefaultUnit(CLHEP::mm);
+    world_phys = VB::CreateCenteredBoxBuilder("hallbox", 3000, 3000, 3000)
                  ->SetMaterial(_air)
                  ->SetColor(0.8, 0.8, 0.8, 0.1)
                  ->SetVisibility(false)
