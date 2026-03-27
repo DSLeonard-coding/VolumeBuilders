@@ -8,10 +8,10 @@
 */
 
 #include "DetectorConstruction_includes.hh" // common includes
-#include <VolumeBuilderIncludes.hh>
+#include <VolumeBuilders.hh>
 
 using namespace CLHEP;
-using namespace DLG4::VolumeBuilders; // Geometry builder helpers.
+namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers
 
 void DetectorConstruction::ConstructExample1() {
     static bool firstcall = true;
@@ -22,14 +22,14 @@ void DetectorConstruction::ConstructExample1() {
     firstcall = false;
     //@formatter:on
 
-    DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::cm); // set a global unit
+    VB::SetGlobalDefaultUnit(CLHEP::cm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
-    RZPlane p;
+    VB::RZPlane p;
     p.unit = mm; // see prior note.
     G4double some_reference;
 
     // some shape to union onto our main shape:
-    auto another_builder_or_geant_solid = CreatePolyconeBuilder("union")
+    auto another_builder_or_geant_solid = VB::CreatePolyconeBuilder("union")
             //@formatter:off
             ->AddPlane(p.IR = 90       , p.OR = 100*2.0/sqrt(3.) , p.z = -10 )
             ->AddPlane(p.IR            , p.OR                   , p.z -= 15 );
@@ -37,7 +37,7 @@ void DetectorConstruction::ConstructExample1() {
     // just a descriptively named variable for the documented README example:
     G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
 
-    auto ring_part = CreatePolyhedraBuilder("ring_part", 6)
+    auto ring_part = VB::CreatePolyhedraBuilder("ring_part", 6)
             // can set configurations in any order mostly, but can be nice to set many things up front before geometry details:
             ->SetMaterial(_copper)
             ->SetColor(coppertone) // We can pre-configure the logical-volume!

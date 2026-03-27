@@ -11,8 +11,12 @@ project(VolumeBuilders LANGUAGES CXX)
 # Set C++ standard consistent with your main project
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-option(VOLUMEBUILDERS_NO_DEMO "Disable building and installing demo executable" OFF)
+set(SETUP_FILE "vb_user_setup.sh")
+set(SETUP_SCRIPT "$ENV{HOME}/${SETUP_FILE}")
+set(DSL_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/DSL/")
+include("${DSL_CMAKE_PATH}/cern/Geant4_Target.cmake")
+include("${DSL_CMAKE_PATH}/cern/ROOT_Target.cmake")
+include("${DSL_CMAKE_PATH}/utils/Setup_Paths.cmake")
 
 add_subdirectory(demo EXCLUDE_FROM_ALL)
 
@@ -20,38 +24,14 @@ if(NOT VOLUMEBUILDERS_NO_DEMO)
     set_property(TARGET VBDemo PROPERTY EXCLUDE_FROM_ALL FALSE)
 endif()
 
-execute_process(
-        COMMAND $ENV{GEANT4_PATH}/bin/geant4-config --cflags
-        OUTPUT_VARIABLE GEANT4_CONFIG_CFLAGS_RAW
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-separate_arguments(GEANT4_CONFIG_CFLAGS_RAW)
-
-set(GEANT4_INCLUDE_DIRS "")
-set(GEANT4_DEFINITIONS "")
-
-foreach(flag ${GEANT4_CONFIG_CFLAGS_RAW})
-    if(flag MATCHES "^-I(.+)")
-        list(APPEND GEANT4_INCLUDE_DIRS "${CMAKE_MATCH_1}")
-    elseif(flag MATCHES "^-D(.+)")
-        list(APPEND GEANT4_DEFINITIONS "${CMAKE_MATCH_1}")
-    endif()
-endforeach()
-
-execute_process(
-        COMMAND $ENV{GEANT4_PATH}/bin/geant4-config --libs
-        OUTPUT_VARIABLE GEANT4_CONFIG_LIBS_RAW
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-separate_arguments(GEANT4_CONFIG_LIBS_RAW)
-
 # --- Source files for VolumeBuilder ---
 file(GLOB_RECURSE VOLUMEBUILDERS_SRC_CC "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc")
 file(GLOB_RECURSE VOLUMEBUILDERS_SRC_CPP "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 list(APPEND VOLUMEBUILDERS_SRC ${VOLUMEBUILDERS_SRC_CC} ${VOLUMEBUILDERS_SRC_CPP})
 
 # --- Define the VolumeBuilder static library ---
-add_library(VolumeBuilders STATIC ${VOLUMEBUILDERS_SRC})
+add_library(VolumeBuilders STATIC ${VOLUMEBUILDERS_SRC}
+        include/BuilderFactories.hh)
 add_library(DLG4::VolumeBuilders ALIAS VolumeBuilders)
 
 # --- Include directories for VolumeBuilder ---
@@ -60,19 +40,14 @@ target_include_directories(VolumeBuilders PUBLIC
     # Local includes for VolumeBuilder
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     # Geant4 includes, extracted using geant4-config
-    ${GEANT4_INCLUDE_DIRS}
 )
 
-# --- Compile Definitions for VolumeBuilder ---
-# Apply any Geant4-related definitions if geant4-config provides them.
-target_compile_definitions(VolumeBuilders PUBLIC
-    ${GEANT4_DEFINITIONS}
-)
 
 # --- Link Libraries for VolumeBuilder ---
 # Link to Geant4 libraries.
 target_link_libraries(VolumeBuilders PUBLIC
-    ${GEANT4_CONFIG_LIBS_RAW}
+    ROOT_Target
+    Geant4_Target
 )
 
 target_compile_options(VolumeBuilders PRIVATE

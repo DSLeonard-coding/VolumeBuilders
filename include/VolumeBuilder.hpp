@@ -16,7 +16,7 @@
 #include <G4SubtractionSolid.hh>
 #include "Linkable.hh"
 #include "VolumeBuilderReference.hh"
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "StructureBuilderReference.hh"
 #include "Assembly.hh"
 #include <memory>
@@ -28,7 +28,7 @@
 
 #include "VolumeBuilder.hh"
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
     // used in CRTP implementation, should be improved probably.
 #define BASE VolumeBuilder<U>
 #define DERIVED typename BASE::DerivedPtr
@@ -97,7 +97,7 @@ namespace DLG4::VolumeBuilders {
     // template this.  Is that better?  Enh... Whatever.
     template <typename U>
     template <typename T, std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>>
-    DLG4::VolumeBuilders::VolumeBuilder<U>::VolumeBuilder(
+    DLG4::VolumeBuilders::_internals_::VolumeBuilder<U>::VolumeBuilder(
         const SharedPtr<T> &other,
         SET_LINK_TYPE) : builder_configs_(other->builder_configs_,SET_LINK),
                          boolean_configs_(other->boolean_configs_,SET_LINK),

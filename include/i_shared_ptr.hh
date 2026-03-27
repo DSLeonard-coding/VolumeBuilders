@@ -15,7 +15,7 @@
 #include "IVolumeBuilder.hh"
 
 
-namespace DLG4 {
+namespace DLG4::VolumeBuilders::_internals_ {
     /// @class DLG4::i_shared_ptr
     /// A wrapper for std::shared_ptr that allows and facilitates many implicit(i) type conversions.
     /// such as from T to i_shared_ptr<T>.   Very useful for accepting paramters in a CRTP fluent base class
@@ -113,35 +113,35 @@ namespace DLG4 {
         }
 
         template <typename X = T, typename = std::enable_if_t<std::is_base_of_v<
-            VolumeBuilders::IVolumeBuilder, X>>>
+            VolumeBuilders::_internals_::IVolumeBuilder, X>>>
         operator G4VSolid *() {
-            auto other = static_cast<VolumeBuilders::IVolumeBuilder *>(this->get());
+            auto other = static_cast<VolumeBuilders::_internals_::IVolumeBuilder *>(this->get());
             return other->GetFinalSolid();
         }
 
         /// @ingroup products
         template <typename X = T, typename = std::enable_if_t<std::is_base_of_v<
-            VolumeBuilders::IVolumeBuilder, X>>>
+            VolumeBuilders::_internals_::IVolumeBuilder, X>>>
         operator G4LogicalVolume *() {
-            auto other = static_cast<VolumeBuilders::IVolumeBuilder *>(this->get());
+            auto other = static_cast<VolumeBuilders::_internals_::IVolumeBuilder *>(this->get());
             return other->GetLogicalVolume();
         }
 
         /// @ingroup products
         template <typename X = T, typename = std::enable_if_t<std::is_base_of_v<
-            VolumeBuilders::IVolumeBuilder, X>>>
+            VolumeBuilders::_internals_::IVolumeBuilder, X>>>
         operator G4VPhysicalVolume *() {
-            auto other = static_cast<VolumeBuilders::IVolumeBuilder *>(this->get());
+            auto other = static_cast<VolumeBuilders::_internals_::IVolumeBuilder *>(this->get());
             return other->GetPlacement();
         }
 
         /// @ingroup products
         template <typename X = T, typename = std::enable_if_t<std::is_base_of_v<
-            VolumeBuilders::IVolumeBuilder, X>>>
+            VolumeBuilders::_internals_::IVolumeBuilder, X>>>
         operator G4Transform3D() const {
-            static_assert(std::is_base_of_v<VolumeBuilders::IVolumeBuilder, X>,
+            static_assert(std::is_base_of_v<VolumeBuilders::_internals_::IVolumeBuilder, X>,
                 "T must derive from IVolumeBuilder");
-            auto other = static_cast<const VolumeBuilders::IVolumeBuilder *>(this->get());
+            auto other = static_cast<const VolumeBuilders::_internals_::IVolumeBuilder *>(this->get());
             return other->GetPhysTransform();
         }
     };

@@ -2,7 +2,7 @@
 // Created by Douglas S. Leonard on 6/19/25.  All rights Reserved
 // See related files for license, if any is provided.
 //
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "VolumeBuilder.hh"
 #include "VolumeBuilder.hpp"
 #include "RZBuilder.hh"
@@ -16,9 +16,10 @@
 
 // instantiate 99% of templates
 using namespace DLG4::VolumeBuilders;
-template class VolumeBuilder<RZBuilder>;
-template class VolumeBuilder<FromG4VSolid>;
-template class VolumeBuilder<VolumeBuilderReference>;
-template class StructureBuilder<StructureBuilderReference>;
-template class StructureBuilder<Assembly>;
-template class VolumeBuilder<BoxBuilder>;
+using namespace DLG4::VolumeBuilders::Builders;
+template class DLG4::VolumeBuilders::Builders::VolumeBuilder<RZBuilder>;
+template class DLG4::VolumeBuilders::Builders::VolumeBuilder<FromG4VSolid>;
+template class DLG4::VolumeBuilders::Builders::VolumeBuilder<VolumeBuilderReference>;
+template class DLG4::VolumeBuilders::Builders::StructureBuilder<StructureBuilderReference>;
+template class DLG4::VolumeBuilders::Builders::StructureBuilder<Assembly>;
+template class DLG4::VolumeBuilders::Builders::VolumeBuilder<BoxBuilder>;

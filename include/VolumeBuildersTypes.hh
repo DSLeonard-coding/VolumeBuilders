@@ -5,8 +5,8 @@
 //
 // Types for VolumeBuilder classes
 
-#ifndef VOLUMEBUILDERTYPES_HH
-#define VOLUMEBUILDERTYPES_HH
+#ifndef VOLUMEBUILDERSTYPES_HH
+#define VOLUMEBUILDERSTYPES_HH
 #include <G4ThreeVector.hh>
 #include <memory>
 #include <optional>
@@ -17,7 +17,11 @@
 
 #define ONCE_MUTABLE mutable  // for linkable objects
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
+    // a shorthand out to the public namespace:
+    namespace VB=DLG4::VolumeBuilders;
+    using namespace VB;
+
     // Base template alias
     template <typename T>
     using SharedPtr = i_shared_ptr<T>;
@@ -144,4 +148,33 @@ namespace DLG4::VolumeBuilders {
         return std::const_pointer_cast<std::remove_const_t<T>>(sp_const);
     }
 }
-#endif  //VOLUMEBUILDERTYPES_HH
+
+//Export names for API usage/tab-completion.
+namespace DLG4::VolumeBuilders {
+    using _internals_::RZBuilderPtr;
+    using _internals_::BoxBuilderPtr;
+    using _internals_::FromG4VSolidPtr;
+    using _internals_::AssemblyPtr;
+    using _internals_::FromG4VSolidPtr;
+    using _internals_::VolumeBuilderPtr;
+
+    using _internals_::BuilderView;
+    using _internals_::BuilderView;
+    using _internals_::BuilderViewList;
+    using _internals_::StructureView;
+    using _internals_::StructureViewList;
+    using _internals_::Unit3Vec;
+    using _internals_::Unitless3Vec;
+}
+
+namespace DLG4::VolumeBuilders::Builders {
+    using ::DLG4::VolumeBuilders::_internals_::RZBuilder;
+    using ::DLG4::VolumeBuilders::_internals_::VolumeBuilder;
+    using ::DLG4::VolumeBuilders::_internals_::BoxBuilder;
+    using ::DLG4::VolumeBuilders::_internals_::FromG4VSolid;
+    using ::DLG4::VolumeBuilders::_internals_::Assembly;
+    using ::DLG4::VolumeBuilders::_internals_::StructureBuilder;
+    using ::DLG4::VolumeBuilders::_internals_::VolumeBuilderReference;
+    using ::DLG4::VolumeBuilders::_internals_::StructureBuilderReference;
+}
+#endif  //VOLUMEBUILDERSTYPES_HH

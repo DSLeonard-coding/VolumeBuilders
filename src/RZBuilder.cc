@@ -9,7 +9,7 @@
 
 #include "RZBuilder.hh"
 #include <string>
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 #include <G4Polycone.hh>
 #include <G4Polyhedra.hh>
 //#include "disableable_shared_from_this.hh"
@@ -21,6 +21,8 @@ class G4String;
 using namespace DLG4::Utilities;
 
 //GeantMultiPlane methods //////////////////////////////////////////////////
+using namespace DLG4::VolumeBuilders::_internals_;
+
 namespace DLG4::VolumeBuilders {
     //Factories
     RZBuilderPtr CreatePolyconeBuilder(const G4String &name, G4double phi_start, G4double phi_tot) {
@@ -34,7 +36,7 @@ namespace DLG4::VolumeBuilders {
     }
 
     RZBuilderPtr CreatePolyhedraBuilder(const G4String &name, int sides, G4double phi_start,
-        G4double phi_tot) {
+                                        G4double phi_tot) {
         // ReSharper disable once CppDFAMemoryLeak
         auto object = new RZBuilder(name, phi_start, phi_tot, sides);
         object->MakeSolidFunctionPtr_ = &RZBuilder::MakePolyhedra;
@@ -61,7 +63,9 @@ namespace DLG4::VolumeBuilders {
         G4double IR) {
         return CreateCylinderBuilder(BuilderConfigs::global_default_unit, name, endz, h, OR, IR);
     }
+}
 
+namespace DLG4::VolumeBuilders::_internals_ {
     RZBuilder::RZBuilder(const G4String &name, G4double init_phi_start, G4double init_phi_tot,
         int init_sides) :
         VolumeBuilder<RZBuilder>(), sides_(init_sides), phi_start_deg_(init_phi_start),

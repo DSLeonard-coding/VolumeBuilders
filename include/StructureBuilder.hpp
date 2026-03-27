@@ -9,14 +9,14 @@
 *
 */
 #include "Linkable.hh"
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "StructureBuilderReference.hh"
 #include "StructureBuilder.hh"
 #include "VolumeBuilderReference.hh"
 #include <memory>
 
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
 #define BASE StructureBuilder<U>
 #define DERIVED typename BASE::DerivedPtr
 

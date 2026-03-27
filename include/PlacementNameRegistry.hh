@@ -10,7 +10,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
     class PlacementNameRegistry {
         static std::unordered_map<std::string, int> name_counts_;
         static std::mutex registry_mutex_;
