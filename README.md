@@ -1,3 +1,16 @@
+[To Doug Leonard's other pages](https://DSLeonard-coding.github.io/)  
+
+<h1>DLG4::VolumeBuilders</h1>
+README for VolumeBuilders  code (and readme) Copyright Doug Leonard 2025, All rights reserved.
+
+Distributed under MIT (Expat) license.  
+Related Links:  
+- [The git code repo](https://github.com/DSLeonard-coding/VolumeBuilders)  
+- [The Doxygen documentation page (if you're not already there)](https://DSLeonard-coding.github.io/VolumeBuilders/)
+- [Build Instructions](HowToBuild.md)  
+- [Documentation Building Instrucstions](MakeDocsREADME.md)
+
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -27,28 +40,6 @@
 - [Coding hindsight, and a novel(?) fluent design for C++?](#coding-hindsight-and-a-novel-fluent-design-for-c)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
-
-
-
-
-
-
-
-
-
-[To Doug Leonard's other pages](https://DSLeonard-coding.github.io/)  
-
-#DLG4::VolumeBuilders
-README for VolumeBuilders  code (and readme) Copyright Doug Leonard 2025, All rights reserved.
-
-Distributed under MIT (Expat) license.  
-Related Links:  
-- [The git code repo](https://github.com/DSLeonard-coding/VolumeBuilders)  
-- [The Doxygen documentation page (if you're not already there)](https://DSLeonard-coding.github.io/VolumeBuilders/)
-- [Build Instructions](HowToBuild.md)  
-- [Documentation Building Instrucstions](MakeDocsREADME.md)
 
 ## Introduction
 
