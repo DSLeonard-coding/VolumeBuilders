@@ -9,7 +9,7 @@
 
 #include "BoxBuilder.hh"
 #include <string>
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 #include <G4Polycone.hh>
 #include <G4Polyhedra.hh>
 //#include "disableable_shared_from_this.hh"
@@ -21,9 +21,10 @@
 
 class G4String;
 using namespace DLG4::Utilities;
+using namespace DLG4::VolumeBuilders::_internals_;
+namespace DLG4::VolumeBuilders {
 
 //Geant Box constructing methods //////////////////////////////////////////////////
-namespace DLG4::VolumeBuilders {
     //Factories
     // Factory methods for creating a BoxBuilder. These have been rewritten to
     // delegate directly to the BoxBuilder's member methods.
@@ -141,7 +142,9 @@ namespace DLG4::VolumeBuilders {
               ->SetZEdges(unit, z_edge1, z_edge2);
         return object;
     }
+}
 
+namespace DLG4::VolumeBuilders::_internals_ {
     BoxBuilderPtr BoxBuilder::SetXSizeDimensioned(const G4double size) {
         x_size_ = size;
         return shared_from_this();

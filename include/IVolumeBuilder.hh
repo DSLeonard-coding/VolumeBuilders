@@ -13,7 +13,7 @@
 #include <G4Transform3D.hh>
 #include <G4VSolid.hh>
 
-namespace DLG4::VolumeBuilders {
+namespace DLG4::VolumeBuilders::_internals_ {
     /// @brief Might make this public.
     /// Generally you should prefer use of VolumeReferencePtr
     /// as it provides full type erasure for all VolumeBuilder methods.

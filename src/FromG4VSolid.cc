@@ -10,7 +10,7 @@
 #include "FromG4VSolid.hh"
 #include "VolumeBuilder.hh"
 #include <string>
-#include <VolumeBuilderTypes.hh>
+#include <VolumeBuildersTypes.hh>
 //#include "disableable_shared_from_this.hh"
 #include "i_shared_ptr.hh"
 #include "StructureBuilder.hh"
@@ -28,8 +28,9 @@ namespace DLG4::VolumeBuilders {
         object.get()->SetName(solid->GetName());
         return FromG4VSolidPtr(object);
     }
+}
 
-
+namespace DLG4::VolumeBuilders::_internals_ {
     //Private default copy ctor.
     //This is used by clone methods of concrete classes
     FromG4VSolid::FromG4VSolid(const FromG4VSolid &other) :

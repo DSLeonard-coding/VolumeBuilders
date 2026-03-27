@@ -15,24 +15,20 @@
  * Inherits ability to configure and make the logical volume too.
  *  ... and to add/subtract volumes.
  */
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "VolumeBuilder.hh"
 #include "StructureBuilderReference.hh"
 // ReSharper disable once CppUnusedIncludeDirective
 #include <memory>
 
 namespace DLG4::VolumeBuilders {
-    class BoxBuilder;
-    template <typename T>
-    class VolumeBuilder;
-    using BoxBuilderPtr = SharedPtr<BoxBuilder>;
     // See other Derived classes, or better yet the Factories "Topic" in the Doxygen html manual,
     // For Factories for other types of shapes or sources.
 
     /** @addtogroup Factories  Volume/Structure Builder Factories
      *  @brief Factories for creating VolumeBuilder and StructureBuilder objects.
      *  @{
-    /**
+    **/
 
 
     /**
@@ -42,7 +38,7 @@ namespace DLG4::VolumeBuilders {
     * @return The builder.  Set configurations and then call .MakeSolid() and .MakeLogicalVolume() on it.
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
-    * */
+    **/
     BoxBuilderPtr CreateBoxBuilder(const G4String &name);
 
     /**
@@ -120,8 +116,8 @@ namespace DLG4::VolumeBuilders {
 
     /**
     * @brief Create a Box solid.
-        * Uses the global default unit
- * @param name  Base name to derive geometry object names from.
+    * Uses the global default unit
+    * @param name  Base name to derive geometry object names from.
     * @param edge_x  The x reference of one end (either one)
     * @param x_delta  FULL X size, + or - from end_x.
     * @param edge_y  The y reference of one end (either one)
@@ -192,7 +188,9 @@ namespace DLG4::VolumeBuilders {
 
     /** End Factories
      * @} */
+}
 
+namespace DLG4::VolumeBuilders::_internals_ {
 
     /**
      * @class BoxBuilder
@@ -211,25 +209,25 @@ namespace DLG4::VolumeBuilders {
         friend class i_shared_ptr; // needed in principle, but maybe not for this class.
 
         // Friend all the factories.  Keeping them external is easier for users, but more boilerplate.
-        friend BoxBuilderPtr CreateBoxBuilder(const G4String &name);
-        friend BoxBuilderPtr CreateBoxBuilder(const G4String &name, G4double unit);
-        friend BoxBuilderPtr CreateDeltasBoxBuilder(const G4String &name, G4double edge_x,
+        friend BoxBuilderPtr VB::CreateBoxBuilder(const G4String &name);
+        friend BoxBuilderPtr VB::CreateBoxBuilder(const G4String &name, G4double unit);
+        friend BoxBuilderPtr VB::CreateDeltasBoxBuilder(const G4String &name, G4double edge_x,
             G4double x_delta, G4double edge_y, G4double y_delta, G4double edge_z, G4double z_delta);
-        friend BoxBuilderPtr CreateDeltasBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilderPtr VB::CreateDeltasBoxBuilder(G4double unit, const G4String &name,
             G4double edge_x, G4double x_delta, G4double edge_y, G4double y_delta, G4double edge_z,
             G4double z_delta);
-        friend BoxBuilderPtr CreateZDeltaBoxBuilder(const G4String &name, G4double x_full_size,
+        friend BoxBuilderPtr VB::CreateZDeltaBoxBuilder(const G4String &name, G4double x_full_size,
             G4double y_full_size, G4double edge_z, G4double z_delta);
-        friend BoxBuilderPtr CreateZDeltaBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilderPtr VB::CreateZDeltaBoxBuilder(G4double unit, const G4String &name,
             G4double x_full_size, G4double y_full_size, G4double edge_z, G4double z_delta);
-        friend BoxBuilderPtr CreateCenteredBoxBuilder(const G4String &name, G4double x_full_size,
+        friend BoxBuilderPtr VB::CreateCenteredBoxBuilder(const G4String &name, G4double x_full_size,
             G4double y_full_size, G4double z_full_size);
-        friend BoxBuilderPtr CreateCenteredBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilderPtr VB::CreateCenteredBoxBuilder(G4double unit, const G4String &name,
             G4double x_full_size, G4double y_full_size, G4double z_full_size);
-        friend BoxBuilderPtr CreateEdgesBoxBuilder(const G4String &name, G4double x_edge1,
+        friend BoxBuilderPtr VB::CreateEdgesBoxBuilder(const G4String &name, G4double x_edge1,
             G4double x_edge2, G4double y_edge1, G4double y_edge2, G4double z_edge1,
             G4double z_edge2);
-        friend BoxBuilderPtr CreateEdgesBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilderPtr VB::CreateEdgesBoxBuilder(G4double unit, const G4String &name,
             G4double x_edge1, G4double x_edge2, G4double y_edge1, G4double y_edge2,
             G4double z_edge1, G4double z_edge2);
 

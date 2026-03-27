@@ -1,7 +1,7 @@
 #include "DetectorConstruction_includes.hh" // common includes
-#include "VolumeBuilderIncludes.hh"
+#include "VolumeBuilders.hh"
 using namespace CLHEP;
-using namespace DLG4::VolumeBuilders; // Geometry builder helpers.
+namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
 void DetectorConstruction::ConstructHexPart() {
     static bool firstcall = true;
@@ -32,8 +32,8 @@ void DetectorConstruction::ConstructHexPart() {
     }
 
     //  Copper  hex:  //////////////////////
-    RZPlane p; // just for clarity and temps, since we use the component setting method here:
-    auto hex_filler = CreatePolyhedraBuilder(
+    VB::RZPlane p; // just for clarity and temps, since we use the component setting method here:
+    auto hex_filler = VB::CreatePolyhedraBuilder(
                           "hex_filler",
                           6,
                           30.) // start at 30 deg
@@ -48,7 +48,7 @@ void DetectorConstruction::ConstructHexPart() {
 
     //*******************WARNING  This may not be exactly the same as top of surround, derived in different ways.
     //*******************samples that sit on both should be reviewed  for overlap ex:  Cu2019 sample
-    auto filler_id = CreatePolyconeBuilder("filler_cu_id") // will be unioned to hex_filler.
+    auto filler_id = VB::CreatePolyconeBuilder("filler_cu_id") // will be unioned to hex_filler.
                 ->AddPlane(p.IR = 0,    p.OR = 85 / 2.0,    p.z = -0.1)
                 ->AddPlane(p.IR,        p.OR,               p.z += sample_thickness_mm+0.1);
     //@formatter:on

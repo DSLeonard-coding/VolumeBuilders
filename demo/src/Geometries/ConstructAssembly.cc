@@ -8,10 +8,10 @@
 */
 
 #include "DetectorConstruction_includes.hh" // common includes
-#include <VolumeBuilderIncludes.hh>
+#include <VolumeBuilders.hh>
 
 using namespace CLHEP;
-using namespace DLG4::VolumeBuilders; // Geometry builder helpers.
+namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
 void DetectorConstruction::ConstructAssembly() {
     static bool firstcall = true;
@@ -24,17 +24,17 @@ void DetectorConstruction::ConstructAssembly() {
 
     DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
-    RZPlane p;
+    VB::RZPlane p;
     p.unit = mm; // see prior note.
     G4double some_reference;
 
-    auto cylinder = CreatePolyhedraBuilder("part", 3)
+    auto cylinder = VB::CreatePolyhedraBuilder("part", 3)
             //@formatter:off
             ->AddPlane(p.IR = 40       , p.OR = 50 , p.z = 0 )
             ->AddPlane(p.IR            , p.OR                   , p.z -= 100 );
     //@formatter:on
 
-    auto assembly = CreateAssembly("example_assembly");
+    auto assembly = VB::CreateAssembly("example_assembly");
     auto temp = cylinder;
     for (int i = 0; i < 3; i++) {
         temp->ForkAndReset("part_" + std::to_string(i))

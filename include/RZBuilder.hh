@@ -30,7 +30,7 @@
  * Inherits ability to configure and make the logical volume too.
  *  ... and to add/subtract volumes.
  */
-#include "VolumeBuilderTypes.hh"
+#include "VolumeBuildersTypes.hh"
 #include "VolumeBuilder.hh"
 #include "StructureBuilderReference.hh"
 // ReSharper disable once CppUnusedIncludeDirective
@@ -62,10 +62,6 @@ namespace DLG4::VolumeBuilders {
         G4double z{0};
     };
 
-    class RZBuilder;
-    template <typename T>
-    class VolumeBuilder;
-    using RZBuilderPtr = SharedPtr<RZBuilder>;
     // See other Derived classes, or better yet the Factories "Topic" in the Doxygen html manual,
     // For Factories for other types of shapes or sources.
 
@@ -119,6 +115,9 @@ namespace DLG4::VolumeBuilders {
         G4double endz, G4double height, G4double OR, G4double IR = 0);
     /** @}*/
 
+}
+
+namespace DLG4::VolumeBuilders::_internals_ {
     /** @addtogroup Builders Builder Classes
      * @brief Sub-typed Builder classes constructed by the Factories.
      * @{ */
@@ -138,13 +137,13 @@ namespace DLG4::VolumeBuilders {
         friend class i_shared_ptr; // needed in principle, but maybe not for this class.
 
         // Friend all the factories.  Keeping them external is easier for users, but more boilerplate.
-        friend RZBuilderPtr CreatePolyhedraBuilder(
+        friend RZBuilderPtr VB::CreatePolyhedraBuilder(
             const G4String &name, int sides, G4double phi_start, G4double phi_tot);
-        friend RZBuilderPtr CreatePolyconeBuilder(const G4String &name, G4double phi_start,
+        friend RZBuilderPtr VB::CreatePolyconeBuilder(const G4String &name, G4double phi_start,
             G4double phi_tot);
-        friend RZBuilderPtr CreateCylinderBuilder(G4double unit, const G4String &name,
+        friend RZBuilderPtr VB::CreateCylinderBuilder(G4double unit, const G4String &name,
             G4double endz, G4double height, G4double OR, G4double IR);
-        friend RZBuilderPtr CreateCylinderBuilder(const G4String &name,
+        friend RZBuilderPtr VB::CreateCylinderBuilder(const G4String &name,
             G4double endz, G4double height, G4double OR, G4double IR);
 
         /** @defgroup RZBuilder RZbuilder Configurations

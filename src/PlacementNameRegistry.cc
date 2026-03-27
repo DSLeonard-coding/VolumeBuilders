@@ -10,9 +10,9 @@
 #include <unordered_map>
 
 namespace DLG4 {
-    namespace VolumeBuilders {
+    namespace VolumeBuilders::_internals_ {
         // Define the static members with proper class scope
         std::unordered_map<std::string, int> PlacementNameRegistry::name_counts_;
         std::mutex PlacementNameRegistry::registry_mutex_;
-    } // VolumeBuilders
+    } // VolumeBuilders::_internals_
 }     // DLG4
