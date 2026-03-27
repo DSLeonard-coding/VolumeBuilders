@@ -28,7 +28,7 @@ namespace DLG4::VolumeBuilders {
     /** @addtogroup Factories  Volume/Structure Builder Factories
      *  @brief Factories for creating VolumeBuilder and StructureBuilder objects.
      *  @{
-    /**
+    **/
 
 
     /**
@@ -38,7 +38,7 @@ namespace DLG4::VolumeBuilders {
     * @return The builder.  Set configurations and then call .MakeSolid() and .MakeLogicalVolume() on it.
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
-    * */
+    **/
     BoxBuilderPtr CreateBoxBuilder(const G4String &name);
 
     /**
@@ -116,8 +116,8 @@ namespace DLG4::VolumeBuilders {
 
     /**
     * @brief Create a Box solid.
-        * Uses the global default unit
- * @param name  Base name to derive geometry object names from.
+    * Uses the global default unit
+    * @param name  Base name to derive geometry object names from.
     * @param edge_x  The x reference of one end (either one)
     * @param x_delta  FULL X size, + or - from end_x.
     * @param edge_y  The y reference of one end (either one)
