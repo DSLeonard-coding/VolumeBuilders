@@ -55,8 +55,9 @@ Related Links:
 VolumeBuilders is a fluent-style (ie chained) builder system for simplified and streamlined definition of Geant4 geometries, aimed at simplifying geometry definition and removing code noise to focus on configuration, with a result of easier definition and review and fewer bugs.  As a bonus, it allows easy definition of assemblies containing other assemblies and volumes, treating both in the same way, simply as objects to be configured (visibility etc) or placed.  
 
 Some benefits/features include:
-- Full doxygen documentation.
-- Fully configured for JetBrains Clion IDE, with cntrl-space method discovery/completion, hover docs (or cntrl-P), parameter "inlay" hints, and code analysis/checking.
+- IDE-focussed human discoverability and documentation of methods, with full web-based doxygen reference as well.
+  - Fully configured for JetBrains Clion IDE
+  - Namespaced method discovery/completion, hover docs (or cntrl-P), parameter "inlay" hints, and code analysis/checking.
 - Default settable units mean no unit multiplication bugs.
 - Flexible, offset, edge/center-based pre-boolean solid coordinates greatly ease definition and boolean operations, and allow placing many parts at a fixed reference or origin.
 - Highly streamlined syntax. Much reduced repetition of units, parameters, types, and variable names.
