@@ -40,7 +40,7 @@ execute_process(COMMAND ${GEANT4_PATH}/bin/geant4-config --version OUTPUT_VARIAB
 execute_process(COMMAND ${GEANT4_PATH}/bin/geant4-config --prefix OUTPUT_VARIABLE Geant4_PREFIX OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # Create the Shadow Target
-add_library(Geant4_Target INTERFACE)
+add_library(Geant4_Target INTERFACE IMPORTED GLOBAL)
 
 separate_arguments(G4_CFLAGS_LIST NATIVE_COMMAND "${G4_CFLAGS}")
 foreach(flag ${G4_CFLAGS_LIST})
