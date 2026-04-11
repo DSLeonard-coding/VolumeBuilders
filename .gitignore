@@ -5,6 +5,7 @@ docs/html/**
 public/**
 latex/**
 docs/latex/**
+/share
 
 
 # Ignore other user-specific or temporary files
