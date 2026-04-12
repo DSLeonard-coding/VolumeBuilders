@@ -3,7 +3,7 @@ if(TARGET ROOT_Target)
 endif()
 
 include (${CMAKE_CURRENT_LIST_DIR}/../utils/siphon_user_env.cmake)
-siphon_user_env(ROOTSYS)
+siphon_user_envs(ROOTSYS)
 if("$ENV{ROOTSYS}" STREQUAL "")
     message(FATAL_ERROR "ROOTSYS not set in Environment or hpge_user_setup.sh")
 endif()
@@ -32,7 +32,7 @@ if(EXISTS "$ENV{ROOTSYS}/src")
     add_custom_target(root_sources_indexer SOURCES ${ROOT_SOURCES})
 endif()
 
-add_library(ROOT_Target INTERFACE)
+add_library(ROOT_Target INTERFACE IMPORTED GLOBAL)
 target_include_directories(ROOT_Target INTERFACE ${ROOT_INCLUDE_DIRS})
 target_link_libraries(ROOT_Target INTERFACE ${ROOT_LIBRARIES})
 # More precision way:
