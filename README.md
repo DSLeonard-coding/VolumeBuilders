@@ -112,6 +112,7 @@ Here's a clean example from a real simulated sample.
 ```cpp
     VB::SetGlobalDefaultUnit(mm);
     double bottom= array_plate_top_z_/mm;
+    VB::BuilderViewList pieces;
     VB::CreateZDeltaBoxBuilder("bags_mid", 300, 276, bottom, 24.5 )->AddTo(pieces);
 
     // main +/-x walls, 13 bags each,vertical
