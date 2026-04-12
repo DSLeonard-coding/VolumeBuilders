@@ -1,11 +1,14 @@
 #future proofed for vcpkg
+if(POLICY CMP0177)
+    cmake_policy(SET CMP0177 NEW)
+endif()
 if(NOT VCPKG_TOOLCHAIN AND NOT CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg.cmake")
     include(${CMAKE_CURRENT_LIST_DIR}/../utils/siphon_user_env.cmake)
 
     set(local_bin "./bin")
     set(local_lib "./lib")
-    siphon_user_env(local_bin)
-    siphon_user_env(local_lib)
+    siphon_user_envs(local_bin OPTIONAL)
+    siphon_user_envs(local_lib OPTIONAL)
 
     get_filename_component(INSTALL_PATH "${local_bin}" ABSOLUTE)
     get_filename_component(LIB_INSTALL_PATH "${local_lib}" ABSOLUTE)
