@@ -19,8 +19,7 @@
 
 namespace DLG4::VolumeBuilders::_internals_ {
     // a shorthand out to the public namespace:
-    namespace VB=DLG4::VolumeBuilders;
-    using namespace VB;
+    namespace VB = DLG4::VolumeBuilders;
 
     // Base template alias
     template <typename T>
