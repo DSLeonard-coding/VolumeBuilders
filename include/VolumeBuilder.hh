@@ -351,13 +351,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
         DerivedPtr StackPhysOffset(const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0});
 
         /**
-         * Set the G4Transform3D for placment
-         * The tranformation provided is meant to be UNITLESS
-         * unless you SetDefaultUnit(1).  Otherwise ex: SetDefaultUnit(CLHEP::cm)
-         * and proivde a UNITLESS transform.
-         * To supply units for each G4Tranform3D separately,
+         * Set the G4Transform3D for placment.
+         * The tranformation provided is meant to be in UNITLESS values.
+         * Ie the unit is already pre-configured but not included in the values.
+         * So passing 5 means 5cm if SetDefault(CLHEP::cm) was set.
+         * Otherwise you SetDefaultUnit(1), and pass a value that was already multipled by units.
+         * To supply different units for each G4Tranform3D separately,
          * just call SetDefaultUnit(unit) before each call.
-         * Will overwite/replace rotation and translation.
+         * The call will overwite/replace rotation and translation.
          * @param new_transform Translation vector.
          * @return This builder for chaining.
          * @ingroup PlacementConfigs
@@ -460,7 +461,8 @@ namespace DLG4::VolumeBuilders::_internals_ {
          */
 
 
-        /** @defgroup Transformins  Shape transformers
+        /** @defgroup Transforms  Shape transformers
+         * Modify shape configurations.
          * */
 
         /**
