@@ -11,7 +11,7 @@
 //
 //
 //
-//#include "VolumeBuilderReference.hh"
+//#include "BuilderViewCore.hh"
 #include "Linkable.hh"
 #include "i_shared_ptr.hh"
 #include <stdexcept>
@@ -33,14 +33,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * @details Use it to assign a specialized builder to a generic builder.
      * But you don't use it directly.  It has no direct public ctors or factories,
      * but BuilderView(your_other_builder_object) constructs it as
-     *  i_shared_ptr<VolumeBuilderReference> ( pointer-wrapped builder).
-     * Or pass your builder to something expecting a VolumeBuilderReferencePtr,
-     * like ex: a std::vector<VolumeBuilderReferencePtr>, aka a VolumeBuilderRefList.
+     *  i_shared_ptr<BuilderViewCore> ( pointer-wrapped builder).
+     * Or pass your builder to something expecting a BuilderViewCorePtr,
+     * like ex: a std::vector<BuilderViewCorePtr>, aka a VolumeBuilderRefList.
      *
-     * @headerfile VolumeBuilderReference.hh
+     * @headerfile BuilderViewCore.hh
      * @see VolumeBuilder for inherited methods.
      */
-    class VolumeBuilderReference final: public VolumeBuilder<VolumeBuilderReference> {
+    class BuilderViewCore final: public VolumeBuilder<BuilderViewCore> {
         template <typename T>
         friend class VolumeBuilder;
         friend AssemblyPtr VB::CreateAssembly(G4String name);
@@ -56,7 +56,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     private:
         //allow i_shared_ptr access to our converting ctors
         //This way they get instantly wrapped!
-        friend class i_shared_ptr<VolumeBuilderReference>;
+        friend class i_shared_ptr<BuilderViewCore>;
 
         /**
          * Main constructor to link to another builder
@@ -66,9 +66,9 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @param other The builder to reference
          */
         template <typename T>
-        VolumeBuilderReference(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
+        BuilderViewCore(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
             std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>  = 0) : VolumeBuilder<
-            VolumeBuilderReference>(other, SET_LINK) {
+            BuilderViewCore>(other, SET_LINK) {
         }
 
         /* Constructor to make a builder from an Existing Geant solid
@@ -77,28 +77,28 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @param G4VSolid pointer
          * @return The builder
         */
-        VolumeBuilderReference(G4VSolid *solid);
+        BuilderViewCore(G4VSolid *solid);
 
         /* Constructor to make a builder from an Existing Geant logical_volume
          * This is mostly meant for use in parameter signatures
          * Where you need to get a logical volume or a Builder with a solid
          * @param G4VSolid pointer
          * @return The builder */
-        VolumeBuilderReference(G4LogicalVolume *volume);
+        BuilderViewCore(G4LogicalVolume *volume);
 
         /* Constructor to make a builder from an Existing Geant logical_volume.
          * This is mostly meant for use in parameter signatures
          * where you need to get a logical volume or a Builder with a solid
          * @param G4VPhysicalVolume pointer
          * @return The builder */
-        VolumeBuilderReference(G4VPhysicalVolume *volume);
+        BuilderViewCore(G4VPhysicalVolume *volume);
 
         ///////////////  The rest is all boilerplate: ////////////////////////
 
 
-        VolumeBuilderReference(const VolumeBuilderReference &other) = default;
+        BuilderViewCore(const BuilderViewCore &other) = default;
 
-        VolumeBuilderReference() = default;
+        BuilderViewCore() = default;
 
     protected:
         SharedPtr<IStructureBuilder> clone_impl() const override;
@@ -109,7 +109,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         }
 
     public:
-        VolumeBuilderReference &operator=(const VolumeBuilderReference &other) = delete;
+        BuilderViewCore &operator=(const BuilderViewCore &other) = delete;
     };
 }
 #endif  //VolumeReference_HPP

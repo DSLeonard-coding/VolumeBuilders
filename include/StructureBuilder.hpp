@@ -10,9 +10,9 @@
 */
 #include "Linkable.hh"
 #include "VolumeBuildersTypes.hh"
-#include "StructureBuilderReference.hh"
+#include "StructureViewCore.hh"
 #include "StructureBuilder.hh"
-#include "VolumeBuilderReference.hh"
+#include "BuilderViewCore.hh"
 #include <memory>
 
 

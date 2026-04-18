@@ -10,14 +10,14 @@
 #include "VolumeBuildersTypes.hh"
 #include "ISolidBuilder.hh"
 #include "VolumeBuilder.hh"
-#include "VolumeBuilderReference.hh"
-#include "StructureBuilderReference.hh"
+#include "BuilderViewCore.hh"
+#include "StructureViewCore.hh"
 #include "StructureBuilder.hh"
 #include "StructureBuilder.hpp"
 
 
 namespace DLG4::VolumeBuilders::_internals_ {
-    SharedPtr<IStructureBuilder> StructureBuilderReference::clone_impl() const {
+    SharedPtr<IStructureBuilder> StructureViewCore::clone_impl() const {
         if (builder_configs_->istructure_ptr) {
             // have the erased base clone itself ex: new RZBuilder(*this);  :
             IStructurePtr copy = builder_configs_->istructure_ptr->clone_impl();
@@ -37,7 +37,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         }
     }
 
-    StructureView StructureBuilderReference::ToStructureView() const {
+    StructureView StructureViewCore::ToStructureView() const {
         // we're already type erased, so just return ourselves.
         auto x = shared_mutable_this(this);
         return x;

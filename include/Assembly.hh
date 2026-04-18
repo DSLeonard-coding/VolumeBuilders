@@ -58,7 +58,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         [[noreturn]]
         G4VSolid *SolidConstructor(const G4String &name) override {
             throw std::runtime_error(
-                "Error in StructureBuilderReference::SolidConstructor(const G4String &name) "
+                "Error in StructureViewCore::SolidConstructor(const G4String &name) "
                 + this->builder_configs_->name + " \n" +
                 "SolidConstructor(const G4String &name) is not implemented.");
         }

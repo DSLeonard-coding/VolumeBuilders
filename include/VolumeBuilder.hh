@@ -38,11 +38,11 @@
 #include <unordered_map>
 #include "Assembly.hh"
 
-//#include "VolumeBuilderReference.hh"
+//#include "BuilderViewCore.hh"
 
 namespace DLG4::VolumeBuilders::_internals_ {
 
-    class VolumeBuilderReference;
+    class BuilderViewCore;
     template <typename U>
     class VolumeBuilder;
 
@@ -68,11 +68,11 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // Specifically factories (normal) and the type-erasing pseudo-inheritance (StructureBuilder)
         template <typename>
         friend class VolumeBuilder;
-        friend class VolumeBuilderReference;
+        friend class BuilderViewCore;
         friend class Assembly;
         template <typename>
         friend class StructureBuilder;
-        friend class StructureBuilderReference;
+        friend class StructureViewCore;
         friend FromG4VSolidPtr VB::CreateFromG4VSolid(G4VSolid *solid);
         friend AssemblyPtr VB::CreateAssembly(G4String names);
         friend class RZBuilder;

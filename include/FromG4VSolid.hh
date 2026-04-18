@@ -27,7 +27,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
      */
     class FromG4VSolid final: public VolumeBuilder<FromG4VSolid> {
         friend class VolumeBuilder<FromG4VSolid>;
-        friend class VolumeBuilderReference;
+        friend class BuilderViewCore;
         friend FromG4VSolidPtr VB::CreateFromG4VSolid(G4VSolid *solid);
 
     public:

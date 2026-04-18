@@ -8,9 +8,9 @@ sed -i '/<!-- START doctoc generated TOC please keep comment here to allow auto 
   d
 }' README.md
 rm ./docs/html -rf
+doxygen ./docs/Doxyfile
+doxygen ./docs/Doxyfile
 rm -rf public
-doxygen ./docs/Doxyfile
-doxygen ./docs/Doxyfile
 cp -arf ./docs/html public
 sed -i 's/^\[TOC\]$/<!-- START doctoc generated TOC please keep comment here to allow auto update -->\n<!-- END doctoc generated TOC please keep comment here to allow auto update -->/' README.md d
 doctoc README.md

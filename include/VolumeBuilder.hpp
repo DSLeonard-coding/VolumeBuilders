@@ -15,9 +15,9 @@
 #include <G4PVPlacement.hh>
 #include <G4SubtractionSolid.hh>
 #include "Linkable.hh"
-#include "VolumeBuilderReference.hh"
+#include "BuilderViewCore.hh"
 #include "VolumeBuildersTypes.hh"
-#include "StructureBuilderReference.hh"
+#include "StructureViewCore.hh"
 #include "Assembly.hh"
 #include <memory>
 

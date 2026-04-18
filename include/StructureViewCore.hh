@@ -21,7 +21,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
 
     /**
-     *@class StructureBuilderReference
+     *@class StructureViewCore
      * @brief A type-erased (data shared view) view of a builder or
      * assembly, ie a "structure."
  * \dotfile builder_graph.dot
@@ -33,12 +33,12 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * While this base view only supports limited methods, it is fully polymorphic
      * and builder objects internally can trigger their full build chain.
      *
-     * This derived clas really exists for parallelism with VolumeBuilderReference.
+     * This derived clas really exists for parallelism with BuilderViewCore.
      *
      * @headerfile StructureBuilder.hh
      * @see VolumeBuilder for inherited methods.
      * */
-    class StructureBuilderReference final: public StructureBuilder<StructureBuilderReference> {
+    class StructureViewCore final: public StructureBuilder<StructureViewCore> {
         template <typename T>
         friend class VolumeBuilder;
         template <typename T>
@@ -48,22 +48,22 @@ namespace DLG4::VolumeBuilders::_internals_ {
         friend class i_shared_ptr;
 
     private:
-        friend class i_shared_ptr<StructureBuilderReference>;
+        friend class i_shared_ptr<StructureViewCore>;
 
         template <typename T>
-        StructureBuilderReference(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
+        StructureViewCore(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
             std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
-                int>  = 0) : StructureBuilder<StructureBuilderReference>(other, SET_LINK) {
+                int>  = 0) : StructureBuilder<StructureViewCore>(other, SET_LINK) {
         }
 
         G4VSolid *SolidConstructor(const G4String &name) override {
             throw std::runtime_error(
-                "Error in StructureBuilderReference::SolidConstructor(const G4String &name) "
+                "Error in StructureViewCore::SolidConstructor(const G4String &name) "
                 + this->builder_configs_->name + " \n" +
                 "SolidConstructor(const G4String &name) is not implemented.");
         }
 
-        StructureBuilderReference(const StructureBuilderReference &other) = default;
+        StructureViewCore(const StructureViewCore &other) = default;
 
     protected:
         // Clone impl, this returns a type-erased ISolidPtr
@@ -73,7 +73,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         StructureView ToStructureView() const override;
 
     public:
-        StructureBuilderReference &operator=(const StructureBuilderReference &other) = delete;
+        StructureViewCore &operator=(const StructureViewCore &other) = delete;
     };
 }
 

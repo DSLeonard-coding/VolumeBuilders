@@ -9,7 +9,7 @@
 
 #include "VolumeBuildersTypes.hh"
 #include "VolumeBuilder.hh"
-#include "VolumeBuilderReference.hh"
+#include "BuilderViewCore.hh"
 #include "StructureBuilder.hpp"
 #include "Assembly.hh"
 

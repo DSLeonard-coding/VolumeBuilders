@@ -13,7 +13,6 @@ Related Links:
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Introduction](#introduction)
 - [Primary References](#primary-references)
@@ -541,10 +540,10 @@ Use of smart pointers for returns helps in places, because reference returns in 
 
 But now making a vector of builders or even having base methods accepting a builder as a parameter to a builder is a problem because there are many types ex:: (VolumeBuilder<Derived>::AddSubtraction(<AnotherDerived> another_builder)).  For the latter you can template the method, nested templating, but that doesn't solve the first problem.
 
-VolumeBuilderReference is the better solution.  It has a templated ctor (actually calls a templated copy ctor in VolumeBuilder) that takes any builder type and "copies" the internal data by smart pointer reference.  It makes a live view on another buider, but without non-polymorphic SolidBuilder functionality.  There is a common interface, ISolidBuilder, to all builders, and a pointer of this type to the original 
+BuilderViewCore is the better solution.  It has a templated ctor (actually calls a templated copy ctor in VolumeBuilder) that takes any builder type and "copies" the internal data by smart pointer reference.  It makes a live view on another buider, but without non-polymorphic SolidBuilder functionality.  There is a common interface, ISolidBuilder, to all builders, and a pointer of this type to the original 
 object is stored in the type-erased VolumeBuilder object.  The data smart pointers are custom and use a linked-tree update system (with the open end linkable from any link, yet sealable to data --as oposed to another link --only once, maintaining  strong logical immutability) to keep the original object synchronized with the type-erased object, so that methods can be called polymorphically on the original object and results are seen in the data of the original objects.
 
-Type-erased object views of course cannot be used to configure builer-specific (non-polymorphic) settings, because those obviously cannot be represented in a type-agnostic way.  However they can call polymorphic methods that are forwarded by VolumeBuilderReference, including SolidConstructor(const G4String &name) that knows how to make builder specific solids that have already been configured.  So the only restriction is that builder-specific settings must be configured on the builder-specific (non-type-erased) view of the object (ie, usually before converting to VolumeBuilderReference.   After that, all builders 
+Type-erased object views of course cannot be used to configure builer-specific (non-polymorphic) settings, because those obviously cannot be represented in a type-agnostic way.  However they can call polymorphic methods that are forwarded by BuilderViewCore, including SolidConstructor(const G4String &name) that knows how to make builder specific solids that have already been configured.  So the only restriction is that builder-specific settings must be configured on the builder-specific (non-type-erased) view of the object (ie, usually before converting to BuilderViewCore.   After that, all builders 
 can be operated on together.
 
 
@@ -558,7 +557,7 @@ and then loop over them for placement for example.
 The [CreateFromG4VSolid](@ref CreateFromG4VSolid()) class is another derived type that takes has a Creat(G4VSolid *solid) that makes a builder
 From any Geant4 solid, bypassing the solid building step, and returning a builder for unions, logical volumes and placement.
 
-VolumeBuilderReference has a ctor that also takes a G4VSolid and uses FromG4VSolid to construct a builder.
+BuilderViewCore has a ctor that also takes a G4VSolid and uses FromG4VSolid to construct a builder.
 This allow VBR to be used as a flexible parameter type to get a builder with a solid made or makeable.
 
 

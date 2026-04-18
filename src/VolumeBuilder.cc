@@ -8,7 +8,7 @@
 #include "RZBuilder.hh"
 #include "BoxBuilder.hh"
 #include "FromG4VSolid.hh"
-#include "VolumeBuilderReference.hh"
+#include "BuilderViewCore.hh"
 #include "StructureBuilder.hh"
 #include "StructureBuilder.hpp"
 #include "Assembly.hh"
@@ -19,7 +19,7 @@ using namespace DLG4::VolumeBuilders;
 using namespace DLG4::VolumeBuilders::Builders;
 template class DLG4::VolumeBuilders::Builders::VolumeBuilder<RZBuilder>;
 template class DLG4::VolumeBuilders::Builders::VolumeBuilder<FromG4VSolid>;
-template class DLG4::VolumeBuilders::Builders::VolumeBuilder<VolumeBuilderReference>;
-template class DLG4::VolumeBuilders::Builders::StructureBuilder<StructureBuilderReference>;
+template class DLG4::VolumeBuilders::Builders::VolumeBuilder<BuilderViewCore>;
+template class DLG4::VolumeBuilders::Builders::StructureBuilder<StructureViewCore>;
 template class DLG4::VolumeBuilders::Builders::StructureBuilder<Assembly>;
 template class DLG4::VolumeBuilders::Builders::VolumeBuilder<BoxBuilder>;

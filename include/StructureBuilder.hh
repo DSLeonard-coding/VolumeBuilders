@@ -52,7 +52,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * While this base view only supports limited methods, it is fully polymorphic
      * and builder objects internally can trigger their full build chain.
      *
-     * This derived clas really exists for parallelism with VolumeBuilderReference.
+     * This derived clas really exists for parallelism with BuilderViewCore.
      *
      * @headerfile StructureBuilder.hh
      * @see VolumeBuilder for inherited methods.
@@ -64,7 +64,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // we need access to the other templates for copy
         template <typename>
         friend class VolumeBuilder;
-        friend class StructureBuilderReference;
+        friend class StructureViewCore;
         friend class Assembly;
         friend AssemblyPtr VB::CreateAssembly(G4String name);
         template <typename>
@@ -421,7 +421,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // ctors only useable through explicitly granted (friendship) inheritance...
 
         friend class RZBuilder;
-        friend class StructureBuilderReference;
+        friend class StructureViewCore;
         friend class FromG4VSolid;
 
 

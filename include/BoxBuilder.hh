@@ -17,7 +17,7 @@
  */
 #include "VolumeBuildersTypes.hh"
 #include "VolumeBuilder.hh"
-#include "StructureBuilderReference.hh"
+#include "StructureViewCore.hh"
 // ReSharper disable once CppUnusedIncludeDirective
 #include <memory>
 
@@ -203,7 +203,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
      */
     class BoxBuilder final: public VolumeBuilder<BoxBuilder> {
     public:
-        friend class VolumeBuilderReference;
+        friend class BuilderViewCore;
         friend class VolumeBuilder<BoxBuilder>; // shouldn't be needed, maybe isn't now.
         template <typename T>
         friend class i_shared_ptr; // needed in principle, but maybe not for this class.

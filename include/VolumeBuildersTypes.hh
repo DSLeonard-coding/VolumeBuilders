@@ -22,20 +22,20 @@ namespace DLG4::VolumeBuilders::_internals_ {
     namespace VB = DLG4::VolumeBuilders;
 
     // Base template alias
-    template <typename T>
+    template<typename T>
     using SharedPtr = i_shared_ptr<T>;
     class ISolidBuilder;
     class IStructureBuilder;
     class IVolumeBuilder;
-    template <typename T>
+    template<typename T>
     class VolumeBuilder;
-    class VolumeBuilderReference;
+    class BuilderViewCore;
     class RZBuilder;
     class BoxBuilder;
     class FromG4VSolid;
-    template <typename T>
+    template<typename T>
     class StructureBuilder;
-    class StructureBuilderReference;
+    class StructureViewCore;
     class Assembly;
 
     /**
@@ -50,34 +50,37 @@ namespace DLG4::VolumeBuilders::_internals_ {
      */
     using IStructurePtr = SharedPtr<IStructureBuilder>;
 
+
     /**
      * @typedef BuilderView
      * @brief Common interface for all volume builder types
-     * @details All specific builder pointer types (RZBuilderPtr, FromG4VSolidPtr, etc.)
+     * @details A shared pointer to \_internals\_::BuilderViewCore
+     * All specific builder pointer types (RZBuilderPtr, FromG4VSolidPtr, etc.)
      * are implicitly convertible to this type and provide polymorphic access
      * to volume operations.
      */
-    using BuilderView = SharedPtr<VolumeBuilderReference>;
+    using BuilderView = SharedPtr<BuilderViewCore>;
     /**
      * @typedef StructureView
      * @brief Common interface for all structure types. \n
      * Includes builders and assemblies, and methods for LogicalVolume rendering and placement.
+     * see \_internals\_::StructureViewCore for the common interface.
      */
-    using StructureView = SharedPtr<StructureBuilderReference>;
+    using StructureView = SharedPtr<StructureViewCore>;
 
-    /// @see BuilderView for the common interface.
+    /// Shared pointer to \_internals\_::RZBuilder
     using RZBuilderPtr = SharedPtr<RZBuilder>;
 
-    /// @see BuilderView for the common interface.
+    /// Shared pointer to \_internals\_::FromG4VSolid
     using FromG4VSolidPtr = SharedPtr<FromG4VSolid>;
 
-    /// @see BuilderView for the common interface.
+    /// Shared pointer to \_internals\_::BoxBuilder
     using BoxBuilderPtr = SharedPtr<BoxBuilder>;
 
     /**
      * @typedef AssemblyPtr
-     * @brief Assembly type to hold Structures, ie other assemblies or buidlers.
-    /// @see StructureView for the common interface.
+     * @brief Pointer to Assembly type to hold Structures, ie other assemblies or buidlers.
+     * See \_internals\_::Assembly.
      */
     using AssemblyPtr = SharedPtr<Assembly>;
 
@@ -98,10 +101,10 @@ namespace DLG4::VolumeBuilders::_internals_ {
     using StructureViewList = std::vector<StructureView>;
 
     // For the template base class
-    template <typename U>
+    template<typename U>
     using VolumeBuilderPtr = SharedPtr<U>;
 
-    template <typename U>
+    template<typename U>
     using ENABLE_SHARED_WRAPPER = Utilities::disableable_shared_from_this<U>;
 
     using UnitlessG4Transform3D = G4Transform3D;
@@ -117,15 +120,17 @@ namespace DLG4::VolumeBuilders::_internals_ {
         std::optional<double> units;
 
         // 3-value constructor - no units specified, raw values
-        Unit3Vec(double x, double y, double z) : x(x), y(y), z(z), units(std::nullopt) {
+        Unit3Vec(double x, double y, double z)
+            : x(x), y(y), z(z), units(std::nullopt) {
         }
 
         // 4-value constructor - units specified, scale the values
-        Unit3Vec(double u, double x, double y, double z) : x(x), y(y), z(z), units(u) {
+        Unit3Vec(double u, double x, double y, double z)
+            : x(x), y(y), z(z), units(u) {
         }
 
-        Unit3Vec(double u, const Unitless3Vec &vec) :
-            x(vec.getX()), y(vec.getY()), z(vec.getZ()), units(u) {
+        Unit3Vec(double u, const Unitless3Vec &vec)
+            : x(vec.getX()), y(vec.getY()), z(vec.getZ()), units(u) {
         }
 
         [[nodiscard]] G4ThreeVector apply_units(const double dflt_unit) const {
@@ -138,42 +143,52 @@ namespace DLG4::VolumeBuilders::_internals_ {
         }
     };
 
-    template <typename T>
+    template<typename T>
     std::shared_ptr<T> shared_mutable_this(const std::enable_shared_from_this<T> *obj) {
         // Call shared_from_this() (returns shared_ptr<const T> if obj is const)
         auto sp_const = obj->shared_from_this();
 
         // Cast away constness safely
-        return std::const_pointer_cast<std::remove_const_t<T>>(sp_const);
+        return std::const_pointer_cast<std::remove_const_t<T> >(sp_const);
     }
 }
 
 //Export names for API usage/tab-completion.
+///@namespace DLG4::VolumeBuilders
 namespace DLG4::VolumeBuilders {
-    using _internals_::RZBuilderPtr;
-    using _internals_::BoxBuilderPtr;
-    using _internals_::FromG4VSolidPtr;
-    using _internals_::AssemblyPtr;
-    using _internals_::FromG4VSolidPtr;
-    using _internals_::VolumeBuilderPtr;
-
-    using _internals_::BuilderView;
-    using _internals_::BuilderView;
-    using _internals_::BuilderViewList;
-    using _internals_::StructureView;
-    using _internals_::StructureViewList;
-    using _internals_::Unit3Vec;
-    using _internals_::Unitless3Vec;
+    /// @copydoc _internals_::RZBuilderPtr
+    using RZBuilderPtr = _internals_::RZBuilderPtr;
+    /// @copydoc _internals_::BoxBuilderPtr
+    using BoxBuilderPtr = _internals_::BoxBuilderPtr;
+    /// @copydoc _internals_::AssemblyPtr
+    using AssemblyPtr = _internals_::AssemblyPtr;
+    /// @copydoc _internals_::FromG4VSolidPtr
+    using FromG4VSolidPtr = _internals_::FromG4VSolidPtr;
+    /// @copydoc _internals_::VolumeBuilderPtr
+    template<typename T>
+    using VolumeBuilderPtr = _internals_::VolumeBuilderPtr<T>;
+    /// @copydoc _internals_::BuilderView
+    using BuilderView = _internals_::BuilderView;
+    /// @copydoc _internals_::BuilderViewList
+    using BuilderViewList = _internals_::BuilderViewList;
+    /// @copydoc _internals_::StructureView
+    using StructureView = _internals_::StructureView;
+    /// @copydoc _internals_::StructureViewList
+    using StructureViewList = _internals_::StructureViewList;
+    /// @copydoc _internals_::Unit3Vec
+    using Unit3Vec = _internals_::Unit3Vec;
+    /// @copydoc _internals_::Unitless3Vec
+    using Unitless3Vec = _internals_::Unitless3Vec;
 }
 
 namespace DLG4::VolumeBuilders::Builders {
-    using ::DLG4::VolumeBuilders::_internals_::RZBuilder;
-    using ::DLG4::VolumeBuilders::_internals_::VolumeBuilder;
-    using ::DLG4::VolumeBuilders::_internals_::BoxBuilder;
-    using ::DLG4::VolumeBuilders::_internals_::FromG4VSolid;
-    using ::DLG4::VolumeBuilders::_internals_::Assembly;
-    using ::DLG4::VolumeBuilders::_internals_::StructureBuilder;
-    using ::DLG4::VolumeBuilders::_internals_::VolumeBuilderReference;
-    using ::DLG4::VolumeBuilders::_internals_::StructureBuilderReference;
+    using _internals_::VolumeBuilder;
+    using _internals_::StructureBuilder;
+    using RZBuilder = _internals_::RZBuilder;
+    using BoxBuilder = _internals_::BoxBuilder;
+    using FromG4VSolid = _internals_::FromG4VSolid;
+    using Assembly = _internals_::Assembly;
+    using BuilderViewCore = _internals_::BuilderViewCore;
+    using StructureViewCore = _internals_::StructureViewCore;
 }
 #endif  //VOLUMEBUILDERSTYPES_HH

@@ -22,7 +22,7 @@
 #define ONCE_MUTABLE mutable  // for linkable objects
 
 namespace DLG4::VolumeBuilders::_internals_ {
-    class VolumeBuilderReference;
+    class BuilderViewCore;
     template <typename U>
     class VolumeBuilder;
     using UnitlessG4Transform3D = G4Transform3D;

@@ -8,7 +8,7 @@
 * Generally they need a fluent wrapper in the VolumeBuilder class if they are to be fluent.
 * A non-templated base class like this one cannot use the templated fluent return type.
 *
-* These methods generally also need polymorphic forwarding in the type-erased VolumeBuilderReference.
+* These methods generally also need polymorphic forwarding in the type-erased BuilderViewCore.
 * through the stored ISolidBuilder* reference_builder_interface_ pointer to the original class.
 * Maybe that should really be declared down here.
 *
@@ -35,8 +35,8 @@ namespace DLG4::VolumeBuilders::_internals_ {
     /// This gets used by VolumeBuiderReference to store pointers to derived methods.
     class IStructureBuilder {
     protected:
-        friend class VolumeBuilderReference;    // for tye erasing polymorphism
-        friend class StructureBuilderReference; // for tye erasing polymorphism
+        friend class BuilderViewCore;    // for tye erasing polymorphism
+        friend class StructureViewCore; // for tye erasing polymorphism
         template <typename T>
         friend class StructureBuilder;
         friend class Assembly;

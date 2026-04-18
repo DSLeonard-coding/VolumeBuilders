@@ -15,7 +15,7 @@
 #include "RZBuilder.hh"
 #include "BoxBuilder.hh"
 #include "ISolidBuilder.hh"
-#include "VolumeBuilderReference.hh"
+#include "BuilderViewCore.hh"
 #include "StructureBuilder.hh"
 #include "StructureBuilder.hpp"
 #include "FromG4VSolid.hh"
