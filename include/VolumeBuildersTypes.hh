@@ -69,8 +69,6 @@ namespace DLG4::VolumeBuilders::_internals_ {
      */
     using StructureBuilder = SharedPtr<StructureBuilderCore>;
 
-    /// @class RZBuilder
-
     /// Shared pointer to \_internals\_::RZBuilderCore
     using RZBuilder = SharedPtr<RZBuilderCore>;
 

@@ -12,5 +12,6 @@ doxygen ./docs/Doxyfile
 doxygen ./docs/Doxyfile
 rm -rf public
 cp -arf ./docs/html public
+#sed -i 's/@ref //g' README.md
 sed -i 's/^\[TOC\]$/<!-- START doctoc generated TOC please keep comment here to allow auto update -->\n<!-- END doctoc generated TOC please keep comment here to allow auto update -->/' README.md d
 doctoc README.md

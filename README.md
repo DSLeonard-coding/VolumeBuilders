@@ -165,7 +165,7 @@ Note: The CopyMaterial wrapper is a conveince method to duplicate materials with
 
 ### BoxBuilder Demo example
 
-The following example is included as src/Geometries/ConstructBoxExample.cc  It multiple boxes arranged with faces set relative to z=0, including one rotated around its offset center.  Select BoxExample from the demo for the live example:
+The following example is included as [src/Geometries/ConstructBoxExample.cc](<@ref demo/src/Geometries/ConstructBoxExample.cc>)  It multiple boxes arranged with faces set relative to z=0, including one rotated around its offset center.  Select BoxExample from the demo for the live example:
 ```cpp
     VB::SetGlobalDefaultUnit(CLHEP::mm);     // set a global unit
     G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
@@ -262,7 +262,7 @@ All methods except GetX() methods return the builder itself, allowing more metho
 Get() methods generally will call a Make() method if needed.
 
 But VolumeBuilders does much more, it handles the whole Physical volume build chain, as already hinted at by some options above.
-Here's how we complete the above example to make a physical volume (a Placement).  See demo/src/geometries/ConstructExample1.cc for the complete example and/or run the Demo and select Example 1 to see the build:
+Here's how we complete the above example to make a physical volume (a Placement).  See [demo/src/geometries/ConstructExample1.cc](<@ref demo/src/geometries/ConstructExample1.cc>) for the complete example and/or run the Demo and select Example 1 to see the build:
 
 ```cpp
 #include <VolumeBuilders.hh>
@@ -297,7 +297,7 @@ auto ring_part = VB::CreatePolyhedraBuilder("ring_part", 6)
 ```
 Note that the logical volume and physical volume are auto-named to ring_part_L and ring_part_P, respectively.
 
-The full ConstructExample1.cc produces:  
+The full [ConstructExample1.cc](<@ref demo/src/Geometries/ConstructExample1.cc>) produces:  
 ![Example1\.png](docs/images/Example1.png "Example1_resized.png")  
 
 
@@ -368,7 +368,7 @@ auto my_assembly = VB::CreateAssembly("assembly1")
     ->SetColor(blue)
     ->MakePlacement();
 ```
-A working example is provided in  demo/src/Geometries/ConstructAssembly.cc and can be run with the "assembly" volume selection on the demo.  The code looks about like this (or some updated version of this):
+A working example is provided in  [demo/src/Geometries/ConstructAssembly.cc](<@ref demo/src/Geometries/ConstructAssembly.cc>) and can be run with the "assembly" volume selection on the demo.  The code looks about like this (or some updated version of this):
 
 ```cpp
     VB::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
@@ -442,13 +442,10 @@ auto another_can = VB::CreateFromG4VSolid(some_G4_solid);
     ->SetMother(ring_part);
     ->SetPhysOffset(0,1,2);
 
-auto locical_temp = another_can->GetLogicalVolume();  /// work directly on the logical volume   
+auto logical_temp = another_can->GetLogicalVolume();  /// work directly on the logical volume   
 logical_temp->SetSenstiveDetector(SDetector);         ///   direct call to Geant 4 methods
-anoter_can->MakeSolid();                              /// finish the chain.
+anoter_can->MakePlacement();                              /// finish the chain.
 
-new G4PVPlacement(mother  // transform
-, G4ThreeVector(xCell_[i], yCell_[i], 0), nameLiP,
-            logicLi[i], which_cryostat_ref[i].get(), false, copyNo);
             
 ```
 
