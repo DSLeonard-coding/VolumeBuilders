@@ -16,8 +16,8 @@
  *  ... and to add/subtract volumes.
  */
 #include "VolumeBuildersTypes.hh"
-#include "VolumeBuilder.hh"
-#include "StructureViewCore.hh"
+#include "VolumeBuilderBase.hh"
+#include "StructureBuilderCore.hh"
 // ReSharper disable once CppUnusedIncludeDirective
 #include <memory>
 
@@ -201,10 +201,10 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * @see VolumeBuilder<U> for inherited methods.
      * @ingroup Builders
      */
-    class BoxBuilderCore final: public VolumeBuilder<BoxBuilderCore> {
+    class BoxBuilderCore final: public VolumeBuilderBase<BoxBuilderCore> {
     public:
-        friend class BuilderViewCore;
-        friend class VolumeBuilder<BoxBuilderCore>; // shouldn't be needed, maybe isn't now.
+        friend class VolumeBuilderCore;
+        friend class VolumeBuilderBase<BoxBuilderCore>; // shouldn't be needed, maybe isn't now.
         template <typename T>
         friend class i_shared_ptr; // needed in principle, but maybe not for this class.
 

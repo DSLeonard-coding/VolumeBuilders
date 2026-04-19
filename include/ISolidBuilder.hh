@@ -8,7 +8,7 @@
 * Generally they need a fluent wrapper in the VolumeBuilder class if they are to be fluent.
 * A non-templated base class like this one cannot use the templated fluent return type.
 *
-* These methods generally also need polymorphic forwarding in the type-erased BuilderViewCore.
+* These methods generally also need polymorphic forwarding in the type-erased VolumeBuilderCore.
 * through the stored ISolidBuilder* reference_builder_interface_ pointer to the original class.
 * Maybe that should really be declared down here.
 *
@@ -35,18 +35,18 @@ namespace DLG4::VolumeBuilders::_internals_ {
     /// This gets used by VolumeBuiderReference to store pointers to derived methods.
     class IStructureBuilder {
     protected:
-        friend class BuilderViewCore;    // for tye erasing polymorphism
-        friend class StructureViewCore; // for tye erasing polymorphism
+        friend class VolumeBuilderCore;    // for tye erasing polymorphism
+        friend class StructureBuilderCore; // for tye erasing polymorphism
         template <typename T>
-        friend class StructureBuilder;
+        friend class StructureBuilderBase;
         friend class AssemblyCore;
         virtual G4VSolid *SolidConstructor(const G4String &name) = 0;
         virtual ~IStructureBuilder() = default;
         // clones and returns a base class pointer
         [[nodiscard]] virtual SharedPtr<IStructureBuilder> clone_impl() const = 0;
         // Returns a type-erased view ptr.
-        [[nodiscard]] virtual StructureView ToStructureView() const = 0;
-        [[nodiscard]] virtual BuilderView ToBuilderView() const = 0;
+        [[nodiscard]] virtual StructureBuilder ToStructureView() const = 0;
+        [[nodiscard]] virtual VolumeBuilder ToVolumeBuilder() const = 0;
         // store type erased views of underlying objects...
         // combined with above we can get a view from an object and store the view
         // in the tye-erased object being copied or constructed.

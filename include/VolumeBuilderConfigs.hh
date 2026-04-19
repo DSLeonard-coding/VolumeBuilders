@@ -22,14 +22,14 @@
 #define ONCE_MUTABLE mutable  // for linkable objects
 
 namespace DLG4::VolumeBuilders::_internals_ {
-    class BuilderViewCore;
+    class VolumeBuilderCore;
     template <typename U>
-    class VolumeBuilder;
+    class VolumeBuilderBase;
     using UnitlessG4Transform3D = G4Transform3D;
 
     // Configurations for VolumeBuilder
     struct BooleanSolid {
-        BuilderView vol_ref;
+        VolumeBuilder vol_ref;
         bool is_subtraction;
         bool is_intersection;
         G4ThreeVector offset{};
@@ -46,18 +46,10 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // Linkable<ISolidBuilder> isolid_ptr;
         // Linkable <VolumeBuetilderReference> builder_view;
         IStructurePtr istructure_ptr;
-        BuilderView builder_view;
+        VolumeBuilder builder_view;
         // an internal offset for non-centered solids:
         G4ThreeVector internal_offset{};
     };
-
-    /**
-     * @brief Set the default unit for all VolumeBuilder methods.
-     * @ingroup Units
-     * */
-    inline void SetGlobalDefaultUnit(G4double unit) {
-        BuilderConfigs::global_default_unit = unit;
-    }
 
     struct BooleanConfigs {
         std::vector<BooleanSolid> booleans;
@@ -98,7 +90,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     // Placement parameters
     struct PlacementConfigs {
         // the hierarchical assembly elements, if any
-        std::vector<StructureView> children;
+        std::vector<StructureBuilder> children;
         bool is_builder = true;
         G4RotationMatrix rotation{}; //G4 takes ownership
         G4ThreeVector translation = G4ThreeVector(0, 0, 0);
@@ -112,7 +104,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // component of name added from parent in hierarchy
         G4String parent_name = "";
         //G4 copies
-        BuilderView mother = nullptr; // Alternative mother source if raw is null
+        VolumeBuilder mother = nullptr; // Alternative mother source if raw is null
         G4int copy_no = 0;            // formal G4 copy_no_
         G4int copy_count = 0;         // used in placement naming if auto_copy_name == true;
         G4bool surface_check = false;
@@ -122,10 +114,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
         ~PlacementConfigs() = default;
     };
 }
-
-//Export names
 namespace DLG4::VolumeBuilders {
-    using _internals_::SetGlobalDefaultUnit;
+    /**
+     * @brief Set the default unit for all VolumeBuilder methods.
+     * @ingroup Units
+     * */
+    inline void SetGlobalDefaultUnit(G4double unit) {
+        _internals_::BuilderConfigs::global_default_unit = unit;
+    }
 }
 #endif //VOLUMEBUIDERTYPES_HH
 //TODO Implement auto parent name incrementing?

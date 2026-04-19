@@ -8,13 +8,13 @@
 // See header for documentation.
 
 #include "FromG4VSolidCore.hh"
-#include "VolumeBuilder.hh"
+#include "VolumeBuilderBase.hh"
 #include <string>
 #include <VolumeBuildersTypes.hh>
 //#include "disableable_shared_from_this.hh"
 #include "i_shared_ptr.hh"
-#include "StructureBuilder.hh"
-#include "StructureBuilder.hpp"
+#include "StructureBuilderBase.hh"
+#include "StructureBuilderBase.hpp"
 
 class G4String;
 using namespace DLG4::Utilities;
@@ -34,7 +34,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     //Private default copy ctor.
     //This is used by clone methods of concrete classes
     FromG4VSolidCore::FromG4VSolidCore(const FromG4VSolidCore &other) :
-        VolumeBuilder<FromG4VSolidCore>(other) {
+        VolumeBuilderBase<FromG4VSolidCore>(other) {
         // Call base class copy constructor
         set_shared_from_this_enabled(false);
         SetName(other.GetBuilderName());

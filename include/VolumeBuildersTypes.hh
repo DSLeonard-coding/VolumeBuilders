@@ -28,14 +28,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
     class IStructureBuilder;
     class IVolumeBuilder;
     template<typename T>
-    class VolumeBuilder;
-    class BuilderViewCore;
+    class VolumeBuilderBase;
+    class VolumeBuilderCore;
     class RZBuilderCore;
     class BoxBuilderCore;
     class FromG4VSolidCore;
     template<typename T>
-    class StructureBuilder;
-    class StructureViewCore;
+    class StructureBuilderBase;
+    class StructureBuilderCore;
     class AssemblyCore;
 
     /**
@@ -54,27 +54,30 @@ namespace DLG4::VolumeBuilders::_internals_ {
     /**
      * @typedef BuilderView
      * @brief Common interface for all volume builder types
-     * @details A shared pointer to \_internals\_::BuilderViewCore
+     * @details A shared pointer to \_internals\_::VolumeBuilderCore
      * All specific builder pointer types (RZBuilder, FromG4VSolid, etc.)
      * are implicitly convertible to this type and provide polymorphic access
      * to volume operations.
      */
-    using BuilderView = SharedPtr<BuilderViewCore>;
+    using VolumeBuilder = SharedPtr<VolumeBuilderCore>;
     /**
      * @typedef StructureView
      * @brief Common interface for all structure types. \n
+     * A shared pointer to \_internals\_::StructureBuilderCore
      * Includes builders and assemblies, and methods for LogicalVolume rendering and placement.
-     * see \_internals\_::StructureViewCore for the common interface.
+     * see \_internals\_::StructureBuilderCore for the common interface.
      */
-    using StructureView = SharedPtr<StructureViewCore>;
+    using StructureBuilder = SharedPtr<StructureBuilderCore>;
 
-    /// Shared pointer to \_internals\_::RZBuilder
+    /// @class RZBuilder
+
+    /// Shared pointer to \_internals\_::RZBuilderCore
     using RZBuilder = SharedPtr<RZBuilderCore>;
 
-    /// Shared pointer to \_internals\_::FromG4VSolid
+    /// Shared pointer to \_internals\_::FromG4VSolidCore
     using FromG4VSolid = SharedPtr<FromG4VSolidCore>;
 
-    /// Shared pointer to \_internals\_::BoxBuilder
+    /// Shared pointer to \_internals\_::BoxBuilderCore
     using BoxBuilder = SharedPtr<BoxBuilderCore>;
 
     /**
@@ -90,7 +93,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * But you should be able myBuilder->AddTo(myList)  to a vector of, for example,
      * G4LogicalVolume * as well since type converting operators are defined.!!!
      */
-    using BuilderViewList = std::vector<BuilderView>;
+    using BuilderViewList = std::vector<VolumeBuilder>;
 
     /**
      * @brief a user type to hold many structures
@@ -98,7 +101,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * But you should be able myStructure->AddTo(myList)  to a vector of, for example,
      * G4LogicalVolume * as well since type converting operators are defined.!!!
      **/
-    using StructureViewList = std::vector<StructureView>;
+    using StructureViewList = std::vector<StructureBuilder>;
 
     // For the template base class
     template<typename U>
@@ -166,29 +169,36 @@ namespace DLG4::VolumeBuilders {
     using FromG4VSolid = _internals_::FromG4VSolid;
     /// @copydoc _internals_::VolumeBuilder
     template<typename T>
-    using VolumeBuilder = _internals_::VolumeBuilder<T>;
+    using VolumeBuilder = _internals_::VolumeBuilderBase<T>;
     /// @copydoc _internals_::BuilderView
-    using BuilderView = _internals_::BuilderView;
+    using BuilderView = _internals_::VolumeBuilder;
     /// @copydoc _internals_::BuilderViewList
     using BuilderViewList = _internals_::BuilderViewList;
     /// @copydoc _internals_::StructureView
-    using StructureView = _internals_::StructureView;
+    using StructureView = _internals_::StructureBuilder;
     /// @copydoc _internals_::StructureViewList
     using StructureViewList = _internals_::StructureViewList;
     /// @copydoc _internals_::Unit3Vec
     using Unit3Vec = _internals_::Unit3Vec;
     /// @copydoc _internals_::Unitless3Vec
     using Unitless3Vec = _internals_::Unitless3Vec;
+
 }
 
-namespace DLG4::VolumeBuilders::Builders {
-    using _internals_::VolumeBuilder;
-    using _internals_::StructureBuilder;
+namespace DLG4::VolumeBuilders::BuilderCores {
+    using _internals_::VolumeBuilderBase;
+    using _internals_::StructureBuilderBase;
+    /// @copydoc _internals_::RZBuilderCore
     using RZBuilder = _internals_::RZBuilderCore;
+    /// @copydoc _internals_::BoxBuilderCore
     using BoxBuilder = _internals_::BoxBuilderCore;
+    /// @copydoc _internals_::FromG4VSolidCore
     using FromG4VSolid = _internals_::FromG4VSolidCore;
+    /// @copydoc _internals_::AssemblyCore
     using Assembly = _internals_::AssemblyCore;
-    using BuilderViewCore = _internals_::BuilderViewCore;
-    using StructureViewCore = _internals_::StructureViewCore;
+    /// @copydoc _internals_::VolumeBuilderCore
+    using VolumeBuilderCore = _internals_::VolumeBuilderCore;
+    /// @copydoc _internals_::StructureBuilderCore
+    using StructureBuilderCore = _internals_::StructureBuilderCore;
 }
 #endif  //VOLUMEBUILDERSTYPES_HH

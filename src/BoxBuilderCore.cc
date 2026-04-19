@@ -16,7 +16,7 @@
 #include <G4Box.hh>
 
 #include "i_shared_ptr.hh"
-#include "StructureBuilder.hpp"
+#include "StructureBuilderBase.hpp"
 #include "VolumeBuilderConfigs.hh"
 
 class G4String;
@@ -307,7 +307,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     //Private default copy ctor.
     //This is used by clone methods of concrete classes
-    BoxBuilderCore::BoxBuilderCore(const BoxBuilderCore &other) : VolumeBuilder<BoxBuilderCore>(other),
+    BoxBuilderCore::BoxBuilderCore(const BoxBuilderCore &other) : VolumeBuilderBase<BoxBuilderCore>(other),
                                                       // Call base class copy constructor
                                                       x_size_(other.x_size_),
                                                       y_size_(other.y_size_),

@@ -6,7 +6,7 @@ README for VolumeBuilders  code (and readme) Copyright Doug Leonard 2025, All ri
 Distributed under MIT (Expat) license.  
 Related Links:  
 - [The git code repo](https://github.com/DSLeonard-coding/VolumeBuilders)  
-- [The Doxygen documentation page (if you're not already there)](https://DSLeonard-coding.github.io/VolumeBuilders/)
+- [The Doxygen documentation page (with working reference links)](https://DSLeonard-coding.github.io/VolumeBuilders/).  The links in the github README copy mostly don't work. 
 - [Build Instructions](HowToBuild.md)  
 - [Documentation Building Instrucstions](MakeDocsREADME.md)
 
@@ -30,6 +30,10 @@ Related Links:
   - [Geant Products from Builders](#geant-products-from-builders)
   - [G4 interoperability:](#g4-interoperability)
 - [A more comprehensive overview of the builders:](#a-more-comprehensive-overview-of-the-builders)
+  - [Volume Builder](#volume-builder)
+  - [StructureBuilder](#structurebuilder)
+  - [Inner workings in Brief](#inner-workings-in-brief)
+- [Advanced: Reference semantics and builder assignment](#advanced-reference-semantics-and-builder-assignment)
 - [Geant complications that VolumeBuilder may Obsolete.](#geant-complications-that-volumebuilder-may-obsolete)
 - [Other thoughts for the future.](#other-thoughts-for-the-future)
   - [RZBuilder improvements](#rzbuilder-improvements)
@@ -42,7 +46,7 @@ Related Links:
 
 ## Introduction
 
-VolumeBuilders is a fluent-style (ie chained) builder system for simplified and streamlined definition of Geant4 geometries, aimed at simplifying geometry definition and removing code noise to focus on configuration, with a result of easier definition and review and fewer bugs.  As a bonus, it allows easy definition of assemblies containing other assemblies and volumes, treating both in the same way, simply as objects to be configured (visibility etc) or placed.  
+VolumeBuilders is a modernized fluent-style (ie chained) builder system for simplified and streamlined definition of Geant4 geometries, aimed at simplifying geometry definition and removing code noise to focus on configuration, with a result of easier definition and review and fewer bugs.  As a bonus, it allows easy definition of assemblies containing other assemblies and volumes, treating both in the same way, simply as objects to be configured (visibility etc) or placed.  
 
 Some benefits/features include:
 - IDE-focussed human discoverability and documentation of methods, with full web-based doxygen reference as well.
@@ -50,25 +54,25 @@ Some benefits/features include:
   - Namespaced method discovery/completion, hover docs (or cntrl-P), parameter "inlay" hints, and code analysis/checking.
 - Default settable units mean no unit multiplication bugs.
 - Flexible, offset, edge/center-based pre-boolean solid coordinates greatly ease definition and boolean operations, and allow placing many parts at a fixed reference or origin.
-- Highly streamlined syntax. Much reduced repetition of units, parameters, types, and variable names.
+- Highly streamlined syntax. Much reduced repetition of units, of reused parameter values, of types, and reduction of temp variables, thus removing a lot of noise, and avoiding oversight bugs.  
   - Ex: copy and place loops specify only what is changing (position for instance), easing comprehension.  Noise hides bugs.      
   - Far fewer temporary object declarations, 
-  - Omission of defaulted configs (offsets, rotations, etc)
+  - Omission of defaulted or copied/re-used parameters (offsets, rotations, etc)
 - Auto-generation of logical volumes if placement is requested.
 - Automated logical/phsyical suffix naming and configurable copy naming/numbering.
 - Simplified hierarchical assemblies, behave exactly like standard builders, for implemented features. Assembly reflection is planned.
 - Fully interoperable with standard geant classes/methods, and thus is gradually adoptable/implementable.  
 
 Code Note:
--Polymorphic fluent systems in C++ are notoriously challenging to write, and this was no exception.  A novel C#-like method is discussed at the bottom.
+-Polymorphic fluent systems in C++ are notoriously challenging to write, and this was no exception, but they are famously pleasant to use.  A novel C#-like method is discussed at the bottom.
 
 ## Primary References
 1. The examples below are probably the 1st choice.
 2. Typing DLG4::VolumeBuilders::<cntrl-space> in CLion for tab completion. (or VB:: if aliased like in examples below.) Hover documentation and parameter hints are available for all methods if using a modern IDE.  The project is pre-configured for CLion, which is 
-3. **[Factories](@ref Factories)**, and specifically solid builder factories, are the primary visible/starting starting point to create VolumeBuilders and are documented in the linked page.
-4. [VolumeBuilder methods](@ref DLG4::VolumeBuilders::_internals_::VolumeBuilder) documents methods available for all builders (and largely assemblies/structures). They can be chained to configure things like booleans, the logical volumes and placements. 
-5. **[Builder classes](@ref Builders)** documentation additionally includes builder-specific methods, depending on the factory used.  There aren't many, but RZBuilder (used by CreatePolyCone() and CreatePolyHedra) has a few. 
-7. **[Assembly](@ref DLG4::VolumeBuilders::_internals_::Assembly())**, a structure [StructureView](@ref StructureBuilder), and more are documented in the general Doxygen class listings.  
+3. **[Factories](<@ref Factories>)**, and specifically solid builder factories, are the primary visible/starting starting point to create VolumeBuilders and are documented in the linked page.
+4. [VolumeBuilder methods](<@ref DLG4::VolumeBuilders::_internals_::VolumeBuilderCore>) documents methods available for all builders (and largely assemblies/structures). They can be chained to configure things like booleans, the logical volumes and placements. 
+5. **[Builder classes](<@ref Builders>)** documentation additionally includes builder-specific methods, depending on the factory used.  There aren't many, but RZBuilder (used by CreatePolyCone() and CreatePolyHedra) has a few. 
+7. **[Assembly](<@ref DLG4::VolumeBuilders::_internals_::AssemblyCore()>)**, a structure [StructureBuilder](<@ref StructureBuilder>), and more are documented in the general Doxygen class listings.  
 8. **[the Topics page](topics.html)** groups listings of  classes, methods, etc by purpose, etc. 
 
 
@@ -111,7 +115,7 @@ Here's a clean example from a real simulated sample.
 ```cpp
     VB::SetGlobalDefaultUnit(mm);
     double bottom= array_plate_top_z_/mm;
-    VB::BuilderViewList pieces;
+    VB::VolumeBuilderList pieces;
     VB::CreateZDeltaBoxBuilder("bags_mid", 300, 276, bottom, 24.5 )->AddTo(pieces);
 
     // main +/-x walls, 13 bags each,vertical
@@ -146,7 +150,7 @@ And here is the geometry it makes, a powder sample measured on the CUP CAGe dete
 The code is self-explanatory. The logical and physical volumes are named with "_L" and "_P" extensions, and copy_numbers are incremented automatically by default (or explicitly provided) when relevant. 
 
 ### Units
-Units can be set globally as above ([DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::cm)](@ref DLG4::VolumeBuilders::_internals_::SetGlobalDefaultUnit())), per builder (from solid to placement), per solid, per vector, or per value (by setting units to 1).  This also avoids many mistakes relating to failure to multiply units or double multiplying in calculations.  
+Units can be set globally as above ([DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::cm)](<@ref DLG4::VolumeBuilders::_internals_::SetGlobalDefaultUnit()>)), per builder (from solid to placement), per solid, per vector, or per value (by setting units to 1).  This also avoids many mistakes relating to failure to multiply units or double multiplying in calculations.  
 
 ### Offset solids
 
@@ -165,7 +169,7 @@ The following example is included as src/Geometries/ConstructBoxExample.cc  It m
 ```cpp
     VB::SetGlobalDefaultUnit(CLHEP::mm);     // set a global unit
     G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
-    VB::BuilderViewList builder_list;
+    VB::VolumeBuilderList builder_list;
     // a small box to mark the world center
     auto box_part = VB::CreateZDeltaBoxBuilder(
                         "box_part",     // name
@@ -209,7 +213,7 @@ This creates the geometry shown below:
 ![BoxExample\.png](docs/images/BoxExample_resized.png "BoxExample_resized.png")  
 The blocks are face aligned without needing to shift them by half-lengths. And the orange block is rotated about an offset origin on its face.
 
-Many factories (CreateXXX(...)) and setters are provided for flexible defintion allowing arbitrary offsets.  A traditional centered-only [CreateCenteredBoxBuilder()](DLG4::VolumeBuilders::CreateCenteredBoxBuilder())  version (but with full sizes, not half) is also included as well as ones that can be offset in all three axes, defined as edges and deltas, or as two edges, and alternatively through individual single-line X,Y,Z setters of the same variations. As with other methods, units are optional, with global default fallback. See **[Factories](@ref Factories)** or auto complete in your IDE for details.  Or use a default factory like @ref CreateBoxBuilder("name") with [setters](DLG4::VolumeBuilders::CreateBoxBuilder(const G4String &name).
+Many factories (CreateXXX(...)) and setters are provided for flexible defintion allowing arbitrary offsets.  A traditional centered-only [CreateCenteredBoxBuilder\(\)](<@ref DLG4::VolumeBuilders::CreateCenteredBoxBuilder()>)  version (but with full sizes, not half) is also included as well as ones that can be offset in all three axes, defined as edges and deltas, or as two edges, and alternatively through individual single-line X,Y,Z setters of the same variations. As with other methods, units are optional, with global default fallback. See **[Factories](<@ref Factories>)** or auto complete in your IDE for details.  Or use a default factory like CreateBoxBuilder("name") with [setters](<@ref DLG4::VolumeBuilders::CreateBoxBuilder(const G4String &name)>).
 
 ## More in-depth with RZBuilder examples
 
@@ -243,7 +247,7 @@ auto ring_part = VB::CreatePolyhedraBuilder("ring_part");
     // clang-format-on                       
 
 ```
-Here we used the **[CreatePolyhedtraBuilder()](@ref DLG4::VolumeBuilders::CreatePolyhedraBuilder())**   factory to construct a builder and then configure it.  If you need the logical or physical volume for some reason, you can get it with:
+Here we used the **[CreatePolyhedtraBuilder()](<@ref DLG4::VolumeBuilders::CreatePolyhedraBuilder()>)**   factory to construct a builder and then configure it.  If you need the logical or physical volume for some reason, you can get it with:
 ```cpp
 auto logical_volume = ring_part -> GetLoogicVolume();
 auto physical_volume = ring_part -> GetPlacement();
@@ -301,14 +305,14 @@ The full ConstructExample1.cc produces:
 
 ## Placing and manipulating multiple generic objects:
 
-We can more easily customize and arrange multiple things now. While factory-specific settings can only be applied to the original builder, generic builder properties can be set using a generic BuilderView. Note in the code above this allowed to avoid repetition by only setting the common properties once. In review, every line of code has a clear declarative purpose and we do not have to search through repetitive options to see what is being changed.  In this example, common functionality was accessed by adding the builders to a BuilderViewList which is a vector of BuilderView objects.
+We can more easily customize and arrange multiple things now. While factory-specific settings can only be applied to the original builder, generic builder properties can be set using a generic VolumeBuilder. Note in the code above this allowed to avoid repetition by only setting the common properties once. In review, every line of code has a clear declarative purpose and we do not have to search through repetitive options to see what is being changed.  In this example, common functionality was accessed by adding the builders to a VolumeBuilderList which is a vector of VolumeBuilder objects.
 
 This also shows an example, of placing multiple objects in a loop.
  
  Another example of this is below. This one is not tested and may contain typos):
 ```cpp
 // A std::vector<VolumeReferenceBuilder>  ie a vector of generic builders.
-VB::BuilderViewList builder_list; 
+VB::VolumeBuilderList builder_list; 
 
 VB::SetGlobalDefaultUnit(CLHEP::mm);
 // We can get a normal G4 solid!!!! 
@@ -373,14 +377,14 @@ A working example is provided in  demo/src/Geometries/ConstructAssembly.cc and c
     p.unit = mm; // see prior note.
     G4double some_reference;
 
-    auto cylinder = VB::CreatePolyhedraBuilder("part", 3)
+    auto shape = VB::CreatePolyhedraBuilder("part", 3)
             //@formatter:off
             ->AddPlane(p.IR = 40       , p.OR = 50 , p.z = 0 )
             ->AddPlane(p.IR            , p.OR                   , p.z -= 100 );
     //@formatter:on
 
     auto assembly = VB::CreateAssembly("example_assembly");
-    auto temp = cylinder;
+    auto temp = shape;
     for (int i = 0; i < 3; i++) {
         temp->ForkAndReset("part_" + std::to_string(i))
                 ->SetPhysOffset({0, 250. * (i), 0.})
@@ -407,7 +411,7 @@ The result looks like:
 
 ![Example1\.png](docs/images/assembly.png "Example1_resized.png")  
 
-A 3-sided polyhedra was defined.   It was positioned along y while adding to an assembly.  The assembly was translated in x and placed, then twice it was rotated 90 degrees around y and placed again.  These were done using a "stacked" rotation that stacks the rotation on the prior translation in x.  The last time, copies of the logical volumes were made so that their color could be changed independently.  In this example AddTo(assembly) was used, which works with assemblies and BuilderViewList.  But you can also use assembly->AddStructure(temp) as convenient.
+A 3-sided polyhedra was defined.   It was positioned along y while adding to an assembly.  The assembly was translated in x and placed, then twice it was rotated 90 degrees around y and placed again.  These were done using a "stacked" rotation that stacks the rotation on the prior translation in x.  The last time, copies of the logical volumes were made so that their color could be changed independently.  In this example AddTo(assembly) was used, which works with assemblies and VolumeBuilderList.  But you can also use assembly->AddStructure(temp) as convenient.
 
 All commands that work to manipulate logical volumes work on assemblies, including things like ForceSolid, etc.  Even auto numbering and naming should work in some way, although it is in development.  Note that Logical Volume properties like VisAtt do not affect physics and are left mutable for now even after constructing the logical volume.  Because changing these does not force a copy of the logical volume, the changes apply to all prior and future copied of the logical volume, just as in vanilla Geant4.
 
@@ -468,42 +472,42 @@ Some of this is covered in the previous sectgion.
 
 Moreover you can pass a builder directly to any method taking G4VSolid (passes FinalSolid) including booleans if any) G4LogicalVolume and G4VPhysicalVolume without calling getters explictly.  Of course calling  builder->GetLogicalVolume() or similar can add clarity of intent and overload safety.
 
-Any time you call a Get method, or pass a builder to a parameter taking a product, the product and any of its requirements (even its mother logical_volume) will be auto-built, sealing those stages of configuration until a copy is made.  (Note, some parameters can take a builder (BuilderView)  explicitly, and may lazily trigger the production when needed.  See detailed documentation.)
+Any time you call a Get method, or pass a builder to a parameter taking a product, the product and any of its requirements (even its mother logical_volume) will be auto-built, sealing those stages of configuration until a copy is made.  (Note, some parameters can take a builder (VolumeBuilder)  explicitly, and may lazily trigger the production when needed.  See detailed documentation.)
 
 
 ## A more comprehensive overview of the builders:
 
 ![Polymorphism Hierachy](docs/html/dot_builder_graph.svg)
 
-Above is the polymorphic inheritance graph for VolumeBuilder.  This is _not_ C++ inheritance.
+Above is the polymorphic inheritance graph for VolumeBuilder.  This is _not_ true C++ inheritance at the language level (see [Tech details](#inner-workings-in-brief)), but it behaves identically to polymorphic inheritance for a user of the code.  
 
-There is a C++ inheritance structure to the builders, but that requries the "base" classes to actually be templated (CRTP) so they can
-return the same builder type as derived classes.  This though means there is not a common base class for virtual  fluent methods in the strict C++ sense (well, see [Coding Hindsight Section](#coding-hindsight-and-a-novel-fluent-design-for-c)).
+### Volume Builder 
 
-### BuilderView
+RZBuilder and BoxBuilder, for example, are different types, with different solid construction options, but you can assign, cast, pass to, or otherwise coerce them all to a VolumeBuilder to operate on collections of them, because semantically, they _are_ all VolumeBuilders. More specifically you can use ->AddTo(thing) to add them to a VolumeBuilderList or to an Assembly.  For example maybe you want to make all your builders blue.  So you ->AddTo(mylist) all your builders, do foreach overy mylist, and ->SetColor(blue).  This is demonstrated in the [Assembly](#hierarchical-assemblies-as-generic-structures) example and the production-use [BoxBuilder](#boxbuilder) sample above. 
 
-Instead VolumeBuilder has custom data-sharing type-erasure classes that behave exactly like polymorphic base classes.  **For simple
-cases, the user can simply use the factories and call chained methods on them, as in the examples above.**
-
-However, different buidlers may use different factories, so as you put a few in (list.push_back(builder) or builder->AddTo(list) a **[BuilderViewList](@ref DLG4::VolumeBuilders::_internals_::BuilderViewList) (a std::vector\<[BuilderView](@ref DLG4::VolumeBuilders::_internals_::BuilderView))>) to loop over, you are using the BuilderView. (Technically a BuilderView is a smart pointer to a type-erased VolumeBuilder, but its ctor is also the factory for them.  But don't worry about that.)   This is effectively a common, or base class-like, view on the orginal objects with (mostly) common and (a little) polymorphic functionality.  It lacks detailed builder-specific methods for configuring the radius of the base solid for example, but retains boolean and logical volume configs and placement, and even, polymorphically, MakeSolid().
-
-**Simple Version:**   
-All this means is even though RZBuilder and BoxBuilder are different types, with different solid construction options, you can assign, or "cast," or pass or otherwise coerce them all to a BuilderView to operate on collections of them, and more specifically can use ->AddTo(thing) to add them to a BuilderViewList or an Assembly. 
-
-### StructureView
+### StructureBuilder
 But we can go a step farther and make a "structure" view, where both builders and assemblies (of builders and other assemblies)
 can be manipulated with a partial set of methods, specifically LogicalVolume setters like SetVissAtt, and offset, rotation and placment commands.
 
-**Normally you would likely only deal with the assembly factory, [CreateAssembly()]( DLG4::VolumeBuilders::CreateAssembly()), and add other buidlers or assemblies to an assembly.  Then you can simply
-place them in the same way as any other builder.**
+**Normally you would likely only deal with the assembly factory, [CreateAssembly()](<@ref DLG4::VolumeBuilders::CreateAssembly()>), and add other buidlers or assemblies to an assembly.  Then you can simply
+place them in the same way as any other builder.**  
 
 Every assembly stores its own tranlsation and rotation (setable the same way as for any builder), including every assembly it may hold, and on placement these transformations are stacked  as expected.
 
 (In principle items in assemblies can have different mother volumes, if none is applied to the whole assembly, and this can produce
 some interesting effects, and maybe be useful.)
 
+### Inner workings in Brief
+
+ There _is_ a true C++ inheritance structure to the builders, but that requries the "base" classes ( ie \_internals\_::VolumeBuilderBase)to actually be templated (CRTP) so they can
+return the same builder type as the derived classes, a necessity for the fluent chains to work ideally.  This though means there is not a common base class for virtual  fluent methods in the formal C++ language sense. Every base class is a templated version with different return types.   See [Coding Hindsight Section](#coding-hindsight-and-a-novel-fluent-design-for-c).
+
+However VolumeBuilders has custom data-sharing type-erasure classes that behave exactly like polymorphic base classes.  These are themselves concrete implementations of the same CRTP base as the builders, but their ctors link data from other builders into the common CRTP template type, and provide accesses to mechanisms to make polymorphic calls for solid constructoin and cloning. Details are quite involved, but to the user, you generic VolumeBuilders that just work.  
+
+
+
 ## Advanced: Reference semantics and builder assignment
-You don't usually need to assign one builder variable to another (in many cases you never even need one) but you could. If you do, assignment is by reference, shared pointer specifically for all the Builders and Views. So your new variable is working with the same builder. It's just a new reference to it.   Normally you can use Copy() and Fork() commands to create copies instead, but there could be advanced cases where the reference could make sense.
+You don't usually need to assign one builder variable to another (in many cases you never even need one) but you could. If you do, assignment is by reference, shared pointer specifically for all the builders. So your new variable is working with the same builder. It's just a new reference to it.   Normally you can use  Fork() commands to create copies instead, but there could be advanced cases where the reference could make sense.
 
 
 ## Geant complications that VolumeBuilder may Obsolete.
@@ -547,24 +551,24 @@ Use of smart pointers for returns helps in places, because reference returns in 
 
 But now making a vector of builders or even having base methods accepting a builder as a parameter to a builder is a problem because there are many types ex:: (VolumeBuilder<Derived>::AddSubtraction(<AnotherDerived> another_builder)).  For the latter you can template the method, nested templating, but that doesn't solve the first problem.
 
-BuilderViewCore is the better solution.  It has a templated ctor (actually calls a templated copy ctor in VolumeBuilder) that takes any builder type and "copies" the internal data by smart pointer reference.  It makes a live view on another buider, but without non-polymorphic SolidBuilder functionality.  There is a common interface, ISolidBuilder, to all builders, and a pointer of this type to the original 
+VolumeBuilderCore is the better solution.  It has a templated ctor (actually calls a templated copy ctor in VolumeBuilder) that takes any builder type and "copies" the internal data by smart pointer reference.  It makes a live view on another buider, but without non-polymorphic SolidBuilder functionality.  There is a common interface, ISolidBuilder, to all builders, and a pointer of this type to the original 
 object is stored in the type-erased VolumeBuilder object.  The data smart pointers are custom and use a linked-tree update system (with the open end linkable from any link, yet sealable to data --as oposed to another link --only once, maintaining  strong logical immutability) to keep the original object synchronized with the type-erased object, so that methods can be called polymorphically on the original object and results are seen in the data of the original objects.
 
-Type-erased object views of course cannot be used to configure builer-specific (non-polymorphic) settings, because those obviously cannot be represented in a type-agnostic way.  However they can call polymorphic methods that are forwarded by BuilderViewCore, including SolidConstructor(const G4String &name) that knows how to make builder specific solids that have already been configured.  So the only restriction is that builder-specific settings must be configured on the builder-specific (non-type-erased) view of the object (ie, usually before converting to BuilderViewCore.   After that, all builders 
+Type-erased object views of course cannot be used to configure builer-specific (non-polymorphic) settings, because those obviously cannot be represented in a type-agnostic way.  However they can call polymorphic methods that are forwarded by VolumeBuilderCore, including SolidConstructor(const G4String &name) that knows how to make builder specific solids that have already been configured.  So the only restriction is that builder-specific settings must be configured on the builder-specific (non-type-erased) view of the object (ie, usually before converting to VolumeBuilderCore.   After that, all builders 
 can be operated on together.
 
 
-A **[BuilderViewList](@ref DLG4::VolumeBuilders::_internals_::BuilderViewList) type is provided for users for that purpose and you can do
+A **[VolumeBuilderList](<@ref DLG4::VolumeBuilders::_internals_::VolumeBuilderList>) type is provided for users for that purpose and you can do
 ```cpp
-BuilderViewList list;
+VolumeBuilderList list;
 list.std::emplace_back(some_builder)
 and then loop over them for placement for example.
 ```
 
-The [CreateFromG4VSolid](@ref CreateFromG4VSolid()) class is another derived type that takes has a Creat(G4VSolid *solid) that makes a builder
+The [CreateFromG4VSolid](<@ref CreateFromG4VSolid()>) class is another derived type that takes has a Creat(G4VSolid *solid) that makes a builder
 From any Geant4 solid, bypassing the solid building step, and returning a builder for unions, logical volumes and placement.
 
-BuilderViewCore has a ctor that also takes a G4VSolid and uses FromG4VSolid to construct a builder.
+VolumeBuilderCore has a ctor that also takes a G4VSolid and uses FromG4VSolid to construct a builder.
 This allow VBR to be used as a flexible parameter type to get a builder with a solid made or makeable.
 
 

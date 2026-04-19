@@ -14,8 +14,8 @@
 #include <G4Polyhedra.hh>
 //#include "disableable_shared_from_this.hh"
 #include "i_shared_ptr.hh"
-#include "StructureBuilder.hh"
-#include "StructureBuilder.hpp"
+#include "StructureBuilderBase.hh"
+#include "StructureBuilderBase.hpp"
 
 class G4String;
 using namespace DLG4::Utilities;
@@ -68,7 +68,7 @@ namespace DLG4::VolumeBuilders {
 namespace DLG4::VolumeBuilders::_internals_ {
     RZBuilderCore::RZBuilderCore(const G4String &name, G4double init_phi_start, G4double init_phi_tot,
         int init_sides) :
-        VolumeBuilder<RZBuilderCore>(), sides_(init_sides), phi_start_deg_(init_phi_start),
+        VolumeBuilderBase<RZBuilderCore>(), sides_(init_sides), phi_start_deg_(init_phi_start),
         phi_tot_deg(init_phi_tot) {
         set_shared_from_this_enabled(false);
         SetName(name);
@@ -78,7 +78,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     //Private default copy ctor.
     //This is used by clone methods of concrete classes
     RZBuilderCore::RZBuilderCore(const RZBuilderCore &other) :
-        VolumeBuilder<RZBuilderCore>(other), // Call base class copy constructor
+        VolumeBuilderBase<RZBuilderCore>(other), // Call base class copy constructor
         sides_(other.sides_), phi_start_deg_(other.phi_start_deg_), phi_tot_deg(other.phi_tot_deg),
         num_planes_(other.num_planes_), z_(other.z_), IR_(other.IR_), OR_(other.OR_),
         MakeSolidFunctionPtr_(other.MakeSolidFunctionPtr_) {

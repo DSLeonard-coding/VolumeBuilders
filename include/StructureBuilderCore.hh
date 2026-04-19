@@ -10,18 +10,18 @@
 #include "Linkable.hh"
 #include "i_shared_ptr.hh"
 #include <stdexcept>
-#include <StructureBuilder.hh>
+#include <StructureBuilderBase.hh>
 #include <VolumeBuildersTypes.hh>
 
 
 namespace DLG4::VolumeBuilders::_internals_ {
     template <typename T>
-    class VolumeBuilder;
+    class VolumeBuilderBase;
     //    class StructureBuilder;
 
 
     /**
-     *@class StructureViewCore
+     *@class StructureBuilderCore
      * @brief A type-erased (data shared view) view of a builder or
      * assembly, ie a "structure."
  * \dotfile builder_graph.dot
@@ -33,47 +33,47 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * While this base view only supports limited methods, it is fully polymorphic
      * and builder objects internally can trigger their full build chain.
      *
-     * This derived clas really exists for parallelism with BuilderViewCore.
+     * This derived clas really exists for parallelism with VolumeBuilderCore.
      *
-     * @headerfile StructureBuilder.hh
+     * @headerfile StructureBuilderBase.hh
      * @see VolumeBuilder for inherited methods.
      * */
-    class StructureViewCore final: public StructureBuilder<StructureViewCore> {
+    class StructureBuilderCore final: public StructureBuilderBase<StructureBuilderCore> {
         template <typename T>
-        friend class VolumeBuilder;
+        friend class VolumeBuilderBase;
         template <typename T>
-        friend class StructureBuilder;
+        friend class StructureBuilderBase;
 
         template <typename T>
         friend class i_shared_ptr;
 
     private:
-        friend class i_shared_ptr<StructureViewCore>;
+        friend class i_shared_ptr<StructureBuilderCore>;
 
         template <typename T>
-        StructureViewCore(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
+        StructureBuilderCore(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
             std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
-                int>  = 0) : StructureBuilder<StructureViewCore>(other, SET_LINK) {
+                int>  = 0) : StructureBuilderBase<StructureBuilderCore>(other, SET_LINK) {
         }
 
         G4VSolid *SolidConstructor(const G4String &name) override {
             throw std::runtime_error(
-                "Error in StructureViewCore::SolidConstructor(const G4String &name) "
+                "Error in StructureBuilderCore::SolidConstructor(const G4String &name) "
                 + this->builder_configs_->name + " \n" +
                 "SolidConstructor(const G4String &name) is not implemented.");
         }
 
-        StructureViewCore(const StructureViewCore &other) = default;
+        StructureBuilderCore(const StructureBuilderCore &other) = default;
 
     protected:
         // Clone impl, this returns a type-erased ISolidPtr
         // But in reality must bee a Builder here to be downcast by Clone().
         SharedPtr<IStructureBuilder> clone_impl() const override;
 
-        StructureView ToStructureView() const override;
+        StructureBuilder ToStructureView() const override;
 
     public:
-        StructureViewCore &operator=(const StructureViewCore &other) = delete;
+        StructureBuilderCore &operator=(const StructureBuilderCore &other) = delete;
     };
 }
 

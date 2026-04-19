@@ -8,9 +8,9 @@
 */
 
 #include "VolumeBuildersTypes.hh"
-#include "VolumeBuilder.hh"
-#include "BuilderViewCore.hh"
-#include "StructureBuilder.hpp"
+#include "VolumeBuilderBase.hh"
+#include "VolumeBuilderCore.hh"
+#include "StructureBuilderBase.hpp"
 #include "AssemblyCore.hh"
 
 using namespace DLG4::VolumeBuilders::_internals_;
@@ -21,7 +21,7 @@ namespace DLG4::VolumeBuilders {
         // ... with is_builder set to false.
         object->placement_configs_->is_builder = false;
         //We're storing a pointer to the view in the builder by writing to the builder through that same view!
-        BuilderView builder_view = object->ToBuilderView();
+        BuilderView builder_view = object->ToVolumeBuilder();
         builder_view->StoreBuilderView(builder_view);
         // Then store itself in its new builder (that links to its data).
         //object->builder_configs_->builder_view->StoreIStructurePtr(IStructurePtr(object.get()));    // this is the owning copy.
@@ -36,13 +36,13 @@ namespace DLG4::VolumeBuilders {
 
 namespace DLG4::VolumeBuilders::_internals_ {
     AssemblyCore::AssemblyCore(const AssemblyCore &other) :
-        StructureBuilder<AssemblyCore>(other) {
+        StructureBuilderBase<AssemblyCore>(other) {
         // Call base class copy constructor
         set_shared_from_this_enabled(false);
         set_shared_from_this_enabled(true);
     }
 
-    Assembly AssemblyCore::AddStructure(const StructureView &other) {
+    Assembly AssemblyCore::AddStructure(const StructureBuilder &other) {
         this->placement_configs_->children.emplace_back(other);
         return this->shared_from_this();
     }

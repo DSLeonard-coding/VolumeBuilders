@@ -11,12 +11,12 @@
 //
 //
 //
-//#include "BuilderViewCore.hh"
+//#include "VolumeBuilderCore.hh"
 #include "Linkable.hh"
 #include "i_shared_ptr.hh"
 #include <stdexcept>
 #include <VolumeBuildersTypes.hh>
-#include "VolumeBuilder.hh"
+#include "VolumeBuilderBase.hh"
 #include "ISolidBuilder.hh"
 #include <BuilderFactories.hh>
 
@@ -25,7 +25,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     using namespace VB;
 
     template <typename T>
-    class VolumeBuilder;
+    class VolumeBuilderBase;
     class RZBuilderCore;
 
     /**
@@ -33,19 +33,19 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * @details Use it to assign a specialized builder to a generic builder.
      * But you don't use it directly.  It has no direct public ctors or factories,
      * but BuilderView(your_other_builder_object) constructs it as
-     *  i_shared_ptr<BuilderViewCore> ( pointer-wrapped builder).
+     *  i_shared_ptr<VolumeBuilderCore> ( pointer-wrapped builder).
      * Or pass your builder to something expecting a BuilderView,
      * like ex: a std::vector<BuilderViewr>, aka a BuilderViewList.
      *
-     * @headerfile BuilderViewCore.hh
+     * @headerfile VolumeBuilderCore.hh
      * @see VolumeBuilder for inherited methods.
      */
-    class BuilderViewCore final: public VolumeBuilder<BuilderViewCore> {
+    class VolumeBuilderCore final: public VolumeBuilderBase<VolumeBuilderCore> {
         template <typename T>
-        friend class VolumeBuilder;
+        friend class VolumeBuilderBase;
         friend Assembly VB::CreateAssembly(G4String name);
         template <typename T>
-        friend class StructureBuilder;
+        friend class StructureBuilderBase;
 
         template <typename T>
         friend class i_shared_ptr;
@@ -56,7 +56,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     private:
         //allow i_shared_ptr access to our converting ctors
         //This way they get instantly wrapped!
-        friend class i_shared_ptr<BuilderViewCore>;
+        friend class i_shared_ptr<VolumeBuilderCore>;
 
         /**
          * Main constructor to link to another builder
@@ -66,9 +66,9 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @param other The builder to reference
          */
         template <typename T>
-        BuilderViewCore(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
-            std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>  = 0) : VolumeBuilder<
-            BuilderViewCore>(other, SET_LINK) {
+        VolumeBuilderCore(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
+            std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>  = 0) : VolumeBuilderBase<
+            VolumeBuilderCore>(other, SET_LINK) {
         }
 
         /* Constructor to make a builder from an Existing Geant solid
@@ -77,39 +77,39 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @param G4VSolid pointer
          * @return The builder
         */
-        BuilderViewCore(G4VSolid *solid);
+        VolumeBuilderCore(G4VSolid *solid);
 
         /* Constructor to make a builder from an Existing Geant logical_volume
          * This is mostly meant for use in parameter signatures
          * where you need to get a logical volume or a Builder with a solid
          * @param G4VSolid pointer
          * @return The builder */
-        BuilderViewCore(G4LogicalVolume *volume);
+        VolumeBuilderCore(G4LogicalVolume *volume);
 
         /* Constructor to make a builder from an Existing Geant logical_volume.
          * This is mostly meant for use in parameter signatures
          * where you need to get a logical volume or a Builder with a solid
          * @param G4VPhysicalVolume pointer
          * @return The builder */
-        BuilderViewCore(G4VPhysicalVolume *volume);
+        VolumeBuilderCore(G4VPhysicalVolume *volume);
 
         ///////////////  The rest is all boilerplate: ////////////////////////
 
 
-        BuilderViewCore(const BuilderViewCore &other) = default;
+        VolumeBuilderCore(const VolumeBuilderCore &other) = default;
 
-        BuilderViewCore() = default;
+        VolumeBuilderCore() = default;
 
     protected:
         SharedPtr<IStructureBuilder> clone_impl() const override;
 
-        BuilderView ToBuilderView() const override {
+        VolumeBuilder ToVolumeBuilder() const override {
             // we're already type erased, so just return ourselves.
             return shared_mutable_this(this);
         }
 
     public:
-        BuilderViewCore &operator=(const BuilderViewCore &other) = delete;
+        VolumeBuilderCore &operator=(const VolumeBuilderCore &other) = delete;
     };
 }
 #endif  //VolumeReference_HPP

@@ -28,14 +28,14 @@ void DetectorConstruction::ConstructAssembly() {
     p.unit = mm; // see prior note.
     G4double some_reference;
 
-    auto cylinder = VB::CreatePolyhedraBuilder("part", 3)
+    auto shape = VB::CreatePolyhedraBuilder("part", 3)
             //@formatter:off
             ->AddPlane(p.IR = 40       , p.OR = 50 , p.z = 0 )
             ->AddPlane(p.IR            , p.OR                   , p.z -= 100 );
     //@formatter:on
 
     auto assembly = VB::CreateAssembly("example_assembly");
-    auto temp = cylinder;
+    auto temp = shape;
     for (int i = 0; i < 3; i++) {
         temp->ForkAndReset("part_" + std::to_string(i))
             ->SetPhysOffset({0, 250. * (i), 0.})
