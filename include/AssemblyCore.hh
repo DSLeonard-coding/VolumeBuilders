@@ -19,7 +19,7 @@
 
 namespace DLG4::VolumeBuilders::_internals_ {
     /**
-     *@class Assembly
+     *@class AssemblyCore
      * @brief A type-erased (data shared view) view of a builder or
      * assembly, ie a "structure."
      * \dotfile builder_graph.dot
@@ -35,24 +35,24 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * @see StructureBuilder for inherited methods.
      * @ingroup Builders
      * */
-    class Assembly final: public StructureBuilder<Assembly> {
+    class AssemblyCore final: public StructureBuilder<AssemblyCore> {
         template <typename T>
         friend class VolumeBuilder;
         template <typename T>
         friend class StructureBuilder;
-        friend AssemblyPtr VB::CreateAssembly(G4String name);
+        friend Assembly VB::CreateAssembly(G4String name);
 
-        friend class i_shared_ptr<Assembly>;
+        friend class i_shared_ptr<AssemblyCore>;
 
     public:
-        AssemblyPtr AddStructure(const StructureView &other);
+        Assembly AddStructure(const StructureView &other);
 
     private:
         //ctor used by factory.  Will construct an assembly from a builder actually.
         template <typename T>
-        Assembly(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
+        AssemblyCore(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
             std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
-                int>  = 0) : StructureBuilder<Assembly>(other, SET_LINK) {
+                int>  = 0) : StructureBuilder<AssemblyCore>(other, SET_LINK) {
         }
 
         [[noreturn]]
@@ -67,15 +67,15 @@ namespace DLG4::VolumeBuilders::_internals_ {
         friend class i_shared_ptr;
 
 
-        Assembly(const Assembly &other);
-        Assembly() = default;
+        AssemblyCore(const AssemblyCore &other);
+        AssemblyCore() = default;
 
     protected:
         // Clone impl, this returns a type-erased ISolidPtr
-        // But in reality must bee a BuilderPtr here to be downcast by Clone().
+        // But in reality must bee a Builder here to be downcast by Clone().
 
     public:
-        Assembly &operator=(const Assembly &other) = delete;
+        AssemblyCore &operator=(const AssemblyCore &other) = delete;
     };
 }
 

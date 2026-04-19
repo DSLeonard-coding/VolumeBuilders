@@ -18,7 +18,7 @@
 #include "BuilderViewCore.hh"
 #include "VolumeBuildersTypes.hh"
 #include "StructureViewCore.hh"
-#include "Assembly.hh"
+#include "AssemblyCore.hh"
 #include <memory>
 
 // this will never be netered because we are ALWAYS entered FROM here:
@@ -1016,7 +1016,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::AddTo(AssemblyPtr &assembly) const {
+    DERIVED BASE::AddTo(Assembly &assembly) const {
         assembly->AddStructure(this->ToStructureView());
         auto retval = shared_mutable_this(this);
         return retval;

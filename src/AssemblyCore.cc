@@ -11,13 +11,13 @@
 #include "VolumeBuilder.hh"
 #include "BuilderViewCore.hh"
 #include "StructureBuilder.hpp"
-#include "Assembly.hh"
+#include "AssemblyCore.hh"
 
 using namespace DLG4::VolumeBuilders::_internals_;
 namespace DLG4::VolumeBuilders {
-    AssemblyPtr CreateAssembly(G4String name) {
+    Assembly CreateAssembly(G4String name) {
         // Haha... assemblies actually are builders!!!
-        auto object = AssemblyPtr(new Assembly());
+        auto object = Assembly(new AssemblyCore());
         // ... with is_builder set to false.
         object->placement_configs_->is_builder = false;
         //We're storing a pointer to the view in the builder by writing to the builder through that same view!
@@ -27,7 +27,7 @@ namespace DLG4::VolumeBuilders {
         //object->builder_configs_->builder_view->StoreIStructurePtr(IStructurePtr(object.get()));    // this is the owning copy.
         // ... and viewed through a reduced StructureView interface:
         object->SetName(name);
-        auto return_obj = AssemblyPtr(object);
+        auto return_obj = Assembly(object);
         return return_obj;
 
         // This let's us reuse builder methods!
@@ -35,14 +35,14 @@ namespace DLG4::VolumeBuilders {
 }
 
 namespace DLG4::VolumeBuilders::_internals_ {
-    Assembly::Assembly(const Assembly &other) :
-        StructureBuilder<Assembly>(other) {
+    AssemblyCore::AssemblyCore(const AssemblyCore &other) :
+        StructureBuilder<AssemblyCore>(other) {
         // Call base class copy constructor
         set_shared_from_this_enabled(false);
         set_shared_from_this_enabled(true);
     }
 
-    AssemblyPtr Assembly::AddStructure(const StructureView &other) {
+    Assembly AssemblyCore::AddStructure(const StructureView &other) {
         this->placement_configs_->children.emplace_back(other);
         return this->shared_from_this();
     }

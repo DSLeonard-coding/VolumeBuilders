@@ -7,7 +7,7 @@
 // Presently includes src for VolumeMaker and GeantMultiPlane classes
 // See header for documentation.
 
-#include "RZBuilder.hh"
+#include "RZBuilderCore.hh"
 #include <string>
 #include <VolumeBuildersTypes.hh>
 #include <G4Polycone.hh>
@@ -25,29 +25,29 @@ using namespace DLG4::VolumeBuilders::_internals_;
 
 namespace DLG4::VolumeBuilders {
     //Factories
-    RZBuilderPtr CreatePolyconeBuilder(const G4String &name, G4double phi_start, G4double phi_tot) {
-        // We could actually construct these as RZBuilderPtr without using new, vis i_shared_ptr constructor.
+    RZBuilder CreatePolyconeBuilder(const G4String &name, G4double phi_start, G4double phi_tot) {
+        // We could actually construct these as RZBuilder without using new, vis i_shared_ptr constructor.
         // But maybe we can unfriend i_shared_ptr in the future if we use new here, and avoid exposing
         // a backdoor to the general ctor, which doesn't select a MakeSolidFunctionPtr.
         // ReSharper disable once CppDFAMemoryLeak
-        auto object = RZBuilderPtr(new RZBuilder(name, phi_start, phi_tot, 0));
-        object->MakeSolidFunctionPtr_ = &RZBuilder::MakePolycone;
-        return RZBuilderPtr(object);
+        auto object = RZBuilder(new RZBuilderCore(name, phi_start, phi_tot, 0));
+        object->MakeSolidFunctionPtr_ = &RZBuilderCore::MakePolycone;
+        return RZBuilder(object);
     }
 
-    RZBuilderPtr CreatePolyhedraBuilder(const G4String &name, int sides, G4double phi_start,
+    RZBuilder CreatePolyhedraBuilder(const G4String &name, int sides, G4double phi_start,
                                         G4double phi_tot) {
         // ReSharper disable once CppDFAMemoryLeak
-        auto object = new RZBuilder(name, phi_start, phi_tot, sides);
-        object->MakeSolidFunctionPtr_ = &RZBuilder::MakePolyhedra;
-        return RZBuilderPtr(object);
+        auto object = new RZBuilderCore(name, phi_start, phi_tot, sides);
+        object->MakeSolidFunctionPtr_ = &RZBuilderCore::MakePolyhedra;
+        return RZBuilder(object);
     }
 
-    RZBuilderPtr CreateCylinderBuilder(
+    RZBuilder CreateCylinderBuilder(
         G4double unit, const G4String &name, G4double endz, G4double h, G4double OR, G4double IR) {
         // ReSharper disable once CppDFAMemoryLeak
-        auto object = RZBuilderPtr(new RZBuilder(name));
-        object->MakeSolidFunctionPtr_ = &RZBuilder::MakePolycone;
+        auto object = RZBuilder(new RZBuilderCore(name));
+        object->MakeSolidFunctionPtr_ = &RZBuilderCore::MakePolycone;
         RZPlane plane;
         plane.unit = unit;
         plane.z = endz;
@@ -56,19 +56,19 @@ namespace DLG4::VolumeBuilders {
         object->AddPlane(plane);
         plane.z += h;
         object->AddPlane(plane);
-        return RZBuilderPtr(object);
+        return RZBuilder(object);
     }
 
-    RZBuilderPtr CreateCylinderBuilder(const G4String &name, G4double endz, G4double h, G4double OR,
+    RZBuilder CreateCylinderBuilder(const G4String &name, G4double endz, G4double h, G4double OR,
         G4double IR) {
         return CreateCylinderBuilder(BuilderConfigs::global_default_unit, name, endz, h, OR, IR);
     }
 }
 
 namespace DLG4::VolumeBuilders::_internals_ {
-    RZBuilder::RZBuilder(const G4String &name, G4double init_phi_start, G4double init_phi_tot,
+    RZBuilderCore::RZBuilderCore(const G4String &name, G4double init_phi_start, G4double init_phi_tot,
         int init_sides) :
-        VolumeBuilder<RZBuilder>(), sides_(init_sides), phi_start_deg_(init_phi_start),
+        VolumeBuilder<RZBuilderCore>(), sides_(init_sides), phi_start_deg_(init_phi_start),
         phi_tot_deg(init_phi_tot) {
         set_shared_from_this_enabled(false);
         SetName(name);
@@ -77,8 +77,8 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     //Private default copy ctor.
     //This is used by clone methods of concrete classes
-    RZBuilder::RZBuilder(const RZBuilder &other) :
-        VolumeBuilder<RZBuilder>(other), // Call base class copy constructor
+    RZBuilderCore::RZBuilderCore(const RZBuilderCore &other) :
+        VolumeBuilder<RZBuilderCore>(other), // Call base class copy constructor
         sides_(other.sides_), phi_start_deg_(other.phi_start_deg_), phi_tot_deg(other.phi_tot_deg),
         num_planes_(other.num_planes_), z_(other.z_), IR_(other.IR_), OR_(other.OR_),
         MakeSolidFunctionPtr_(other.MakeSolidFunctionPtr_) {
@@ -88,7 +88,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
 
-    RZBuilderPtr RZBuilder::FillSolidConfig() {
+    RZBuilder RZBuilderCore::FillSolidConfig() {
         if (solid_ptr_) {
             throw std::runtime_error("Error in RZBuilder::FillSolidConfig\"\n"
                 "Cannot fill a solid builder CONFIGURATION, when the solid is already built from it."
@@ -103,7 +103,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
 
-    RZBuilderPtr RZBuilder::ReflectZSolidConfig() {
+    RZBuilder RZBuilderCore::ReflectZSolidConfig() {
         if (solid_ptr_) {
             throw std::runtime_error("Error in RZBuilder::ReflectZSolidConfig\"\n"
                 "Cannot flip a solid builder CONFIGURATION, when the solid is already built from it.\n"
@@ -116,8 +116,8 @@ namespace DLG4::VolumeBuilders::_internals_ {
         return this->shared_from_this();
     }
 
-    RZBuilderPtr RZBuilder::SetNumSides(G4double n) {
-        if (MakeSolidFunctionPtr_ == &RZBuilder::MakePolyhedra) {
+    RZBuilder RZBuilderCore::SetNumSides(G4double n) {
+        if (MakeSolidFunctionPtr_ == &RZBuilderCore::MakePolyhedra) {
             sides_ = n;
         } else {
             G4cout <<
@@ -131,7 +131,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     // Overloads are handled a lot more implicitly in VolumeBuilder, but it would all have to be redone
     // here since the vector parameter names need to be different.
     // overload to take direct values
-    RZBuilderPtr RZBuilder::AddPlane(const RZPlane &plane) {
+    RZBuilder RZBuilderCore::AddPlane(const RZPlane &plane) {
         if (plane.IR < 0 || plane.OR < 0) {
             throw std::runtime_error("Error in RZBuilder::AddPlane()"
                                      " for builder " + GetBuilderName() + ".\n"
@@ -144,20 +144,20 @@ namespace DLG4::VolumeBuilders::_internals_ {
         return shared_from_this();
     }
 
-    RZBuilderPtr RZBuilder::AddPlane(G4double unit, G4double IR, G4double OR, G4double z) {
+    RZBuilder RZBuilderCore::AddPlane(G4double unit, G4double IR, G4double OR, G4double z) {
         auto plane = RZPlane{unit, IR, OR, z};
         return AddPlane(plane);
     }
 
     // overload to take direct values with default unit
-    RZBuilderPtr RZBuilder::AddPlane(G4double IR, G4double OR, G4double z) {
+    RZBuilder RZBuilderCore::AddPlane(G4double IR, G4double OR, G4double z) {
         auto plane = RZPlane{GetEffectiveDefaultUnit(), IR, OR, z};
         return AddPlane(plane);
     }
 
     //Overloads for adding multiple planes at once:
     // 1. Vector of full RZPlane objects (each with their own units)
-    RZBuilderPtr RZBuilder::AddPlanes(const std::vector<RZPlane> &planes) {
+    RZBuilder RZBuilderCore::AddPlanes(const std::vector<RZPlane> &planes) {
         for (const auto &plane : planes) {
             AddPlane(plane);
         }
@@ -165,7 +165,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     // 2. Unitless planes using builder's preset default unit
-    RZBuilderPtr RZBuilder::AddPlanes(const std::vector<RZPlaneUnitless> &planes) {
+    RZBuilder RZBuilderCore::AddPlanes(const std::vector<RZPlaneUnitless> &planes) {
         for (const auto &plane : planes) {
             G4double unit = this->GetEffectiveDefaultUnit();
             auto rzplane = RZPlane{unit, plane.IR, plane.OR, plane.z};
@@ -175,7 +175,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     // 3. Most compact - one unit for all planes
-    RZBuilderPtr RZBuilder::AddPlanes(G4double unit, const std::vector<RZPlaneUnitless> &planes) {
+    RZBuilder RZBuilderCore::AddPlanes(G4double unit, const std::vector<RZPlaneUnitless> &planes) {
         for (const auto &plane : planes) {
             auto rzplane = RZPlane{unit, plane.IR, plane.OR, plane.z};
             AddPlane(rzplane);
@@ -184,7 +184,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
 
-    G4VSolid *RZBuilder::MakePolycone(const G4String &name) {
+    G4VSolid *RZBuilderCore::MakePolycone(const G4String &name) {
         if (this->solid_ptr_.get() != nullptr) {
             std::string error = "Error in MakePolycone: A solid was already built\n"
                 "You can copy and rename the builder to reset it and build again.";
@@ -204,7 +204,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         return retval;
     }
 
-    G4VSolid *RZBuilder::MakePolyhedra(const G4String &name) {
+    G4VSolid *RZBuilderCore::MakePolyhedra(const G4String &name) {
         if (this->solid_ptr_.get() != nullptr) {
             std::string error = "Error in MakePolyhedra: A solid was already built\n"
                 "You can copy and rename the builder to reset it and build again.";

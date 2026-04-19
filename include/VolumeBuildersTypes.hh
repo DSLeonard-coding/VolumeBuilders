@@ -30,13 +30,13 @@ namespace DLG4::VolumeBuilders::_internals_ {
     template<typename T>
     class VolumeBuilder;
     class BuilderViewCore;
-    class RZBuilder;
-    class BoxBuilder;
-    class FromG4VSolid;
+    class RZBuilderCore;
+    class BoxBuilderCore;
+    class FromG4VSolidCore;
     template<typename T>
     class StructureBuilder;
     class StructureViewCore;
-    class Assembly;
+    class AssemblyCore;
 
     /**
      * True polymorphic class base view for all builders
@@ -55,7 +55,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * @typedef BuilderView
      * @brief Common interface for all volume builder types
      * @details A shared pointer to \_internals\_::BuilderViewCore
-     * All specific builder pointer types (RZBuilderPtr, FromG4VSolidPtr, etc.)
+     * All specific builder pointer types (RZBuilder, FromG4VSolid, etc.)
      * are implicitly convertible to this type and provide polymorphic access
      * to volume operations.
      */
@@ -69,20 +69,20 @@ namespace DLG4::VolumeBuilders::_internals_ {
     using StructureView = SharedPtr<StructureViewCore>;
 
     /// Shared pointer to \_internals\_::RZBuilder
-    using RZBuilderPtr = SharedPtr<RZBuilder>;
+    using RZBuilder = SharedPtr<RZBuilderCore>;
 
     /// Shared pointer to \_internals\_::FromG4VSolid
-    using FromG4VSolidPtr = SharedPtr<FromG4VSolid>;
+    using FromG4VSolid = SharedPtr<FromG4VSolidCore>;
 
     /// Shared pointer to \_internals\_::BoxBuilder
-    using BoxBuilderPtr = SharedPtr<BoxBuilder>;
+    using BoxBuilder = SharedPtr<BoxBuilderCore>;
 
     /**
-     * @typedef AssemblyPtr
+     * @typedef Assembly
      * @brief Pointer to Assembly type to hold Structures, ie other assemblies or buidlers.
      * See \_internals\_::Assembly.
      */
-    using AssemblyPtr = SharedPtr<Assembly>;
+    using Assembly = SharedPtr<AssemblyCore>;
 
     /**
      * @brief a user type to hold many builders
@@ -156,17 +156,17 @@ namespace DLG4::VolumeBuilders::_internals_ {
 //Export names for API usage/tab-completion.
 ///@namespace DLG4::VolumeBuilders
 namespace DLG4::VolumeBuilders {
-    /// @copydoc _internals_::RZBuilderPtr
-    using RZBuilderPtr = _internals_::RZBuilderPtr;
-    /// @copydoc _internals_::BoxBuilderPtr
-    using BoxBuilderPtr = _internals_::BoxBuilderPtr;
-    /// @copydoc _internals_::AssemblyPtr
-    using AssemblyPtr = _internals_::AssemblyPtr;
-    /// @copydoc _internals_::FromG4VSolidPtr
-    using FromG4VSolidPtr = _internals_::FromG4VSolidPtr;
-    /// @copydoc _internals_::VolumeBuilderPtr
+    /// @copydoc _internals_::RZBuilder
+    using RZBuilder = _internals_::RZBuilder;
+    /// @copydoc _internals_::BoxBuilder
+    using BoxBuilder = _internals_::BoxBuilder;
+    /// @copydoc _internals_::Assembly
+    using Assembly = _internals_::Assembly;
+    /// @copydoc _internals_::FromG4VSolid
+    using FromG4VSolid = _internals_::FromG4VSolid;
+    /// @copydoc _internals_::VolumeBuilder
     template<typename T>
-    using VolumeBuilderPtr = _internals_::VolumeBuilderPtr<T>;
+    using VolumeBuilder = _internals_::VolumeBuilder<T>;
     /// @copydoc _internals_::BuilderView
     using BuilderView = _internals_::BuilderView;
     /// @copydoc _internals_::BuilderViewList
@@ -184,10 +184,10 @@ namespace DLG4::VolumeBuilders {
 namespace DLG4::VolumeBuilders::Builders {
     using _internals_::VolumeBuilder;
     using _internals_::StructureBuilder;
-    using RZBuilder = _internals_::RZBuilder;
-    using BoxBuilder = _internals_::BoxBuilder;
-    using FromG4VSolid = _internals_::FromG4VSolid;
-    using Assembly = _internals_::Assembly;
+    using RZBuilder = _internals_::RZBuilderCore;
+    using BoxBuilder = _internals_::BoxBuilderCore;
+    using FromG4VSolid = _internals_::FromG4VSolidCore;
+    using Assembly = _internals_::AssemblyCore;
     using BuilderViewCore = _internals_::BuilderViewCore;
     using StructureViewCore = _internals_::StructureViewCore;
 }

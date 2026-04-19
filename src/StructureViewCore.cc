@@ -21,7 +21,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         if (builder_configs_->istructure_ptr) {
             // have the erased base clone itself ex: new RZBuilder(*this);  :
             IStructurePtr copy = builder_configs_->istructure_ptr->clone_impl();
-            // Then have it create a builderPtr from itself:
+            // Then have it create a Builder from itself:
             // These are non owning views, won't keep the temp copy:
             BuilderView builder_view = copy->ToBuilderView();
             StructureView structure_view = copy->ToStructureView();

@@ -36,7 +36,7 @@
 #include <mutex>
 #include <memory>
 #include <unordered_map>
-#include "Assembly.hh"
+#include "AssemblyCore.hh"
 
 //#include "BuilderViewCore.hh"
 
@@ -60,7 +60,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     class VolumeBuilder: public ENABLE_SHARED_WRAPPER<U>, public ISolidBuilder
                          , public IVolumeBuilder {
         /// Templated type for VolumeBuilder base class.
-        /// @see VolumeReferencePtr for the common interface.
+        /// @see BuilderView for the common interface.
         using DerivedPtr = SharedPtr<U>;
 
         // limit public(protected) API by using friendship.
@@ -69,15 +69,15 @@ namespace DLG4::VolumeBuilders::_internals_ {
         template <typename>
         friend class VolumeBuilder;
         friend class BuilderViewCore;
-        friend class Assembly;
+        friend class AssemblyCore;
         template <typename>
         friend class StructureBuilder;
         friend class StructureViewCore;
-        friend FromG4VSolidPtr VB::CreateFromG4VSolid(G4VSolid *solid);
-        friend AssemblyPtr VB::CreateAssembly(G4String names);
-        friend class RZBuilder;
-        friend class BoxBuilder;
-        friend class FromG4VSolid;
+        friend FromG4VSolid VB::CreateFromG4VSolid(G4VSolid *solid);
+        friend Assembly VB::CreateAssembly(G4String names);
+        friend class RZBuilderCore;
+        friend class BoxBuilderCore;
+        friend class FromG4VSolidCore;
 
     public:
         /**
@@ -186,7 +186,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         /**
          * Define combination another volume with present one,
          * This does NOT immediately trigger a build on a passed-in builder, just pre-sets the relationship.
-         * @param other  A VolumeBuilder, G4VSolid, or anything constructable by a VolumeReferencePtr
+         * @param other  A VolumeBuilder, G4VSolid, or anything constructable by a BuilderView
          * @param offset  Offset applied to solid
          * @param rotation Applied to solid
          * @return The builder
@@ -209,7 +209,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         /**
          * Add a boolean operation.
          * This does NOT immediately trigger a build on a passed-in builder, just pre-sets the relationship.
-         * @param other  A VolumeBuilder, G4VSolid, or anything constructable by a VolumeReferencePtr
+         * @param other  A VolumeBuilder, G4VSolid, or anything constructable by a BuilderView
          * @param is_subtraction true for subtraction, false for union
          * @param is_intersection true for intersection, false for union
          * @param offset  Offset applied to solid
@@ -420,7 +420,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * This does NOT immediately force a build the mother builder, just pre-sets the relationship.
          *
          *
-         * @param mother olumeReferencePtrparameter accepts
+         * @param mother BuilderVew parameter accepts
          *           a builder or a G4VSolid through implicit ctor
          * @return This builder for chaining.
          * @ingroup PlacementConfigs
@@ -626,7 +626,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @return the builder
          * @ingroup Batch collection
          */
-        DerivedPtr AddTo(AssemblyPtr &assembly) const;
+        DerivedPtr AddTo(Assembly &assembly) const;
 
         /**
          * Destructor

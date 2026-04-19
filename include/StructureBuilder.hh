@@ -65,8 +65,8 @@ namespace DLG4::VolumeBuilders::_internals_ {
         template <typename>
         friend class VolumeBuilder;
         friend class StructureViewCore;
-        friend class Assembly;
-        friend AssemblyPtr VB::CreateAssembly(G4String name);
+        friend class AssemblyCore;
+        friend Assembly VB::CreateAssembly(G4String name);
         template <typename>
         friend class StructureBuilder;
         //allow i_shared_ptr access to our converting ctors
@@ -326,7 +326,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * This does NOT immediately force a build the mother builder, just pre-sets the relationship.
          *
          *
-         * @param mother olumeReferencePtrparameter accepts
+         * @param mother BuilderView parameter accepts
          *           a builder or a G4VSolid through implicit ctor
          * @return This builder for chaining.
          * @ingroup PlacementConfigs
@@ -420,9 +420,9 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // But for now, keep them private and require explicit friend access
         // ctors only useable through explicitly granted (friendship) inheritance...
 
-        friend class RZBuilder;
+        friend class RZBuilderCore;
         friend class StructureViewCore;
-        friend class FromG4VSolid;
+        friend class FromG4VSolidCore;
 
 
         StructureBuilder();

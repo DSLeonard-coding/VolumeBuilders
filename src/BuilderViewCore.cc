@@ -60,7 +60,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     SharedPtr<IStructureBuilder> BuilderViewCore::clone_impl() const {
         // have the erased base clone itself:
         auto copy = builder_configs_->istructure_ptr->clone_impl();
-        // Then have it create a builderPtr from itself:
+        // Then have it create a Builder from itself:
         auto builder_view = copy->ToBuilderView();
         builder_view->StoreIStructurePtr(copy); // this is the owning copy.
         builder_view->StoreBuilderView(builder_view);

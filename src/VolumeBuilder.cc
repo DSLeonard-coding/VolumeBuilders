@@ -5,21 +5,22 @@
 #include "VolumeBuildersTypes.hh"
 #include "VolumeBuilder.hh"
 #include "VolumeBuilder.hpp"
-#include "RZBuilder.hh"
-#include "BoxBuilder.hh"
-#include "FromG4VSolid.hh"
+#include "RZBuilderCore.hh"
+#include "BoxBuilderCore.hh"
+#include "FromG4VSolidCore.hh"
 #include "BuilderViewCore.hh"
 #include "StructureBuilder.hh"
 #include "StructureBuilder.hpp"
-#include "Assembly.hh"
+#include "AssemblyCore.hh"
+#include "StructureViewCore.hh"
 
 
 // instantiate 99% of templates
 using namespace DLG4::VolumeBuilders;
 using namespace DLG4::VolumeBuilders::Builders;
-template class DLG4::VolumeBuilders::Builders::VolumeBuilder<RZBuilder>;
-template class DLG4::VolumeBuilders::Builders::VolumeBuilder<FromG4VSolid>;
+template class DLG4::VolumeBuilders::Builders::VolumeBuilder<_internals_::RZBuilderCore>;
+template class DLG4::VolumeBuilders::Builders::VolumeBuilder<_internals_::FromG4VSolidCore>;
 template class DLG4::VolumeBuilders::Builders::VolumeBuilder<BuilderViewCore>;
 template class DLG4::VolumeBuilders::Builders::StructureBuilder<StructureViewCore>;
-template class DLG4::VolumeBuilders::Builders::StructureBuilder<Assembly>;
-template class DLG4::VolumeBuilders::Builders::VolumeBuilder<BoxBuilder>;
+template class DLG4::VolumeBuilders::Builders::StructureBuilder<_internals_::AssemblyCore>;
+template class DLG4::VolumeBuilders::Builders::VolumeBuilder<_internals_::BoxBuilderCore>;

@@ -39,7 +39,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         friend class StructureViewCore; // for tye erasing polymorphism
         template <typename T>
         friend class StructureBuilder;
-        friend class Assembly;
+        friend class AssemblyCore;
         virtual G4VSolid *SolidConstructor(const G4String &name) = 0;
         virtual ~IStructureBuilder() = default;
         // clones and returns a base class pointer

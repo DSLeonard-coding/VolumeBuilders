@@ -7,7 +7,7 @@
 
 // See header for documentation.
 
-#include "FromG4VSolid.hh"
+#include "FromG4VSolidCore.hh"
 #include "VolumeBuilder.hh"
 #include <string>
 #include <VolumeBuildersTypes.hh>
@@ -22,19 +22,19 @@ using namespace DLG4::Utilities;
 //GeantMultiPlane methods //////////////////////////////////////////////////
 namespace DLG4::VolumeBuilders {
     //Factories
-    FromG4VSolidPtr CreateFromG4VSolid(G4VSolid *solid) {
-        auto object = FromG4VSolidPtr();
+    FromG4VSolid CreateFromG4VSolid(G4VSolid *solid) {
+        auto object = FromG4VSolid();
         object.get()->SetSolid(solid);
         object.get()->SetName(solid->GetName());
-        return FromG4VSolidPtr(object);
+        return FromG4VSolid(object);
     }
 }
 
 namespace DLG4::VolumeBuilders::_internals_ {
     //Private default copy ctor.
     //This is used by clone methods of concrete classes
-    FromG4VSolid::FromG4VSolid(const FromG4VSolid &other) :
-        VolumeBuilder<FromG4VSolid>(other) {
+    FromG4VSolidCore::FromG4VSolidCore(const FromG4VSolidCore &other) :
+        VolumeBuilder<FromG4VSolidCore>(other) {
         // Call base class copy constructor
         set_shared_from_this_enabled(false);
         SetName(other.GetBuilderName());

@@ -67,7 +67,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     protected:
         // Clone impl, this returns a type-erased ISolidPtr
-        // But in reality must bee a BuilderPtr here to be downcast by Clone().
+        // But in reality must bee a Builder here to be downcast by Clone().
         SharedPtr<IStructureBuilder> clone_impl() const override;
 
         StructureView ToStructureView() const override;

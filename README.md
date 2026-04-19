@@ -308,7 +308,7 @@ This also shows an example, of placing multiple objects in a loop.
  Another example of this is below. This one is not tested and may contain typos):
 ```cpp
 // A std::vector<VolumeReferenceBuilder>  ie a vector of generic builders.
-VB::BuilderRefList builder_list; 
+VB::BuilderViewList builder_list; 
 
 VB::SetGlobalDefaultUnit(CLHEP::mm);
 // We can get a normal G4 solid!!!! 
@@ -468,9 +468,7 @@ Some of this is covered in the previous sectgion.
 
 Moreover you can pass a builder directly to any method taking G4VSolid (passes FinalSolid) including booleans if any) G4LogicalVolume and G4VPhysicalVolume without calling getters explictly.  Of course calling  builder->GetLogicalVolume() or similar can add clarity of intent and overload safety.
 
-Any time you call a Get method, or pass a builder to a parameter taking a product, the product and any of its requirements (even its mother logical_volume) will be auto-built, sealing those stages of configuration until a copy is made.  (Note, some parameters can take a builder pointer explicitly, and may lazily trigger the production when needed.  See detailed documentation.)
-
-
+Any time you call a Get method, or pass a builder to a parameter taking a product, the product and any of its requirements (even its mother logical_volume) will be auto-built, sealing those stages of configuration until a copy is made.  (Note, some parameters can take a builder (BuilderView)  explicitly, and may lazily trigger the production when needed.  See detailed documentation.)
 
 
 ## A more comprehensive overview of the builders:
@@ -480,13 +478,19 @@ Any time you call a Get method, or pass a builder to a parameter taking a produc
 Above is the polymorphic inheritance graph for VolumeBuilder.  This is _not_ C++ inheritance.
 
 There is a C++ inheritance structure to the builders, but that requries the "base" classes to actually be templated (CRTP) so they can
-return the same builder type as derived classes.  This though means there is not a common base class for virtual  fluent methods (well, see [Coding Hindsight Section](#coding-hindsight-and-a-novel-fluent-design-for-c)).
+return the same builder type as derived classes.  This though means there is not a common base class for virtual  fluent methods in the strict C++ sense (well, see [Coding Hindsight Section](#coding-hindsight-and-a-novel-fluent-design-for-c)).
 
-Instead VolumeBuilder has custom data-sharing type-erasure classes that behave exactly like polymorphic base pointers.  **For simple
+### BuilderView
+
+Instead VolumeBuilder has custom data-sharing type-erasure classes that behave exactly like polymorphic base classes.  **For simple
 cases, the user can simply use the factories and call chained methods on them, as in the examples above.**
 
-However, different buidlers may use different factories, so as you put a few in (list.push_back(builder) or builder->AddTo(list) a **[BuilderViewList](@ref DLG4::VolumeBuilders::_internals_::BuilderViewList) (a std::vector\<[BuilderView](@ref DLG4::VolumeBuilders::_internals_::BuilderView))>) to loop over, you are using the BuilderView base (itself technically a factory wrapped in a smart pointer constructor, but never mind).  This is effectively a base pointer view on the orginal objects with (mostly) common and (a little) polymorphic functionality.  It lacks detailed builder-specific methods for configuring the radius of the base solid for example, but retains boolean and logical volume configs and placement, and even, polymorphically, MakeSolid()
+However, different buidlers may use different factories, so as you put a few in (list.push_back(builder) or builder->AddTo(list) a **[BuilderViewList](@ref DLG4::VolumeBuilders::_internals_::BuilderViewList) (a std::vector\<[BuilderView](@ref DLG4::VolumeBuilders::_internals_::BuilderView))>) to loop over, you are using the BuilderView. (Technically a BuilderView is a smart pointer to a type-erased VolumeBuilder, but its ctor is also the factory for them.  But don't worry about that.)   This is effectively a common, or base class-like, view on the orginal objects with (mostly) common and (a little) polymorphic functionality.  It lacks detailed builder-specific methods for configuring the radius of the base solid for example, but retains boolean and logical volume configs and placement, and even, polymorphically, MakeSolid().
 
+**Simple Version:**   
+All this means is even though RZBuilder and BoxBuilder are different types, with different solid construction options, you can assign, or "cast," or pass or otherwise coerce them all to a BuilderView to operate on collections of them, and more specifically can use ->AddTo(thing) to add them to a BuilderViewList or an Assembly. 
+
+### StructureView
 But we can go a step farther and make a "structure" view, where both builders and assemblies (of builders and other assemblies)
 can be manipulated with a partial set of methods, specifically LogicalVolume setters like SetVissAtt, and offset, rotation and placment commands.
 
@@ -497,6 +501,9 @@ Every assembly stores its own tranlsation and rotation (setable the same way as 
 
 (In principle items in assemblies can have different mother volumes, if none is applied to the whole assembly, and this can produce
 some interesting effects, and maybe be useful.)
+
+## Advanced: Reference semantics and builder assignment
+You don't usually need to assign one builder variable to another (in many cases you never even need one) but you could. If you do, assignment is by reference, shared pointer specifically for all the Builders and Views. So your new variable is working with the same builder. It's just a new reference to it.   Normally you can use Copy() and Fork() commands to create copies instead, but there could be advanced cases where the reference could make sense.
 
 
 ## Geant complications that VolumeBuilder may Obsolete.
@@ -549,7 +556,7 @@ can be operated on together.
 
 A **[BuilderViewList](@ref DLG4::VolumeBuilders::_internals_::BuilderViewList) type is provided for users for that purpose and you can do
 ```cpp
-BuilderRefList list;
+BuilderViewList list;
 list.std::emplace_back(some_builder)
 and then loop over them for placement for example.
 ```

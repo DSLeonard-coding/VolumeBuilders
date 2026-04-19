@@ -6,7 +6,7 @@
 // See related files for license, if any is provided.
 //
 // A type erasing class to hold all kinds of SolidBuilders and VolumeBuilders
-// Use is indirect,  by passing to a VolumeReferencePtr parameter or by emplace_back to vector<VolumeReferencePtr().
+// Use is indirect,  by passing to a BuilderView parameter or by emplace_back to vector<BuilderView>().
 // If explicit use is needed  VolumeReferencePtr(builder_object), object.VolumeReferencePtr() work.
 //
 //
@@ -26,16 +26,16 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     template <typename T>
     class VolumeBuilder;
-    class RZBuilder;
+    class RZBuilderCore;
 
     /**
-     * @brief A polymorphic, type-erased builder referencing any specialized builder.
+     * @brief A polymorphic, type-erased "view" of any specialized builder.
      * @details Use it to assign a specialized builder to a generic builder.
      * But you don't use it directly.  It has no direct public ctors or factories,
      * but BuilderView(your_other_builder_object) constructs it as
      *  i_shared_ptr<BuilderViewCore> ( pointer-wrapped builder).
-     * Or pass your builder to something expecting a BuilderViewCorePtr,
-     * like ex: a std::vector<BuilderViewCorePtr>, aka a VolumeBuilderRefList.
+     * Or pass your builder to something expecting a BuilderView,
+     * like ex: a std::vector<BuilderViewr>, aka a BuilderViewList.
      *
      * @headerfile BuilderViewCore.hh
      * @see VolumeBuilder for inherited methods.
@@ -43,7 +43,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     class BuilderViewCore final: public VolumeBuilder<BuilderViewCore> {
         template <typename T>
         friend class VolumeBuilder;
-        friend AssemblyPtr VB::CreateAssembly(G4String name);
+        friend Assembly VB::CreateAssembly(G4String name);
         template <typename T>
         friend class StructureBuilder;
 
@@ -81,7 +81,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
         /* Constructor to make a builder from an Existing Geant logical_volume
          * This is mostly meant for use in parameter signatures
-         * Where you need to get a logical volume or a Builder with a solid
+         * where you need to get a logical volume or a Builder with a solid
          * @param G4VSolid pointer
          * @return The builder */
         BuilderViewCore(G4LogicalVolume *volume);
