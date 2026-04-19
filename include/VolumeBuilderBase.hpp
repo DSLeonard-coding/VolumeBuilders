@@ -15,10 +15,10 @@
 #include <G4PVPlacement.hh>
 #include <G4SubtractionSolid.hh>
 #include "Linkable.hh"
-#include "VolumeBuilderReference.hh"
+#include "VolumeBuilderCore.hh"
 #include "VolumeBuildersTypes.hh"
-#include "StructureBuilderReference.hh"
-#include "Assembly.hh"
+#include "StructureBuilderCore.hh"
+#include "AssemblyCore.hh"
 #include <memory>
 
 // this will never be netered because we are ALWAYS entered FROM here:
@@ -26,11 +26,11 @@
 #include <G4IntersectionSolid.hh>
 #include <G4ReflectedSolid.hh>
 
-#include "VolumeBuilder.hh"
+#include "VolumeBuilderBase.hh"
 
 namespace DLG4::VolumeBuilders::_internals_ {
     // used in CRTP implementation, should be improved probably.
-#define BASE VolumeBuilder<U>
+#define BASE VolumeBuilderBase<U>
 #define DERIVED typename BASE::DerivedPtr
 
     //First: non-templated implementations
@@ -55,7 +55,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     // VolumeMaker methods //////////////////////////////////////////////////
     template <typename U>
-    BASE::VolumeBuilder() : solid_ptr_(),
+    BASE::VolumeBuilderBase() : solid_ptr_(),
                             logicvol_ptr_(),
                             placement_() {
         lv_configs_->material = G4Material::GetMaterial("VolumeBuilderDefaultGas");
@@ -80,7 +80,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     // copy ctor, called by derived copy ctor
     template <typename U>
-    BASE::VolumeBuilder(const BASE &other): builder_configs_(other.builder_configs_),
+    BASE::VolumeBuilderBase(const BASE &other): builder_configs_(other.builder_configs_),
                                             boolean_configs_(other.boolean_configs_),
                                             lv_configs_(other.lv_configs_),
                                             placement_configs_(other.placement_configs_) {
@@ -97,7 +97,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     // template this.  Is that better?  Enh... Whatever.
     template <typename U>
     template <typename T, std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>>
-    DLG4::VolumeBuilders::_internals_::VolumeBuilder<U>::VolumeBuilder(
+    DLG4::VolumeBuilders::_internals_::VolumeBuilderBase<U>::VolumeBuilderBase(
         const SharedPtr<T> &other,
         SET_LINK_TYPE) : builder_configs_(other->builder_configs_,SET_LINK),
                          boolean_configs_(other->boolean_configs_,SET_LINK),
@@ -111,7 +111,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
 
     template <typename U>
-    BASE::~VolumeBuilder() {
+    BASE::~VolumeBuilderBase() {
         // optionally release resources (default)
         // ReSharper disable once CppIfCanBeReplacedByConstexprIf
         if (!has_ownership_) {
@@ -240,7 +240,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     // End of Setsolid versions
 
     template <typename U>
-    DERIVED BASE::AddUnion(const BuilderView &other, const Unit3Vec &new_offset,
+    DERIVED BASE::AddUnion(const VolumeBuilder &other, const Unit3Vec &new_offset,
         G4RotationMatrix *rotation) {
         bool is_subtraction = false;
         bool is_intersection = false;
@@ -249,7 +249,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::AddSubtraction(const BuilderView &other, const Unit3Vec &new_offset,
+    DERIVED BASE::AddSubtraction(const VolumeBuilder &other, const Unit3Vec &new_offset,
         G4RotationMatrix *rotation) {
         if (other) {
             bool is_subtraction = true;
@@ -264,7 +264,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::AddIntersection(const BuilderView &other, const Unit3Vec &new_offset,
+    DERIVED BASE::AddIntersection(const VolumeBuilder &other, const Unit3Vec &new_offset,
         G4RotationMatrix *rotation) {
         if (other) {
             bool is_subtraction = false;
@@ -279,7 +279,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::AddBoolean(const BuilderView &other, bool is_subtraction,
+    DERIVED BASE::AddBoolean(const VolumeBuilder &other, bool is_subtraction,
         bool is_intersection, const Unit3Vec &new_offset, G4RotationMatrix *rotation) {
         auto offset = ProvisionUnits(new_offset);
 
@@ -642,9 +642,9 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     // SetMother (builder pointer)
     template <typename U>
-    DERIVED BASE::SetMother(const BuilderView &mother) {
+    DERIVED BASE::SetMother(const VolumeBuilder &mother) {
         if (!mother) {
-            throw std::runtime_error("Error in VolumeBuilder::SetMother,"
+            throw std::runtime_error("Error in VolumeBuilderBase::SetMother,"
                                      "for builder named: \"" + builder_configs_->name + "\"\n"
                                      " no valid mother physical volume provided");
             // We cannot actually fully check this yet because we allow this to be a forward association
@@ -772,7 +772,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
 
     template <typename U>
-    DERIVED BASE::CopyPlacementConfigsFrom(const BuilderView &other) {
+    DERIVED BASE::CopyPlacementConfigsFrom(const VolumeBuilder &other) {
         this->placement_configs_ = other->placement_configs_;
         // receiver is responsible for unique naming/numbering.
         // we can't clobber auto-name/number incrementing from another config:
@@ -781,7 +781,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::CopyVolumeConfigsFrom(const BuilderView &other) {
+    DERIVED BASE::CopyVolumeConfigsFrom(const VolumeBuilder &other) {
         // Booleans are NOT considered as part of Volume Configs.
         // We keep our booleans.
         auto name = this->builder_configs_->name; // backup our name
@@ -917,7 +917,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     template <typename U>
     DERIVED BASE::ReflectZFinalSolid() {
         if (final_solid_ptr_) {
-            throw std::runtime_error("Error VolumeBuilder::ReflectZFinalSolid,  \n"
+            throw std::runtime_error("Error VolumeBuilderBase::ReflectZFinalSolid,  \n"
                 "The final solid is already built.  \n");
         }
         boolean_configs_->reflect_z = true;
@@ -927,7 +927,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     template <typename U>
     DERIVED BASE::ReflectZBaseSolid() {
         if (final_solid_ptr_) {
-            throw std::runtime_error("Error VolumeBuilder::ReflectZBaseSolid,  \n"
+            throw std::runtime_error("Error VolumeBuilderBase::ReflectZBaseSolid,  \n"
                 "The base solid is already built.  \n");
         }
         builder_configs_->reflect_base_solid_z = true;
@@ -964,7 +964,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    void BASE::StoreBuilderView(const BuilderView &builder_view) {
+    void BASE::StoreBuilderView(const VolumeBuilder &builder_view) {
         // can only set this ONCE!!
         builder_configs_->builder_view = builder_view;
     }
@@ -975,22 +975,22 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    BuilderView BASE::ToBuilderView() const {
+    VolumeBuilder BASE::ToVolumeBuilder() const {
         // calls the BuilderView copy/convert ctor::
         // presently the i_shared converter only works with l-value.
         std::shared_ptr<U> builder_std_ptr =
             std::const_pointer_cast<U>(this->shared_from_this());
         auto x = DerivedPtr(builder_std_ptr);
-        return BuilderView(x);
+        return VolumeBuilder(x);
     }
 
     template <typename U>
-    StructureView BASE::ToStructureView() const {
+    StructureBuilder BASE::ToStructureView() const {
         // calls the structure view copy/convert ctor:
         std::shared_ptr<U> builder_std_ptr =
             std::const_pointer_cast<U>(this->shared_from_this());
         auto x = DerivedPtr(builder_std_ptr);
-        return StructureView(x);
+        return StructureBuilder(x);
     }
 
     template <typename U>
@@ -1003,7 +1003,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     template <typename U>
     DERIVED BASE::AddTo(BuilderViewList &list) const {
-        list.emplace_back(this->ToBuilderView());
+        list.emplace_back(this->ToVolumeBuilder());
         auto retval = shared_mutable_this(this);
         return retval;
     }
@@ -1016,7 +1016,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::AddTo(AssemblyPtr &assembly) const {
+    DERIVED BASE::AddTo(Assembly &assembly) const {
         assembly->AddStructure(this->ToStructureView());
         auto retval = shared_mutable_this(this);
         return retval;

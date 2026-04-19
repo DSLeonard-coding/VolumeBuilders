@@ -7,16 +7,16 @@ digraph fake_hierarchy {
     subgraph cluster_row1 {
     label = "Structures";
     nodesep = 2.0;
-    StructureView;
+    StructureBuilder;
     subgraph cluster_row2 {
         label = "Builders";
-        BuilderView;
-        RZBuilderPtr;
-        BoxBuilderPtr;
-        FromG4VSolidPtr;
+        VolumeBuilder;
+        RZBuilder;
+        BoxBuilder;
+        FromG4VSolid;
         rank = same;
     }
-    AssemblyPtr;
+    Assembly;
     dummy;
     rank = same;
     }
@@ -30,7 +30,7 @@ digraph fake_hierarchy {
 subgraph cluster_row3 {
     label = "Structure Factories"
     subgraph cluster_row4 {
-        label = "Builder Factories";
+        label = "Volume Builder Factories";
         "CreateFromG4VSolid()";
         "CreateBoxBuilder()";
         "CreatePolycone()";
@@ -55,25 +55,25 @@ subgraph side_comments {
 
     // edges between nodes
      dummy [label = "", shape = box, width = 0.5; style = invis];
-    structureComment [label="Structures are a common view on builders and assemblies.\n  They can have VisAtts etc. set, hierarchical application of offset, and rotation,\n and finally placement", shape=plaintext, fontcolor=gray50, fontsize=12, width=0, height=0]
-    structureComment -> StructureView [color = gray50];
-    builderComment [label="BuilderViews allow operating on collections of different concrete builders.\n  This view allows all operations except initial solid configuration.", shape=plaintext, fontcolor=gray50, fontsize=12, width=0, height=0]
-    builderComment -> BuilderView [color = gray50];
-    concreteBuilderComment [label="Specialized builders are just what factories return.\n  They do everything, solid configuration, boolean, transforms,\n logical construction, visAtts, ect, and placment", shape=plaintext, fontcolor=gray50, fontsize=12, width=0, height=0]
-    concreteBuilderComment -> RZBuilderPtr [color = gray50];
-    factoryComment [label="Factories are the basic builder interferace,\n starting a fluent builder chain that can do everything.", shape=plaintext, fontcolor=gray50, fontsize=12, width=0, height=0]
-    factoryComment -> "CreateCylinder()" [color = gray50];
-    StructureView -> BuilderView;
-    StructureView -> dummy [style = invis];
-    StructureView -> AssemblyPtr;
+    structureComment [label="Structures are a common view on builders and assemblies.\n  They can have VisAtts etc. set, hierarchical application \n of offset,  rotation, and finally placement", shape=plaintext, fontcolor=gray30, fontsize=13, width=0, height=0]
+    structureComment -> StructureBuilder [color = gray30];
+    builderComment [label="VolumeBuilder allows operating on collections \n of different  concrete builders.  This view allows all \n operations except initial solid configuration.", shape=plaintext, fontcolor=gray30, fontsize=13, width=0, height=0]
+    builderComment -> VolumeBuilder [color = gray30];
+    concreteBuilderComment [label="Specialized builders are just what factories return.\n  They do everything, solid configuration, boolean, \n transforms, logical construction, \n visAtts, ect, and placment", shape=plaintext, fontcolor=gray30, fontsize=13, width=0, height=0]
+    concreteBuilderComment -> RZBuilder [color = gray30];
+    factoryComment [label="Factories are the basic builder interferace,\n starting a fluent builder chain \n that can do everything.", shape=plaintext, fontcolor=gray30, fontsize=13, width=0, height=0]
+    factoryComment -> "CreateCylinder()" [color = gray30];
+    StructureBuilder -> VolumeBuilder;
+    StructureBuilder -> dummy [style = invis];
+    StructureBuilder -> Assembly;
     dummy -> "CreateFromG4VSolid()" [style = invis];
-    BuilderView -> RZBuilderPtr;
-    BuilderView -> "FromG4VSolidPtr";
-    BuilderView -> "BoxBuilderPtr";
-    FromG4VSolidPtr -> "CreateFromG4VSolid()";
-    RZBuilderPtr -> "CreatePolycone()";
-    RZBuilderPtr -> "CreatePolyhedra()";
-    RZBuilderPtr -> "CreateCylinder()";
-    BoxBuilderPtr -> "CreateBoxBuilder()";
-    AssemblyPtr -> "CreateAssembly()";
+    VolumeBuilder -> RZBuilder;
+    VolumeBuilder -> "FromG4VSolid";
+    VolumeBuilder -> "BoxBuilder";
+    FromG4VSolid -> "CreateFromG4VSolid()";
+    RZBuilder -> "CreatePolycone()";
+    RZBuilder -> "CreatePolyhedra()";
+    RZBuilder -> "CreateCylinder()";
+    BoxBuilder -> "CreateBoxBuilder()";
+    Assembly -> "CreateAssembly()";
 }

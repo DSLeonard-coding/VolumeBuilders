@@ -12,7 +12,7 @@
 // Use it to configure logical volume and placement with VolumeBuilder from a standard G4VSolid.
 /// @endverbatim
 #include <VolumeBuildersTypes.hh>
-#include "VolumeBuilder.hh"
+#include "VolumeBuilderBase.hh"
 #include <BuilderFactories.hh>
 
 // Factory CreateFromG4VSolid moved to BuilderFactories.hh
@@ -25,18 +25,18 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * @see VolumeBuilder for inherited methods.
      * @ingroup Builders
      */
-    class FromG4VSolid final: public VolumeBuilder<FromG4VSolid> {
-        friend class VolumeBuilder<FromG4VSolid>;
-        friend class VolumeBuilderReference;
-        friend FromG4VSolidPtr VB::CreateFromG4VSolid(G4VSolid *solid);
+    class FromG4VSolidCore final: public VolumeBuilderBase<FromG4VSolidCore> {
+        friend class VolumeBuilderBase<FromG4VSolidCore>;
+        friend class VolumeBuilderCore;
+        friend FromG4VSolid VB::CreateFromG4VSolid(G4VSolid *solid);
 
     public:
         // No functional public methods.  Only the Factory!
         // Just boilerplate below here:
         //        FromG4VSolid(const FromG4VSolid &other) = delete;
 
-        FromG4VSolid(const FromG4VSolid &other);
-        FromG4VSolid &operator=(const FromG4VSolid &other) = delete;
+        FromG4VSolidCore(const FromG4VSolidCore &other);
+        FromG4VSolidCore &operator=(const FromG4VSolidCore &other) = delete;
 
     private:
         //Implement pure vitual SolidConstructor from ISolidBuilder
@@ -47,7 +47,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         }
 
         // Does this need to exist?  Maybe.
-        FromG4VSolid() {
+        FromG4VSolidCore() {
         }
     };
 }

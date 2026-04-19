@@ -9,24 +9,24 @@
 
 #include "VolumeBuildersTypes.hh"
 #include "ISolidBuilder.hh"
-#include "VolumeBuilder.hh"
-#include "VolumeBuilderReference.hh"
-#include "StructureBuilderReference.hh"
-#include "StructureBuilder.hpp"
+#include "VolumeBuilderBase.hh"
+#include "VolumeBuilderCore.hh"
+#include "StructureBuilderCore.hh"
+#include "StructureBuilderBase.hpp"
 
 namespace DLG4::VolumeBuilders::_internals_ {
-    G4VSolid *VolumeBuilderReference::SolidConstructor(const G4String &name) {
+    G4VSolid *VolumeBuilderCore::SolidConstructor(const G4String &name) {
         if (!this->builder_configs_->istructure_ptr) {
             throw std::runtime_error(
-                "Error in VolumeBuilderReference::VolumeBuilderReference::SolidConstructor(const G4String &name) \n"
-                "In VolumeBuilderReference::VolumeBuilderReference::SolidConstructor(const G4String &name): No solid configuration to construct on"
+                "Error in VolumeBuilderCore::VolumeBuilderCore::SolidConstructor(const G4String &name) \n"
+                "In VolumeBuilderCore::VolumeBuilderCore::SolidConstructor(const G4String &name): No solid configuration to construct on"
                 + this->builder_configs_->name);
         }
         return this->builder_configs_->istructure_ptr->SolidConstructor(name);
     }
 
 
-    VolumeBuilderReference::VolumeBuilderReference(G4VSolid *solid) { // NOLINT(*-explicit-constructor)
+    VolumeBuilderCore::VolumeBuilderCore(G4VSolid *solid) { // NOLINT(*-explicit-constructor)
         // disable shared from this so we can use fluent calls... but NO CHAINING!!
         set_shared_from_this_enabled(false);
         this->SetSolid_impl(solid);
@@ -34,14 +34,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
         set_shared_from_this_enabled(true);
     }
 
-    VolumeBuilderReference::VolumeBuilderReference(G4LogicalVolume *volume) { // NOLINT(*-explicit-constructor)
+    VolumeBuilderCore::VolumeBuilderCore(G4LogicalVolume *volume) { // NOLINT(*-explicit-constructor)
         set_shared_from_this_enabled(false);
         this->SetLogicalVolume_impl(volume);
         this->SetName(volume->GetName());
         set_shared_from_this_enabled(true);
     }
 
-    VolumeBuilderReference::VolumeBuilderReference(G4VPhysicalVolume *volume) {
+    VolumeBuilderCore::VolumeBuilderCore(G4VPhysicalVolume *volume) {
         // NOLINT(*-explicit-constructor)
         set_shared_from_this_enabled(false);
         if (volume) {
@@ -57,11 +57,11 @@ namespace DLG4::VolumeBuilders::_internals_ {
         set_shared_from_this_enabled(true);
     }
 
-    SharedPtr<IStructureBuilder> VolumeBuilderReference::clone_impl() const {
+    SharedPtr<IStructureBuilder> VolumeBuilderCore::clone_impl() const {
         // have the erased base clone itself:
         auto copy = builder_configs_->istructure_ptr->clone_impl();
-        // Then have it create a builderPtr from itself:
-        auto builder_view = copy->ToBuilderView();
+        // Then have it create a Builder from itself:
+        auto builder_view = copy->ToVolumeBuilder();
         builder_view->StoreIStructurePtr(copy); // this is the owning copy.
         builder_view->StoreBuilderView(builder_view);
 

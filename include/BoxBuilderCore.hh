@@ -16,8 +16,8 @@
  *  ... and to add/subtract volumes.
  */
 #include "VolumeBuildersTypes.hh"
-#include "VolumeBuilder.hh"
-#include "StructureBuilderReference.hh"
+#include "VolumeBuilderBase.hh"
+#include "StructureBuilderCore.hh"
 // ReSharper disable once CppUnusedIncludeDirective
 #include <memory>
 
@@ -39,7 +39,7 @@ namespace DLG4::VolumeBuilders {
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
     **/
-    BoxBuilderPtr CreateBoxBuilder(const G4String &name);
+    BoxBuilder CreateBoxBuilder(const G4String &name);
 
     /**
     * @brief Create an unconfigured Box Solid, for use with SetXEdges() etc...
@@ -49,7 +49,7 @@ namespace DLG4::VolumeBuilders {
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
     * */
-    BoxBuilderPtr CreateBoxBuilder(const G4String &name, G4double unit);
+    BoxBuilder CreateBoxBuilder(const G4String &name, G4double unit);
 
     /**
      * @brief Create a Box solid.
@@ -63,7 +63,7 @@ namespace DLG4::VolumeBuilders {
      *     See VolumeBuilder for inherited public methods including Union/Subtraction.
      *     @ingroup BoxBuilder
      * */
-    BoxBuilderPtr CreateCenteredBoxBuilder(
+    BoxBuilder CreateCenteredBoxBuilder(
         const G4String &name, G4double x_full_size, G4double y_full_size, G4double z_full_size);
 
     /**
@@ -77,7 +77,7 @@ namespace DLG4::VolumeBuilders {
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
     * */
-    BoxBuilderPtr CreateCenteredBoxBuilder
+    BoxBuilder CreateCenteredBoxBuilder
     (G4double unit, const G4String &name, G4double x_full_size, G4double y_full_size,
         G4double z_full_size);
 
@@ -93,7 +93,7 @@ namespace DLG4::VolumeBuilders {
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
     * */
-    BoxBuilderPtr CreateZDeltaBoxBuilder(
+    BoxBuilder CreateZDeltaBoxBuilder(
         const G4String &name, G4double x_full_size, G4double y_full_size, G4double edge_z,
         G4double z_delta);
 
@@ -109,7 +109,7 @@ namespace DLG4::VolumeBuilders {
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
     * */
-    BoxBuilderPtr CreateZDeltaBoxBuilder
+    BoxBuilder CreateZDeltaBoxBuilder
     (G4double unit, const G4String &name, G4double x_full_size, G4double y_full_size,
         G4double edge_z, G4double z_delta);
 
@@ -128,7 +128,7 @@ namespace DLG4::VolumeBuilders {
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
     * */
-    BoxBuilderPtr CreateDeltasBoxBuilder(
+    BoxBuilder CreateDeltasBoxBuilder(
         const G4String &name, G4double edge_x, G4double x_delta, G4double edge_y, G4double y_delta,
         G4double edge_z, G4double z_delta);
 
@@ -146,7 +146,7 @@ namespace DLG4::VolumeBuilders {
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
     * */
-    BoxBuilderPtr CreateDeltasBoxBuilder(G4double unit,
+    BoxBuilder CreateDeltasBoxBuilder(G4double unit,
         const G4String &name, G4double edge_x, G4double x_delta, G4double edge_y, G4double y_delta,
         G4double edge_z, G4double z_delta);
 
@@ -164,7 +164,7 @@ namespace DLG4::VolumeBuilders {
      * See VolumeBuilder for inherited public methods including Union/Subtraction.
      * @ingroup BoxBuilder
      * */
-    BoxBuilderPtr CreateEdgesBoxBuilder(const G4String &name, G4double x_edge1, G4double x_edge2,
+    BoxBuilder CreateEdgesBoxBuilder(const G4String &name, G4double x_edge1, G4double x_edge2,
         G4double y_edge1,
         G4double y_edge2, G4double z_edge1, G4double z_edge2);
 
@@ -182,7 +182,7 @@ namespace DLG4::VolumeBuilders {
      * See VolumeBuilder for inherited public methods including Union/Subtraction.
      * @ingroup BoxBuilder
      * */
-    BoxBuilderPtr CreateEdgesBoxBuilder(G4double unit, const G4String &name, G4double x_edge1,
+    BoxBuilder CreateEdgesBoxBuilder(G4double unit, const G4String &name, G4double x_edge1,
         G4double x_edge2,
         G4double y_edge1, G4double y_edge2, G4double z_edge1, G4double z_edge2);
 
@@ -193,7 +193,7 @@ namespace DLG4::VolumeBuilders {
 namespace DLG4::VolumeBuilders::_internals_ {
 
     /**
-     * @class BoxBuilder
+     * @class BoxBuilderCore
      * @brief Builder class for simple Box solids.
      * @details Use the CreateXXX() factory methods to create the buiders.
      * In particular we can create boxes that are not referenced to the center!!
@@ -201,81 +201,81 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * @see VolumeBuilder<U> for inherited methods.
      * @ingroup Builders
      */
-    class BoxBuilder final: public VolumeBuilder<BoxBuilder> {
+    class BoxBuilderCore final: public VolumeBuilderBase<BoxBuilderCore> {
     public:
-        friend class VolumeBuilderReference;
-        friend class VolumeBuilder<BoxBuilder>; // shouldn't be needed, maybe isn't now.
+        friend class VolumeBuilderCore;
+        friend class VolumeBuilderBase<BoxBuilderCore>; // shouldn't be needed, maybe isn't now.
         template <typename T>
         friend class i_shared_ptr; // needed in principle, but maybe not for this class.
 
         // Friend all the factories.  Keeping them external is easier for users, but more boilerplate.
-        friend BoxBuilderPtr VB::CreateBoxBuilder(const G4String &name);
-        friend BoxBuilderPtr VB::CreateBoxBuilder(const G4String &name, G4double unit);
-        friend BoxBuilderPtr VB::CreateDeltasBoxBuilder(const G4String &name, G4double edge_x,
+        friend BoxBuilder VB::CreateBoxBuilder(const G4String &name);
+        friend BoxBuilder VB::CreateBoxBuilder(const G4String &name, G4double unit);
+        friend BoxBuilder VB::CreateDeltasBoxBuilder(const G4String &name, G4double edge_x,
             G4double x_delta, G4double edge_y, G4double y_delta, G4double edge_z, G4double z_delta);
-        friend BoxBuilderPtr VB::CreateDeltasBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilder VB::CreateDeltasBoxBuilder(G4double unit, const G4String &name,
             G4double edge_x, G4double x_delta, G4double edge_y, G4double y_delta, G4double edge_z,
             G4double z_delta);
-        friend BoxBuilderPtr VB::CreateZDeltaBoxBuilder(const G4String &name, G4double x_full_size,
+        friend BoxBuilder VB::CreateZDeltaBoxBuilder(const G4String &name, G4double x_full_size,
             G4double y_full_size, G4double edge_z, G4double z_delta);
-        friend BoxBuilderPtr VB::CreateZDeltaBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilder VB::CreateZDeltaBoxBuilder(G4double unit, const G4String &name,
             G4double x_full_size, G4double y_full_size, G4double edge_z, G4double z_delta);
-        friend BoxBuilderPtr VB::CreateCenteredBoxBuilder(const G4String &name, G4double x_full_size,
+        friend BoxBuilder VB::CreateCenteredBoxBuilder(const G4String &name, G4double x_full_size,
             G4double y_full_size, G4double z_full_size);
-        friend BoxBuilderPtr VB::CreateCenteredBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilder VB::CreateCenteredBoxBuilder(G4double unit, const G4String &name,
             G4double x_full_size, G4double y_full_size, G4double z_full_size);
-        friend BoxBuilderPtr VB::CreateEdgesBoxBuilder(const G4String &name, G4double x_edge1,
+        friend BoxBuilder VB::CreateEdgesBoxBuilder(const G4String &name, G4double x_edge1,
             G4double x_edge2, G4double y_edge1, G4double y_edge2, G4double z_edge1,
             G4double z_edge2);
-        friend BoxBuilderPtr VB::CreateEdgesBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilder VB::CreateEdgesBoxBuilder(G4double unit, const G4String &name,
             G4double x_edge1, G4double x_edge2, G4double y_edge1, G4double y_edge2,
             G4double z_edge1, G4double z_edge2);
 
-        BoxBuilderPtr SetXSize(G4double x_size);
-        BoxBuilderPtr SetYSize(G4double y_size);
-        BoxBuilderPtr SetZSize(G4double z_size);
+        BoxBuilder SetXSize(G4double x_size);
+        BoxBuilder SetYSize(G4double y_size);
+        BoxBuilder SetZSize(G4double z_size);
 
-        BoxBuilderPtr SetXEdges(G4double x_edge1, G4double x_edge2);
-        BoxBuilderPtr SetYEdges(G4double y_edge1, G4double y_edge2);
-        BoxBuilderPtr SetZEdges(G4double z_edge1, G4double z_edge2);
+        BoxBuilder SetXEdges(G4double x_edge1, G4double x_edge2);
+        BoxBuilder SetYEdges(G4double y_edge1, G4double y_edge2);
+        BoxBuilder SetZEdges(G4double z_edge1, G4double z_edge2);
 
-        BoxBuilderPtr SetXEdgeDelta(G4double x_edge, G4double x_delta);
-        BoxBuilderPtr SetYEdgeDelta(G4double y_edge, G4double y_delta);
-        BoxBuilderPtr SetZEdgeDelta(G4double z_edge, G4double z_delta);
+        BoxBuilder SetXEdgeDelta(G4double x_edge, G4double x_delta);
+        BoxBuilder SetYEdgeDelta(G4double y_edge, G4double y_delta);
+        BoxBuilder SetZEdgeDelta(G4double z_edge, G4double z_delta);
 
-        BoxBuilderPtr SetInternalOffset(G4double x, G4double y, G4double z);
+        BoxBuilder SetInternalOffset(G4double x, G4double y, G4double z);
 
         // BoxBuilder method overloads with a leading `unit` parameter.
         // These allow for a per-call unit override.
 
-        BoxBuilderPtr SetXSize(G4double unit, G4double x_size);
-        BoxBuilderPtr SetYSize(G4double unit, G4double y_size);
-        BoxBuilderPtr SetZSize(G4double unit, G4double z_size);
+        BoxBuilder SetXSize(G4double unit, G4double x_size);
+        BoxBuilder SetYSize(G4double unit, G4double y_size);
+        BoxBuilder SetZSize(G4double unit, G4double z_size);
 
-        BoxBuilderPtr SetXEdges(G4double unit, G4double x_edge1, G4double x_edge2);
-        BoxBuilderPtr SetYEdges(G4double unit, G4double y_edge1, G4double y_edge2);
-        BoxBuilderPtr SetZEdges(G4double unit, G4double z_edge1, G4double z_edge2);
+        BoxBuilder SetXEdges(G4double unit, G4double x_edge1, G4double x_edge2);
+        BoxBuilder SetYEdges(G4double unit, G4double y_edge1, G4double y_edge2);
+        BoxBuilder SetZEdges(G4double unit, G4double z_edge1, G4double z_edge2);
 
-        BoxBuilderPtr SetXEdgeDelta(G4double unit, G4double x_edge, G4double x_delta);
-        BoxBuilderPtr SetYEdgeDelta(G4double unit, G4double y_edge, G4double y_delta);
-        BoxBuilderPtr SetZEdgeDelta(G4double unit, G4double z_edge, G4double z_delta);
+        BoxBuilder SetXEdgeDelta(G4double unit, G4double x_edge, G4double x_delta);
+        BoxBuilder SetYEdgeDelta(G4double unit, G4double y_edge, G4double y_delta);
+        BoxBuilder SetZEdgeDelta(G4double unit, G4double z_edge, G4double z_delta);
 
-        BoxBuilderPtr SetInternalOffset(G4double unit, G4double x, G4double y, G4double z);
+        BoxBuilder SetInternalOffset(G4double unit, G4double x, G4double y, G4double z);
 
     private:
-        BoxBuilderPtr SetXSizeDimensioned(G4double x_size);
-        BoxBuilderPtr SetYSizeDimensioned(G4double y_size);
-        BoxBuilderPtr SetZSizeDimensioned(G4double z_size);
-        BoxBuilderPtr SetInternalOffsetDimensioned(G4double x, G4double y, G4double z);
+        BoxBuilder SetXSizeDimensioned(G4double x_size);
+        BoxBuilder SetYSizeDimensioned(G4double y_size);
+        BoxBuilder SetZSizeDimensioned(G4double z_size);
+        BoxBuilder SetInternalOffsetDimensioned(G4double x, G4double y, G4double z);
 
     protected:
         ///The polymorphic Solid constructor
         G4VSolid *SolidConstructor(const G4String &name) override;
 
     private:
-        explicit BoxBuilder(const G4String &name);
+        explicit BoxBuilderCore(const G4String &name);
 
-        BoxBuilder(const BoxBuilder &other);
+        BoxBuilderCore(const BoxBuilderCore &other);
 
         // offset of box from center.  This effectively redefines the center of the solid
         // as far as the builder behavior.
@@ -285,11 +285,11 @@ namespace DLG4::VolumeBuilders::_internals_ {
         G4double unit_{};
 
 
-        BoxBuilder() = default;
-        BoxBuilder(BoxBuilder &&) noexcept = delete;
+        BoxBuilderCore() = default;
+        BoxBuilderCore(BoxBuilderCore &&) noexcept = delete;
 
-        // BoxBuilderPtr Clone() const override {
-        //     return BoxBuilderPtr(new BoxBuilder(*this));
+        // BoxBuilder Clone() const override {
+        //     return BoxBuilder(new BoxBuilderCore(*this));
         // }
     };
 }

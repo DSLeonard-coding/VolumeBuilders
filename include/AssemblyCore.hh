@@ -12,14 +12,14 @@
 #include <stdexcept>
 //#include <VolumeBuilder.hh>
 #include <VolumeBuildersTypes.hh>
-#include <StructureBuilder.hh>
+#include <StructureBuilderBase.hh>
 #include <BuilderFactories.hh>
 
 // Factory CreateAssembly moved to BuilderFactories.hh
 
 namespace DLG4::VolumeBuilders::_internals_ {
     /**
-     *@class Assembly
+     *@class AssemblyCore
      * @brief A type-erased (data shared view) view of a builder or
      * assembly, ie a "structure."
      * \dotfile builder_graph.dot
@@ -31,34 +31,34 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * While this base view only supports limited methods, it is fully polymorphic
      * and builder objects internally can trigger their full build chain.
      *
-     * @headerfile StructureBuilder.hh
+     * @headerfile StructureBuilderBase.hh
      * @see StructureBuilder for inherited methods.
      * @ingroup Builders
      * */
-    class Assembly final: public StructureBuilder<Assembly> {
+    class AssemblyCore final: public StructureBuilderBase<AssemblyCore> {
         template <typename T>
-        friend class VolumeBuilder;
+        friend class VolumeBuilderBase;
         template <typename T>
-        friend class StructureBuilder;
-        friend AssemblyPtr VB::CreateAssembly(G4String name);
+        friend class StructureBuilderBase;
+        friend Assembly VB::CreateAssembly(G4String name);
 
-        friend class i_shared_ptr<Assembly>;
+        friend class i_shared_ptr<AssemblyCore>;
 
     public:
-        AssemblyPtr AddStructure(const StructureView &other);
+        Assembly AddStructure(const StructureBuilder &other);
 
     private:
         //ctor used by factory.  Will construct an assembly from a builder actually.
         template <typename T>
-        Assembly(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
+        AssemblyCore(i_shared_ptr<T> other, // NOLINT(*-explicit-constructor)
             std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
-                int>  = 0) : StructureBuilder<Assembly>(other, SET_LINK) {
+                int>  = 0) : StructureBuilderBase<AssemblyCore>(other, SET_LINK) {
         }
 
         [[noreturn]]
         G4VSolid *SolidConstructor(const G4String &name) override {
             throw std::runtime_error(
-                "Error in StructureBuilderReference::SolidConstructor(const G4String &name) "
+                "Error in StructureBuilderCore::SolidConstructor(const G4String &name) "
                 + this->builder_configs_->name + " \n" +
                 "SolidConstructor(const G4String &name) is not implemented.");
         }
@@ -67,15 +67,15 @@ namespace DLG4::VolumeBuilders::_internals_ {
         friend class i_shared_ptr;
 
 
-        Assembly(const Assembly &other);
-        Assembly() = default;
+        AssemblyCore(const AssemblyCore &other);
+        AssemblyCore() = default;
 
     protected:
         // Clone impl, this returns a type-erased ISolidPtr
-        // But in reality must bee a BuilderPtr here to be downcast by Clone().
+        // But in reality must bee a Builder here to be downcast by Clone().
 
     public:
-        Assembly &operator=(const Assembly &other) = delete;
+        AssemblyCore &operator=(const AssemblyCore &other) = delete;
     };
 }
 

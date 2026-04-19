@@ -12,7 +12,7 @@ Then just do
 > cmake ..
 > make
 ```
-to build the library and   
+to build the library and then do...
 
 ## Building and running the Demo
 ```
@@ -28,7 +28,6 @@ To run the demo, it's best if your geant has OGL and QT support through:
    -DGEANT4_USE_QT=ON \
    -DGEANT4_USE_OPENGL_X11=ON
 ```
-build options and you should log into your X windows with X.Org, not Wayland (usually an option on a settings wheel at the login.)
 
 The library will be in **build/libVolumeBuilders.a**  and the demo will be in **build/bin/Demo**
 
@@ -53,14 +52,14 @@ By default it this is setup to run the assembly demo.
   or use or own and define the material yourself inside the generated .cc file.
 - Press OK, or whatever it is.  
 
-You now have a .cc and a kind of pluggable header.  You may need to refresh the CMake in Tools->CMake.  You may also (or even first) need to run build-autoincludes.sh from /demo or run it through the build configuration toolbar (top-right). Then rebuild the VBDemo commandline target and click play.  You should see your still uncustomized geometry.  
+You now have a .cc and a kind of pluggable header  (using a now fairly outdated version of DLG4::GeoModules).  You may need to refresh the CMake in Tools->CMake.  You may also (or even first) need to run build-autoincludes.sh from /demo or run it through the build configuration toolbar (top-right). Then rebuild the VBDemo commandline target and click play.  You should see your still uncustomized geometry.  
 
 ## Building the library for your project
 
-Again, to use the library in another project you will need some environment variables setup.  Projects using this should include the provided script or their own expanded version of it.  Otherwise, copy and edit the included one from VolumeBuilders as before.
+Again, to use the library in another project you will need some environment variables script.    Projects using this should include the provided script or their own expanded version of it.  Otherwise, copy and edit the included one from VolumeBuilders as before.  You don't need to run it or source it.  The cmake scripts included do that.  My one biggest annoyance with Clion is that it lacks good pre-build hooks.
 
 Assume you install the library repository into your project in subtrees/VolumeBuilders.
-(I use a subtree workflow for that and specifically git-alltrees -- that I wrote.  But you can install it anywhwere, anyhow, and change the path below)  
+(I use a subtree workflow for that and specifically git-alltrees -- that I wrote.  But you can install it anywhwere, anyhow, and change the path below\*)  
 
 Then In CMakeLists.txt in your project:
 ```
@@ -77,5 +76,7 @@ target_link_libraries(yourEXETarget PRIVATE
         VolumeBuilders
 ...
 ```
-That's it. Build and run your project as usual for your project.
+That's it. Build and run your project as usual.  You might take a look at the scripts here in cmake/  used by CMakeLists.txt as they are meant to ease Geant and ROOT builds in general, as well to leverage traditional env setup scripts, but they may not be tested on recent versions.
 
+
+\* I even tried a version setup for vcpkg auto-installation but I found build speeds were much slower, for reasons I couldn't yet figure out.

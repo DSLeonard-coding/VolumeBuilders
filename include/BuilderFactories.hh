@@ -19,7 +19,7 @@ namespace DLG4::VolumeBuilders {
      * \dotfile builder_graph.dot
      * @ingroup Factories
      * */
-    AssemblyPtr CreateAssembly(G4String name);
+    Assembly CreateAssembly(G4String name);
 
     /**
      * @brief Constructor to make a builder from an Existing Geant solid
@@ -27,7 +27,7 @@ namespace DLG4::VolumeBuilders {
      * @return
      * @ingroup Factories
      * */
-    FromG4VSolidPtr CreateFromG4VSolid(G4VSolid *solid);
+    FromG4VSolid CreateFromG4VSolid(G4VSolid *solid);
 
 }
 #endif  //VOLUMEBUILDERS_BUILDERFACTORIES_HH

@@ -12,14 +12,14 @@
 #define VOLUME_BUILDER_INCLUDES_HH_
 
 #include "VolumeBuildersTypes.hh"
-#include "RZBuilder.hh"
-#include "BoxBuilder.hh"
+#include "RZBuilderCore.hh"
+#include "BoxBuilderCore.hh"
 #include "ISolidBuilder.hh"
-#include "VolumeBuilderReference.hh"
-#include "StructureBuilder.hh"
-#include "StructureBuilder.hpp"
-#include "FromG4VSolid.hh"
-#include "Assembly.hh"
+#include "VolumeBuilderCore.hh"
+#include "StructureBuilderBase.hh"
+#include "StructureBuilderBase.hpp"
+#include "FromG4VSolidCore.hh"
+#include "AssemblyCore.hh"
 #include "BuilderFactories.hh"
 
 #endif /* VOLUME_BUILDER_INCLUDES_HH_ */

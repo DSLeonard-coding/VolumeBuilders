@@ -9,22 +9,22 @@
 
 #include "VolumeBuildersTypes.hh"
 #include "ISolidBuilder.hh"
-#include "VolumeBuilder.hh"
-#include "VolumeBuilderReference.hh"
-#include "StructureBuilderReference.hh"
-#include "StructureBuilder.hh"
-#include "StructureBuilder.hpp"
+#include "VolumeBuilderBase.hh"
+#include "VolumeBuilderCore.hh"
+#include "StructureBuilderCore.hh"
+#include "StructureBuilderBase.hh"
+#include "StructureBuilderBase.hpp"
 
 
 namespace DLG4::VolumeBuilders::_internals_ {
-    SharedPtr<IStructureBuilder> StructureBuilderReference::clone_impl() const {
+    SharedPtr<IStructureBuilder> StructureBuilderCore::clone_impl() const {
         if (builder_configs_->istructure_ptr) {
             // have the erased base clone itself ex: new RZBuilder(*this);  :
             IStructurePtr copy = builder_configs_->istructure_ptr->clone_impl();
-            // Then have it create a builderPtr from itself:
+            // Then have it create a Builder from itself:
             // These are non owning views, won't keep the temp copy:
-            BuilderView builder_view = copy->ToBuilderView();
-            StructureView structure_view = copy->ToStructureView();
+            VolumeBuilder builder_view = copy->ToVolumeBuilder();
+            StructureBuilder structure_view = copy->ToStructureView();
             // Then store itself in its new builder (that links to its data).
             builder_view->StoreIStructurePtr(copy); // this is the owning copy.
             //We're storing the view in the builder by writing to the builder through that same view!
@@ -37,7 +37,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         }
     }
 
-    StructureView StructureBuilderReference::ToStructureView() const {
+    StructureBuilder StructureBuilderCore::ToStructureView() const {
         // we're already type erased, so just return ourselves.
         auto x = shared_mutable_this(this);
         return x;

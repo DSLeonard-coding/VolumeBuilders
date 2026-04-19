@@ -14,9 +14,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SETUP_FILE "vb_user_setup.sh")
 set(SETUP_SCRIPT "$ENV{HOME}/${SETUP_FILE}")
 set(DSL_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/DSL/")
+include("${DSL_CMAKE_PATH}/utils/Setup_Paths.cmake")
 include("${DSL_CMAKE_PATH}/cern/Geant4_Target.cmake")
 include("${DSL_CMAKE_PATH}/cern/ROOT_Target.cmake")
-include("${DSL_CMAKE_PATH}/utils/Setup_Paths.cmake")
+include("${DSL_CMAKE_PATH}/utils/dsl_package_export.cmake")
 
 add_subdirectory(demo EXCLUDE_FROM_ALL)
 
@@ -36,16 +37,19 @@ add_library(DLG4::VolumeBuilders ALIAS VolumeBuilders)
 
 # --- Include directories for VolumeBuilder ---
 # including Geant4
+# --- Include directories for VolumeBuilder ---
 target_include_directories(VolumeBuilders PUBLIC
-    # Local includes for VolumeBuilder
-    "${CMAKE_CURRENT_SOURCE_DIR}/include"
-    # Geant4 includes, extracted using geant4-config
+        # Use the absolute path ONLY during the build phase
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        # Use the relative path once it is installed in vcpkg_installed/
+        $<INSTALL_INTERFACE:include>
 )
+
 
 
 # --- Link Libraries for VolumeBuilder ---
 # Link to Geant4 libraries.
-target_link_libraries(VolumeBuilders PUBLIC
+target_link_libraries(VolumeBuilders PRIVATE
     ROOT_Target
     Geant4_Target
 )
@@ -64,5 +68,11 @@ target_compile_options(VolumeBuilders PRIVATE
 target_compile_options(VolumeBuilders PRIVATE
         $<$<CONFIG:Debug>:-g -O0>
         $<$<CONFIG:Release>:-O0 -DNDEBUG>
+)
+
+dsl_package_export(
+        TARGET VolumeBuilders
+        NAMESPACE DLG4
+        DEPS ""  # empty for now
 )
 

@@ -1,5 +1,3 @@
-#siphon_user_envs D.S.Leonard 2026, MIT
-#siphons env variables from a shell script.
 macro(siphon_user_envs VAR_LIST_OR_NAME)
     if(NOT DEFINED ${VAR_LIST_OR_NAME})
         set(VAR_LIST ${VAR_LIST_OR_NAME})
@@ -14,6 +12,7 @@ macro(siphon_user_envs VAR_LIST_OR_NAME)
             endif()
         endforeach()
         foreach(VAR_NAME ${VAR_LIST})
+            # 1. Attempt to pull from the setup script via your existing siphoner
             execute_process(
                     COMMAND bash -c "source ${SETUP_SCRIPT}> /dev/null 2>&1  ; echo \$${VAR_NAME}"
                     OUTPUT_VARIABLE DETECTED_VALUE

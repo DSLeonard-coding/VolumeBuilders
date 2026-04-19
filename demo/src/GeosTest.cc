@@ -42,6 +42,13 @@ inline void read_init_vis_mac(G4UImanager *theUI) {
 
 
 int main(int argc, char **argv) {
+#ifdef __linux__
+    // force X11 in wayland
+    setenv("QT_QPA_PLATFORM", "xcb", 1);
+    setenv("XDG_SESSION_TYPE", "x11", 1);
+    setenv("LIBGL_ALWAYS_SOFTWARE","1",1);
+    unsetenv("WAYLAND_DISPLAY");
+#endif
     // DL adds this straight from git now so we can know the exact commit:
     G4cout << "This is VolumeBuilder Demo git version string: " << STRINGIZE(GIT_DESCRIBE) <<
         G4endl;
@@ -130,24 +137,6 @@ int main(int argc, char **argv) {
         }
     }
     if (gui) {
-        // Get the value of the XDG_SESSION_TYPE environment variable
-        {
-            const char *session_type = std::getenv("XDG_SESSION_TYPE");
-            if (session_type != nullptr) {
-                if (std::string session_type_str(session_type); session_type_str == "wayland") {
-                    std::cerr << "ERROR: You are currently running a Wayland graphical session." <<
-                        std::endl;
-                    std::cerr <<
-                        "       Geant4's Qt visualization (OGLIQt/OGLSQt) may experience graphical corruption or issues on Wayland."
-                        << std::endl;
-                    std::cerr <<
-                        "       Please log out and select an 'Xorg' or 'X11' session at the login screen \n "
-                        "                             (e.g., 'Ubuntu on Xorg' in settings wheel on ubuntu after selecting a user)."
-                        << std::endl;
-                    return 1;
-                }
-            }
-        }
         if (!readmacs) {
             the_sim.ListGeometries();
             std::cout << "Please type a geometry from the list above and press enter." << std::endl;

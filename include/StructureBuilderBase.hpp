@@ -10,26 +10,27 @@
 */
 #include "Linkable.hh"
 #include "VolumeBuildersTypes.hh"
-#include "StructureBuilderReference.hh"
-#include "StructureBuilder.hh"
-#include "VolumeBuilderReference.hh"
+#include "StructureBuilderCore.hh"
+#include "StructureBuilderBase.hh"
+#include "VolumeBuilderCore.hh"
 #include <memory>
 
 
 namespace DLG4::VolumeBuilders::_internals_ {
-#define BASE StructureBuilder<U>
+#define BASE StructureBuilderBase<U>
 #define DERIVED typename BASE::DerivedPtr
 
 
     // template <typename U>
     // template <typename T>
-    // BASE::StructureBuilder(i_shared_ptr<T> other,
+    // BASE::StructureBuilderBase(i_shared_ptr<T> other,
     //         std::enable_if_t<std::is_base_of_v<VolumeBuilder<T>, T>, int>  =
-    //                 0) : StructureBuilder(other, SET_LINK) {
+    //                 0) : StructureBuilderBase(other, SET_LINK) {
     // }
 
     template <typename U>
-    BASE::StructureBuilder(const StructureBuilder &other) :
+    //Note: placement_configs_.children seem shallow copied here, handled in Fork
+    BASE::StructureBuilderBase(const StructureBuilderBase &other) :
         builder_configs_(other.builder_configs_),
         boolean_configs_(other.boolean_configs_),
         lv_configs_(other.lv_configs_),
@@ -50,7 +51,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
      */
     template <typename U>
     template <typename T, typename std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>, int>>
-    BASE::StructureBuilder(const SharedPtr<T> &other, SET_LINK_TYPE)
+    BASE::StructureBuilderBase(const SharedPtr<T> &other, SET_LINK_TYPE)
         : builder_configs_(other->builder_configs_,SET_LINK),
           boolean_configs_(other->boolean_configs_,SET_LINK),
           lv_configs_(other->lv_configs_, SET_LINK),
@@ -62,14 +63,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
         builder_configs_->istructure_ptr = IStructurePtr(other);
         // provide a builder view on builders:
         if (other->placement_configs_->is_builder) {
-            BuilderView builder_view = other->ToBuilderView();
+            VolumeBuilder builder_view = other->ToVolumeBuilder();
             //We're storing the view in the builder by writing to the builder through that same view!
             builder_view->StoreBuilderView(builder_view);
         }
     }
 
     template <typename U>
-    BASE::~StructureBuilder() {
+    BASE::~StructureBuilderBase() {
         // optionally release resources (default)
         // ReSharper disable once CppIfCanBeReplacedByConstexprIf
         if (!has_ownership_ && placement_configs_->is_builder) {
@@ -281,7 +282,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     template <typename U>
     DERIVED BASE::SetMother(
-        const BuilderView &mother) {
+        const VolumeBuilder &mother) {
         if (!placement_configs_->is_builder) {
             // assembly
             for (auto &child : placement_configs_->children) {
@@ -364,7 +365,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     template <typename U>
     DERIVED BASE::CopyPlacementConfigsFrom(
-        const BuilderView &other) {
+        const VolumeBuilder &other) {
         // we just copy THIS structure's configs.. no recursion.
         this->builder_configs_->builder_view->CopyPlacementConfigsFrom(other);
         return this->shared_from_this();
@@ -391,7 +392,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    BASE::StructureBuilder() {
+    BASE::StructureBuilderBase() {
         lv_configs_->vis_att = G4VisAttributes(true);
         placement_configs_->is_builder = false;
     }
@@ -409,18 +410,18 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    StructureView BASE::ToStructureView() const {
+    StructureBuilder BASE::ToStructureView() const {
         return builder_configs_->istructure_ptr->ToStructureView();
     }
 
     template <typename U>
-    BuilderView BASE::ToBuilderView() const {
+    VolumeBuilder BASE::ToVolumeBuilder() const {
         // calls the BuilderView copy/convert ctor::
         // presently the i_shared converter only works with l-value.
         std::shared_ptr<U> builder_std_ptr =
             std::const_pointer_cast<U>(this->shared_from_this());
         auto x = DerivedPtr(builder_std_ptr);
-        return BuilderView(x);
+        return VolumeBuilder(x);
     }
 
 
@@ -430,7 +431,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         const U &derived_ref = static_cast<const U &>(*this); // downcast
         auto retval = new U(derived_ref);                     // copy
         auto shared_ptr = i_shared_ptr<U>(retval);
-        BuilderView builder_view = shared_ptr->ToBuilderView();
+        VolumeBuilder builder_view = shared_ptr->ToVolumeBuilder();
         builder_view->SetName(this->GetBuilderName());
         //We're storing the view in the builder by writing to the builder through that same view!
         builder_view->StoreBuilderView(builder_view);

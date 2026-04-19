@@ -36,15 +36,15 @@
 #include <mutex>
 #include <memory>
 #include <unordered_map>
-#include "Assembly.hh"
+#include "AssemblyCore.hh"
 
-//#include "VolumeBuilderReference.hh"
+//#include "VolumeBuilderCore.hh"
 
 namespace DLG4::VolumeBuilders::_internals_ {
 
-    class VolumeBuilderReference;
+    class VolumeBuilderCore;
     template <typename U>
-    class VolumeBuilder;
+    class VolumeBuilderBase;
 
     /** @brief VolumeBuilder: Common functionality for volume builder classes.
     * @details Includes material and attribute setting, and union/subtraction methods.
@@ -57,27 +57,27 @@ namespace DLG4::VolumeBuilders::_internals_ {
     *
     */
     template <typename U>
-    class VolumeBuilder: public ENABLE_SHARED_WRAPPER<U>, public ISolidBuilder
+    class VolumeBuilderBase: public ENABLE_SHARED_WRAPPER<U>, public ISolidBuilder
                          , public IVolumeBuilder {
         /// Templated type for VolumeBuilder base class.
-        /// @see VolumeReferencePtr for the common interface.
+        /// @see BuilderView for the common interface.
         using DerivedPtr = SharedPtr<U>;
 
         // limit public(protected) API by using friendship.
         // Much of this can't even be handledby protected.
         // Specifically factories (normal) and the type-erasing pseudo-inheritance (StructureBuilder)
         template <typename>
-        friend class VolumeBuilder;
-        friend class VolumeBuilderReference;
-        friend class Assembly;
+        friend class VolumeBuilderBase;
+        friend class VolumeBuilderCore;
+        friend class AssemblyCore;
         template <typename>
-        friend class StructureBuilder;
-        friend class StructureBuilderReference;
-        friend FromG4VSolidPtr VB::CreateFromG4VSolid(G4VSolid *solid);
-        friend AssemblyPtr VB::CreateAssembly(G4String names);
-        friend class RZBuilder;
-        friend class BoxBuilder;
-        friend class FromG4VSolid;
+        friend class StructureBuilderBase;
+        friend class StructureBuilderCore;
+        friend FromG4VSolid VB::CreateFromG4VSolid(G4VSolid *solid);
+        friend Assembly VB::CreateAssembly(G4String names);
+        friend class RZBuilderCore;
+        friend class BoxBuilderCore;
+        friend class FromG4VSolidCore;
 
     public:
         /**
@@ -186,22 +186,22 @@ namespace DLG4::VolumeBuilders::_internals_ {
         /**
          * Define combination another volume with present one,
          * This does NOT immediately trigger a build on a passed-in builder, just pre-sets the relationship.
-         * @param other  A VolumeBuilder, G4VSolid, or anything constructable by a VolumeReferencePtr
+         * @param other  A VolumeBuilder, G4VSolid, or anything constructable by a BuilderView
          * @param offset  Offset applied to solid
          * @param rotation Applied to solid
          * @return The builder
          * @ingroup LogicalVolumeConfigs
          * @ingroup booleans
          */
-        DerivedPtr AddUnion(const BuilderView &other,
+        DerivedPtr AddUnion(const VolumeBuilder &other,
             const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0},
             G4RotationMatrix *rotation = nullptr);
         ///@copydoc AddUnion
-        DerivedPtr AddSubtraction(const BuilderView &other,
+        DerivedPtr AddSubtraction(const VolumeBuilder &other,
             const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0},
             G4RotationMatrix *rotation = nullptr);
         ///@copydoc AddUnion
-        DerivedPtr AddIntersection(const BuilderView &other,
+        DerivedPtr AddIntersection(const VolumeBuilder &other,
             const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0},
             G4RotationMatrix *rotation = nullptr);
         /** @} */
@@ -209,7 +209,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         /**
          * Add a boolean operation.
          * This does NOT immediately trigger a build on a passed-in builder, just pre-sets the relationship.
-         * @param other  A VolumeBuilder, G4VSolid, or anything constructable by a VolumeReferencePtr
+         * @param other  A VolumeBuilder, G4VSolid, or anything constructable by a BuilderView
          * @param is_subtraction true for subtraction, false for union
          * @param is_intersection true for intersection, false for union
          * @param offset  Offset applied to solid
@@ -218,7 +218,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @ingroup LogicalVolumeConfigs
          */
         DerivedPtr AddBoolean(
-            const BuilderView &other,
+            const VolumeBuilder &other,
             bool is_subtraction = false,
             bool is_intersection = false,
             const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0},
@@ -351,13 +351,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
         DerivedPtr StackPhysOffset(const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0});
 
         /**
-         * Set the G4Transform3D for placment
-         * The tranformation provided is meant to be UNITLESS
-         * unless you SetDefaultUnit(1).  Otherwise ex: SetDefaultUnit(CLHEP::cm)
-         * and proivde a UNITLESS transform.
-         * To supply units for each G4Tranform3D separately,
+         * Set the G4Transform3D for placment.
+         * The tranformation provided is meant to be in UNITLESS values.
+         * Ie the unit is already pre-configured but not included in the values.
+         * So passing 5 means 5cm if SetDefault(CLHEP::cm) was set.
+         * Otherwise you SetDefaultUnit(1), and pass a value that was already multipled by units.
+         * To supply different units for each G4Tranform3D separately,
          * just call SetDefaultUnit(unit) before each call.
-         * Will overwite/replace rotation and translation.
+         * The call will overwite/replace rotation and translation.
          * @param new_transform Translation vector.
          * @return This builder for chaining.
          * @ingroup PlacementConfigs
@@ -419,12 +420,12 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * This does NOT immediately force a build the mother builder, just pre-sets the relationship.
          *
          *
-         * @param mother olumeReferencePtrparameter accepts
+         * @param mother BuilderVew parameter accepts
          *           a builder or a G4VSolid through implicit ctor
          * @return This builder for chaining.
          * @ingroup PlacementConfigs
          */
-        DerivedPtr SetMother(const BuilderView &mother);
+        DerivedPtr SetMother(const VolumeBuilder &mother);
 
         /**
          * Enable auto Physical Volume naming. \n
@@ -460,7 +461,8 @@ namespace DLG4::VolumeBuilders::_internals_ {
          */
 
 
-        /** @defgroup Transformins  Shape transformers
+        /** @defgroup Transforms  Shape transformers
+         * Modify shape configurations.
          * */
 
         /**
@@ -493,7 +495,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @ingroup Forks
          * @return
          */
-        virtual DerivedPtr ForkAndReset(const G4String &new_name) const;
+        DerivedPtr ForkAndReset(const G4String &new_name) const;
 
         /**
          * Calls MakeSolid()  and copies builder with products cleared for further construction.
@@ -559,7 +561,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @return This builder for chaining.
          * @ingroup CopyConfigs
          */
-        DerivedPtr CopyPlacementConfigsFrom(const BuilderView &other);
+        DerivedPtr CopyPlacementConfigsFrom(const VolumeBuilder &other);
 
         /**
          * Copies the LogicalVolume configuration (material, VisAttributes, etc.)
@@ -570,7 +572,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @return This builder for chaining.
          * @ingroup CopyConfigs
          */
-        DerivedPtr CopyVolumeConfigsFrom(const BuilderView &other);
+        DerivedPtr CopyVolumeConfigsFrom(const VolumeBuilder &other);
 
         /**
          * @defgroup Units
@@ -624,17 +626,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @return the builder
          * @ingroup Batch collection
          */
-        DerivedPtr AddTo(AssemblyPtr &assembly) const;
+        DerivedPtr AddTo(Assembly &assembly) const;
 
         /**
          * Destructor
          * Normally does not delete volume objects.  Geant takes care of that.
          */
-        ~VolumeBuilder() override;
+        ~VolumeBuilderBase() override;
 
-        BuilderView ToBuilderView() const override;
-
-        StructureView ToStructureView() const override;
 
         G4String GetBuilderName() const;
 
@@ -650,8 +649,10 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // But for now, keep them private and require explicit friend access
         // ctors only useable through explicitly granted (friendship) inheritance...
 
+        VolumeBuilder ToVolumeBuilder() const override;
+        StructureBuilder ToStructureView() const override;
 
-        VolumeBuilder();
+        VolumeBuilderBase();
         DerivedPtr SetSolid(G4VSolid *solid);
 
         DerivedPtr Clone() const {
@@ -665,13 +666,13 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
         template <typename T, typename std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
             int>  = 0>
-        VolumeBuilder(const SharedPtr<T> &other, SET_LINK_TYPE);
+        VolumeBuilderBase(const SharedPtr<T> &other, SET_LINK_TYPE);
 
-        VolumeBuilder &operator=(const VolumeBuilder &other) = delete;
+        VolumeBuilderBase &operator=(const VolumeBuilderBase &other) = delete;
         DerivedPtr MakeFinalSolid(G4String boolean_name = "");
-        VolumeBuilder(const VolumeBuilder &other);
+        VolumeBuilderBase(const VolumeBuilderBase &other);
 
-        VolumeBuilder(VolumeBuilder &&) noexcept = default;
+        VolumeBuilderBase(VolumeBuilderBase &&) noexcept = default;
 
         G4VSolid *GetSolidPtr() const {
             return this->solid_ptr_.get_mutable();
@@ -695,7 +696,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          */
         void StoreIStructurePtr(const IStructurePtr &istructure_ptr);
 
-        void StoreBuilderView(const BuilderView &builder_view);
+        void StoreBuilderView(const VolumeBuilder &builder_view);
 
 
         //Unsaved data, left out of configs to be reset on all copy operations.
@@ -753,7 +754,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
 
 //The implementation:
-#include "VolumeBuilder.hpp"
+#include "VolumeBuilderBase.hpp"
 #endif
 
 /* TODO
@@ -763,6 +764,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
  * [] review make_persistent vs no-op deleters, and add upfront protection.  make_persistent may need templating.
  * []   use self-owned shared_ptr trick (intentional cycle) instead of make_peristent.
  * [] A fill and copy would great.
+ * [] Structure builder lacks recursive clone of placement_configs_.children
 
 FromG4VSolid (rename?-> SolidAdapterBuilder)
 Bonus

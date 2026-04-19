@@ -40,7 +40,7 @@
 
 namespace DLG4::VolumeBuilders::_internals_ {
     /**
-     *     *@class StructureBuilder
+     *     *@class StructureBuilderBase
      * @brief A type-erased (data shared view) view of a builder or
      * assembly, ie a "structure."
      * \dotfile builder_graph.dot
@@ -52,27 +52,27 @@ namespace DLG4::VolumeBuilders::_internals_ {
      * While this base view only supports limited methods, it is fully polymorphic
      * and builder objects internally can trigger their full build chain.
      *
-     * This derived clas really exists for parallelism with VolumeBuilderReference.
+     * This derived clas really exists for parallelism with VolumeBuilderCore.
      *
      * @headerfile StructureBuilder.hh
      * @see VolumeBuilder for inherited methods.
      * */
     template <typename U>
-    class StructureBuilder: public ENABLE_SHARED_WRAPPER<U>, public IStructureBuilder {
+    class StructureBuilderBase: public ENABLE_SHARED_WRAPPER<U>, public IStructureBuilder {
         using DerivedPtr = SharedPtr<U>;
 
         // we need access to the other templates for copy
         template <typename>
-        friend class VolumeBuilder;
-        friend class StructureBuilderReference;
-        friend class Assembly;
-        friend AssemblyPtr VB::CreateAssembly(G4String name);
+        friend class VolumeBuilderBase;
+        friend class StructureBuilderCore;
+        friend class AssemblyCore;
+        friend Assembly VB::CreateAssembly(G4String name);
         template <typename>
-        friend class StructureBuilder;
+        friend class StructureBuilderBase;
         //allow i_shared_ptr access to our converting ctors
         //This way they get instantly wrapped!
 
-        friend class i_shared_ptr<StructureBuilder<U>>;
+        friend class i_shared_ptr<StructureBuilderBase<U>>;
 
     public:
         //Methods specific to structures/assemblies....
@@ -326,12 +326,12 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * This does NOT immediately force a build the mother builder, just pre-sets the relationship.
          *
          *
-         * @param mother olumeReferencePtrparameter accepts
+         * @param mother BuilderView parameter accepts
          *           a builder or a G4VSolid through implicit ctor
          * @return This builder for chaining.
          * @ingroup PlacementConfigs
          */
-        DerivedPtr SetMother(const BuilderView &mother);
+        DerivedPtr SetMother(const VolumeBuilder &mother);
 
         /**
          * Enable auto Physical Volume naming. \n
@@ -380,7 +380,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @return This builder for chaining.
          * @ingroup CopyConfigs
          */
-        DerivedPtr CopyPlacementConfigsFrom(const BuilderView &other);
+        DerivedPtr CopyPlacementConfigsFrom(const VolumeBuilder &other);
 
 
         /**
@@ -407,7 +407,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * Destructor
          * Normally does not delete volume objects.  Geant takes care of that.
          */
-        ~StructureBuilder() override;
+        ~StructureBuilderBase() override;
 
         G4String GetBuilderName() const;
 
@@ -420,12 +420,12 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // But for now, keep them private and require explicit friend access
         // ctors only useable through explicitly granted (friendship) inheritance...
 
-        friend class RZBuilder;
-        friend class StructureBuilderReference;
-        friend class FromG4VSolid;
+        friend class RZBuilderCore;
+        friend class StructureBuilderCore;
+        friend class FromG4VSolidCore;
 
 
-        StructureBuilder();
+        StructureBuilderBase();
 
         DerivedPtr Clone() const {
             i_shared_ptr<IStructureBuilder> base_cloned_ptr = this->clone_impl();
@@ -436,20 +436,20 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
         SharedPtr<IStructureBuilder> clone_impl() const override;
 
-        StructureView ToStructureView() const override;
+        StructureBuilder ToStructureView() const override;
 
-        BuilderView ToBuilderView() const override;
+        VolumeBuilder ToVolumeBuilder() const override;
 
 
         template <typename T, typename std::enable_if_t<std::is_base_of_v<IStructureBuilder, T>,
             int>  = 0>
-        StructureBuilder(const SharedPtr<T> &other, SET_LINK_TYPE);
+        StructureBuilderBase(const SharedPtr<T> &other, SET_LINK_TYPE);
 
 
-        StructureBuilder &operator=(const StructureBuilder &other) = delete;
-        StructureBuilder(const StructureBuilder &other);
+        StructureBuilderBase &operator=(const StructureBuilderBase &other) = delete;
+        StructureBuilderBase(const StructureBuilderBase &other);
 
-        StructureBuilder(StructureBuilder &&) noexcept = default;
+        StructureBuilderBase(StructureBuilderBase &&) noexcept = default;
 
         G4VSolid *GetSolidPtr() const {
             return this->solid_ptr_.get_mutable();

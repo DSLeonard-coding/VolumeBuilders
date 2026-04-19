@@ -15,9 +15,9 @@
 
 namespace DLG4::VolumeBuilders::_internals_ {
     /// @brief Might make this public.
-    /// Generally you should prefer use of VolumeReferencePtr
+    /// Generally you should prefer use of BuilderView
     /// as it provides full type erasure for all VolumeBuilder methods.
-    /// This Interface MAY DISAPPEAR as VolumeReferencePtr becomes more established.
+    /// This Interface MAY DISAPPEAR as BuilderView becomes more established.
     ///
     /// But this is a lightweight polymorphic class to easily allow access to
     /// the base-CRTP class non-fluent (non-templated) getters.
