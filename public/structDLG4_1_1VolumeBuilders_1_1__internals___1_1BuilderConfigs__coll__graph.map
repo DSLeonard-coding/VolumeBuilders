@@ -1,0 +1,11 @@
+<map id="BuilderConfigs" name="BuilderConfigs">
+<area shape="rect" id="Node000001" title=" " alt="" coords="177,209,292,237"/>
+<area shape="rect" id="Node000002" href="$classDLG4_1_1VolumeBuilders_1_1__internals___1_1i__shared__ptr.html" title=" " alt="" coords="36,99,215,144"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,152,222,207,219,211,158,156"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,14,235,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,57,127,99,121,99,119,58"/>
+<area shape="rect" id="Node000004" href="$classDLG4_1_1VolumeBuilders_1_1__internals___1_1i__shared__ptr.html" title=" " alt="" coords="249,99,460,144"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="325,157,291,187,258,211,254,206,288,183,321,153"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="258,5,459,50"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="360,66,358,99,353,99,354,66"/>
+</map>

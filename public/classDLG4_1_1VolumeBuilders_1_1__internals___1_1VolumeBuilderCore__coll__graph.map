@@ -1,0 +1,15 @@
+<map id="VolumeBuilderCore" name="VolumeBuilderCore">
+<area shape="rect" id="Node000001" title="A polymorphic, type&#45;erased &quot;view&quot; of any specialized builder." alt="" coords="212,283,358,311"/>
+<area shape="rect" id="Node000002" href="$classDLG4_1_1VolumeBuilders_1_1__internals___1_1VolumeBuilderBase.html" title=" " alt="" coords="202,191,368,235"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="288,251,288,283,282,283,282,251"/>
+<area shape="rect" id="Node000003" href="$classDLG4_1_1Utilities_1_1disableable__shared__from__this.html" title=" " alt="" coords="5,98,210,143"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="165,148,244,188,241,193,162,152"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="30,5,185,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="110,66,110,98,105,98,105,66"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="233,106,336,134"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="288,149,288,190,282,190,282,149"/>
+<area shape="rect" id="Node000006" href="$classDLG4_1_1VolumeBuilders_1_1__internals___1_1IStructureBuilder.html" title="a non&#45;fluent polymorphic class to access the derived solid&#45;builder from a base reference: This gets u..." alt="" coords="220,14,350,42"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="288,57,288,106,282,106,282,57"/>
+<area shape="rect" id="Node000007" href="$classDLG4_1_1VolumeBuilders_1_1__internals___1_1IVolumeBuilder.html" title="Might make this public." alt="" coords="361,106,481,134"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="390,145,319,192,316,188,387,141"/>
+</map>

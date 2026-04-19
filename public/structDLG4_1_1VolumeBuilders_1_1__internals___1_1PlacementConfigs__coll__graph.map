@@ -1,0 +1,7 @@
+<map id="PlacementConfigs" name="PlacementConfigs">
+<area shape="rect" id="Node000001" title=" " alt="" coords="42,209,180,237"/>
+<area shape="rect" id="Node000002" href="$classDLG4_1_1VolumeBuilders_1_1__internals___1_1i__shared__ptr.html" title=" " alt="" coords="5,99,217,144"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,159,114,209,108,209,108,159"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="11,5,211,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,66,114,99,108,99,108,66"/>
+</map>

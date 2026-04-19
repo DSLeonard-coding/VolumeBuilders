@@ -1,0 +1,9 @@
+<map id="include/PlacementNameRegistry.hh" name="include/PlacementNameRegistry.hh">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,258,33"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="14,81,78,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,36,75,73,71,69,115,32"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="102,81,161,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,34,134,65,129,65,129,34"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="184,81,308,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="153,31,215,70,212,75,151,36"/>
+</map>
