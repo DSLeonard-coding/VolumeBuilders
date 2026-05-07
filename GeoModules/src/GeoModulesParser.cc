@@ -39,7 +39,7 @@ namespace DLG4::GeoModules {
         geo_recipes_->insert(std::make_pair(key, recipe));
     }
 
-    G4VPhysicalVolume *GeoModulesParser::GetWorldPhys() const {
+    G4VPhysicalVolume *GeoModulesParser::GetWorldVolume() const {
         return context_->world_phys_;
     }
 
@@ -61,7 +61,7 @@ namespace DLG4::GeoModules {
         // with a non-deleting shared pointer since it can't be used in ctor:
         RegisterModules();
         BuildSelectedRecipe();
-        return GetWorldPhys();
+        return GetWorldVolume();
     }
 
     void GeoModulesParser::RegisterModules() {
