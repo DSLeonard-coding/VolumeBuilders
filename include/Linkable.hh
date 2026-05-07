@@ -59,15 +59,25 @@
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
+#include <sanitizer/lsan_interface.h>
 #define SET_LINK_TYPE std::true_type
 #define SET_LINK std::true_type{}
+
+
+
 
 // Geant things need to not be deleted:
 namespace DLG4::VolumeBuilders::_internals_ {
     namespace PersistentObjectRegistry {
         // For Geant, we need things left persistent.
         // Yes, in header this is multiple "registries" but this is a black hole anyway.
-        inline std::vector<std::shared_ptr<void>> black_hole;
+        inline auto black_hole = []() {
+            auto* bh = new std::vector<std::shared_ptr<void>>();
+#ifdef __SANITIZE_ADDRESS__
+            __lsan_ignore_object(bh);
+#endif
+            return bh;
+        }();
         inline std::mutex s_registry_mutex;
     }
 
@@ -281,6 +291,17 @@ namespace DLG4::VolumeBuilders::_internals_ {
             LinkTreeTo(data);
         }
 
+        /// Non owning construct and link
+        template <typename... Args,
+            std::enable_if_t<
+                !(std::conjunction_v<std::is_same<std::decay_t<Args>, Linkable<T>>...>),
+                int> = 0>
+        void ConstructAndRawLink(Args &&... args) {
+            auto raw_data = new T(std::forward<Args>(args)...);
+            LinkToRaw(raw_data);
+        }
+
+
         explicit operator bool() const noexcept {
             return static_cast<bool>(ref_);
         }
@@ -295,7 +316,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
         void make_persistent() {
             std::lock_guard<std::mutex> lock(s_registry_mutex);
-            black_hole.push_back(ref_);
+            black_hole->push_back(ref_);
         }
 
         // operator T() const {
