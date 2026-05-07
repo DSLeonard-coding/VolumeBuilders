@@ -3,4 +3,5 @@
 #include "../src/Geometries/BoxExampleGeoModule.inc"
 #include "../src/Geometries/Example1GeoModule.inc"
 #include "../src/Geometries/HexPartGeoModule.inc"
+#include "../src/Geometries/testing/BoxTestGeoModule.inc"
 #include "../src/Geometries/WorldGeoModule.inc"

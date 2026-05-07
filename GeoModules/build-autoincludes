@@ -1,21 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-#cd "$(dirname "$0")"
-# symlink subtrees
-for i in $(cd ../subtrees; find -name .link_src); do 
-   fullname=${i%/*}
-   fullname=${fullname#*.} 
-   dir=${fullname%/*}
-
-   mkdir -p "src/linked/$dir"
-   #calculate relative link offset:
-   depth=$(echo "$fullname" | tr -cd '/' | wc -c)
-   rel_path="../.."
-   for ((j=0; j<depth; j++)); do rel_path="../$rel_path"; done
-   #symlink it
-   ln -sfn "${rel_path}/subtrees/${fullname}" \
-              "src/linked/${fullname}"
-done
 
 # Build temp auotincludes
 incfile=include/autoincludes.inc
