@@ -1,2 +1,2 @@
-cp ../../hpgesim/cmake . -rf
-cp ../../hpgesim/cmake demo -rf
+cp ../../cmake . -rf
+cp ../../cmake demo -rf

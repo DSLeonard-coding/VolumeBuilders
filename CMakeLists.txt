@@ -19,7 +19,10 @@ project(VolumeBuilders LANGUAGES CXX)
 # Set C++ standard consistent with your main project
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(NOT SETUP_FILE)
 set(SETUP_FILE "vb_user_setup.sh")
+endif()
 set(SETUP_SCRIPT "$ENV{HOME}/${SETUP_FILE}")
 set(DSL_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/DSL/")
 include("${DSL_CMAKE_PATH}/utils/Setup_Paths.cmake")
