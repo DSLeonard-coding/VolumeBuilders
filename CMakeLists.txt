@@ -1,4 +1,4 @@
-# This CMakeLists.txt is for VolumeBuilder
+# This GeoModulesConfig.cmake is for VolumeBuilder
 # It defines a static library for VolumeBuilder, including its source files,
 # its headers, and its necessary Geant4 dependencies.
 
