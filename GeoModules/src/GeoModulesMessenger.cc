@@ -14,7 +14,7 @@
 #include <string>
 #include <bits/istream.tcc>
 #include "GeoModules/GeoModulesParser.hh"
-#include "GeoModules/GeoModulesContext.hh"
+#include <GeoModules/GeoModules.hh>
 
 namespace DLG4::GeoModules {
     GeoModulesMessenger::GeoModulesMessenger(GeoModulesParser *geo_parser)

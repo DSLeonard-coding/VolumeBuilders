@@ -49,7 +49,7 @@ void DetectorConstruction::ListGeometries() const {
 //takes <source> material and returns a pointer to ac opy named <name>
 // G4Material copy constructor is private, so leverage Addmaterial at 100%
 //  DL 2020.
-G4Material *DetectorConstruction::CopyMaterial(G4Material *source, G4String name, G4double dens) {
+G4Material *GM::CopyMaterial(G4Material *source, G4String name, G4double dens) {
     int ncomponents = 1;
     G4double fractionmass = 100 * perCent;
     auto dest = new G4Material(name, dens, ncomponents);
@@ -57,7 +57,7 @@ G4Material *DetectorConstruction::CopyMaterial(G4Material *source, G4String name
     return dest;
 }
 
-G4Material *DetectorConstruction::CopyMaterial(G4Material *source, G4String name) {
+G4Material *GM::CopyMaterial(G4Material *source, G4String name) {
     const G4double dens = source->GetDensity();
     G4Material *dest = CopyMaterial(source, name, dens);
     return dest;

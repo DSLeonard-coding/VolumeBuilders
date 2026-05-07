@@ -5,9 +5,9 @@
 #ifndef GEOMODULEPARSER_CC
 #define GEOMODULEPARSER_CC
 #include "GeoModules/GeoModulesParser.hh"
-#include "GeoModules/GeoModulesContext.hh"
+#include <GeoModules/GeoModules.hh>
 
-#include "GeoModules/GeoModulesContext.hh"
+#include <GeoModules/GeoModules.hh>
 #define INCLUDE_GEOMODULE_CLASS_HEADER
 #include "autoincludes.inc"
 #undef INCLUDE_GEOMODULE_CLASS_HEADER

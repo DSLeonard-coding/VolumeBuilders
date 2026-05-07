@@ -9,8 +9,8 @@
 #ifndef GeoModulesDetectorConstruction_HH
 #define GeoModulesDetectorConstruction_HH 1
 #include <G4VUserDetectorConstruction.hh>
-#include "GeoModules/IGeoModule.hh"
-#include "GeoModules/GeoModulesParser.hh"
+#include "IGeoModule.hh"
+#include "GeoModulesParser.hh"
 
 using namespace DLG4::GeoModules;
 //  Make a first pass on pluggable includes to pickup #defines

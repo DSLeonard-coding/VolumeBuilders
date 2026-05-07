@@ -45,46 +45,6 @@ namespace DLG4::GeoModules {
         G4cout << G4endl;
     };
 
-    G4Material* GeoModulesContext::GetMaterial(const G4String &materialName) {
-        // Check local material store (materials already created/defined)
-        // 2nd parameter is warn if missing.
-        G4Material* mat = G4Material::GetMaterial(materialName, false);
-
-        if (mat) {
-            return mat;
-        }
-
-        // Fallback to NIST manager
-        G4NistManager* nist = G4NistManager::Instance();
-        mat = nist->FindOrBuildMaterial(materialName);
-
-        if (!mat) {
-            G4Exception("GeoModulesContext::GetMaterial", "MatNotFound",
-                        FatalException, ("Could not find material: " + materialName).c_str());
-        }
-
-        return mat;
-    }
-
-    G4Element* GeoModulesContext::GetElement(const G4String &elementName) {
-        // Check the GIlobal Element Table first
-        G4Element* el = G4Element::GetElement(elementName, false);
-
-        if (el) {
-            return el;
-        }
-
-        // Fallback to NIST manager for standard elements
-        G4NistManager* nist = G4NistManager::Instance();
-        el = nist->FindOrBuildElement(elementName);
-
-        if (!el) {
-            G4Exception("GeoModulesContext::GetElement", "ElementNotFound",
-                        FatalException, ("Could not find element: " + elementName).c_str());
-        }
-
-        return el;
-    }
 }
 
 #endif  //GEOMODULESCONTEXT_CC

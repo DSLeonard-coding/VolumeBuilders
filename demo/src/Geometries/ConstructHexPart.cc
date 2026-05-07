@@ -13,7 +13,7 @@ void DetectorConstruction::ConstructHexPart() {
 
     //make a dedicated sample_material for vertex generation:
     // Density in materials is 1.14, but internet :) says 1.18 to 1.19 for cast acrylic.  Should weigh it really:
-    G4Material *sample_mat = DetectorConstruction::CopyMaterial(_copper, "sample_mat");
+    G4Material *sample_mat = GM::CopyMaterial(_copper, "sample_mat");
     G4cout << "now ConstructArrayHexPart()\n" << G4endl;
 
     G4double sample_thickness_mm = 50;
