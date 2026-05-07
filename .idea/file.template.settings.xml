@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ExportableFileTemplateSettings">
     <default_templates>
-      <template name="VBDemo Geometry.cc" file-name="Construct${METHOD_NAME}" reformat="true" live-template-enabled="false">
-        <template name="VBDemo Geometry.cc.child.0.inc" file-name="Construct${METHOD_NAME}" reformat="true" live-template-enabled="false" />
+      <template name="VBDemo Geometry.cc" file-name="${MODULE_BASE_NAME}GeoModule" reformat="true" live-template-enabled="false">
+        <template name="VBDemo Geometry.cc.child.0.inc" file-name="${MODULE_BASE_NAME}GeoModule" reformat="true" live-template-enabled="false" />
       </template>
-      <template name="VBDemo Geometry.cc.child.0.inc" file-name="Construct${METHOD_NAME}" reformat="true" live-template-enabled="false" />
+      <template name="VBDemo Geometry.cc.child.0.inc" file-name="${MODULE_BASE_NAME}GeoModule" reformat="true" live-template-enabled="false" />
     </default_templates>
   </component>
 </project>
