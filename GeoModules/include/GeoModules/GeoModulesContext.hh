@@ -16,7 +16,7 @@
 //It's for use in XYZGeoModule.cc that include GeoModulesContext.hh
 //But should include more.  Doing it here risks header loops
 //Probably need a master include for those.
-#include "IGeoModule.hh"
+#include "GeoModules/IGeoModule.hh"
 #include "GeoModulesParser.hh"
 #define GEOMDULES_CONTEXT_INCLUDES
 #include "GeoModulesContextVariables.inc"
@@ -66,6 +66,9 @@ namespace DLG4::GeoModules {
 
         void SetWorldPhys(G4VPhysicalVolume *world_phys) {
             world_phys_ = world_phys;
+        };
+        G4VPhysicalVolume* GetWorldPhys() {
+            return world_phys_;
         };
 
     private:

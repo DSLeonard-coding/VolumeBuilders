@@ -6,14 +6,19 @@
 * @brief
 *
 */
+//Example1 GeoModule
+#include <GeoModules/GeoModules.hh>
+#define INCLUDE_GEOMODULE_SHARED_OBJECTS
+#include "Example1GeoModule.inc"
+#undef INCLUDE_GEOMODULE_SHARED_OBJECTS
 
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>
 
 using namespace CLHEP;
-namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers
+namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
-void DetectorConstruction::ConstructExample1() {
+void Example1GeoModule::Construct(GeoModulesContextPtr context) {
     static bool firstcall = true;
     if (!firstcall) {
         // only run once
@@ -35,11 +40,11 @@ void DetectorConstruction::ConstructExample1() {
             ->AddPlane(p.IR            , p.OR                   , p.z -= 15 );
 
     // just a descriptively named variable for the documented README example:
-    G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
+    G4VPhysicalVolume *another_builder_or_geant_physical_volume = context->GetWorldPhys();
 
     auto ring_part = VB::CreatePolyhedraBuilder("ring_part", 6)
             // can set configurations in any order mostly, but can be nice to set many things up front before geometry details:
-            ->SetMaterial(_copper)
+            ->SetMaterial("copper")
             ->SetColor(coppertone) // We can pre-configure the logical-volume!
             ->ForceSolid(true)
             ->AddUnion(another_builder_or_geant_solid, {0, 0, 0}) // with relative z, may not need to provide offset.

@@ -1,9 +1,24 @@
+/**
+* @file
+* Created by @author Douglas S. Leonard on @date 7/12/25.  All rights Reserved
+* See related files for license, if any is provided.
+* 
+* @brief
+*
+*/
+//World GeoModule
+#include <GeoModules/GeoModules.hh>
+#define INCLUDE_GEOMODULE_SHARED_OBJECTS
+#include "WorldGeoModule.inc"
+#undef INCLUDE_GEOMODULE_SHARED_OBJECTS
+
 #include "DetectorConstruction_includes.hh" // common includes
-#include "VolumeBuilders.hh"
+#include <VolumeBuilders.hh>
+
 using namespace CLHEP;
 namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
-void DetectorConstruction::ConstructWorld() {
+void WorldGeoModule::Construct(GeoModulesContextPtr context) {
     static bool firstcall = true;
     if (!firstcall) {
         // only run once
@@ -28,9 +43,10 @@ void DetectorConstruction::ConstructWorld() {
 
     // now just becomes:
     VB::SetGlobalDefaultUnit(CLHEP::mm);
-    world_phys = VB::CreateCenteredBoxBuilder("hallbox", 3000, 3000, 3000)
-                 ->SetMaterial(_air)
+    auto world_phys = VB::CreateCenteredBoxBuilder("hallbox", 3000, 3000, 3000)
+                 ->SetMaterial("air")
                  ->SetColor(0.8, 0.8, 0.8, 0.1)
                  ->SetVisibility(false)
                  ->GetPlacement();
+    context->SetWorldPhys(world_phys);
 }

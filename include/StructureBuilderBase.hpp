@@ -13,6 +13,7 @@
 #include "StructureBuilderCore.hh"
 #include "StructureBuilderBase.hh"
 #include "VolumeBuilderCore.hh"
+#include "MaterialsHelpers.hh"
 #include <memory>
 
 
@@ -118,8 +119,8 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::SetMaterial(
-        G4Material *material) {
+    DERIVED BASE::SetMaterial(const
+        VBHelpers::G4MaterialPtrOrString &material) {
         if (!placement_configs_->is_builder) {
             // assembly
             for (auto &child : placement_configs_->children) {

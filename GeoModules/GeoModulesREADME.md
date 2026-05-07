@@ -29,7 +29,7 @@ Provides access to myvar.  This allows global interface variables for aligning m
 
 ### Materials and Elements
 #### Local materials
-Materials can be defined in any module, such as MaterialsGeoModule.cc/inc, and are now accessed in other modules via their Geant global material names through GM::GetMaterial("some_name")
+Materials can be defined in any module, such as MaterialsGeoModule.cc/inc, and are now accessed in other modules via their Geant global material names through VBHelpers::GetMaterial("some_name")
 #### NIST materials
 Nist materials are also retrieved the same way using the NIST material name.  Often this can
 

@@ -6,15 +6,19 @@
 * @brief
 *
 */
+//BoxExample GeoModule
+#include <GeoModules/GeoModules.hh>
+#define INCLUDE_GEOMODULE_SHARED_OBJECTS
+#include "BoxExampleGeoModule.inc"
+#undef INCLUDE_GEOMODULE_SHARED_OBJECTS
 
-// ReSharper disable CppExpressionWithoutSideEffects
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>
 
 using namespace CLHEP;
 namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
-void DetectorConstruction::ConstructBoxExample() {
+void BoxExampleGeoModule::Construct(GeoModulesContextPtr context) {
     static bool firstcall = true;
     if (!firstcall) {
         // only run once
@@ -55,8 +59,8 @@ void DetectorConstruction::ConstructBoxExample() {
     // arrange all boxes in y and set common properties:
     double y = 0;
     for (auto &builder : builder_list) {
-        builder->SetMother(world_phys)
-               ->SetMaterial(_copper)
+        builder->SetMother(context->GetWorldPhys())
+               ->SetMaterial("copper")
                ->ForceSolid(true)
                ->SetPhysOffset({mm, 0, y, 0}) // distribute in y
                ->MakePlacement();

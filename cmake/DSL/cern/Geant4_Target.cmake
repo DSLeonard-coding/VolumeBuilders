@@ -11,7 +11,7 @@ set(REQUIRED_ENVS
         G4NEUTRONHPDATA
 )
 
-siphon_user_envs(REQUIRED_ENVS REQUIRED)
+siphon_user_envs(REQUIRED_ENVS)
 
 if(NOT GEANT4_PATH)
     message(FATAL_ERROR "GEANT4_PATH not set in Environment or vb_user_setup.sh")

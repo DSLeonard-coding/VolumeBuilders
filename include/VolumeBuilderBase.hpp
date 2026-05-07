@@ -126,7 +126,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::MakeLogicalVolume(G4Material *material, G4String name) {
+    DERIVED BASE::MakeLogicalVolume(const VBHelpers::G4MaterialPtrOrString &material, G4String name) {
         ValidateForVolumeBuild(STRINGIFY(BASE) "MakeLogicalVolume");
         //if no volume was previously built, should be safe to reset material.
         if (material) {
@@ -408,7 +408,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::SetMaterial(G4Material *material) {
+    DERIVED BASE::SetMaterial(const VBHelpers::G4MaterialPtrOrString &material) {
         lv_configs_->material = material;
         return this->shared_from_this();
     }

@@ -121,7 +121,7 @@ int main(int argc, char **argv) {
         }
     } else if (strcmp(argv[1], "geos") == 0) {
         // list geometries
-        the_sim.ListGeometries();
+        the_sim.ListGeoRecipes();
         return 0;
     } else {
         // non option args, batch mode.
@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
     }
     if (gui) {
         if (!readmacs) {
-            the_sim.ListGeometries();
+            the_sim.ListGeoRecipes();
             std::cout << "Please type a geometry from the list above and press enter." << std::endl;
             std::string selection;
             std::cin >> selection;

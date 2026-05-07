@@ -6,6 +6,11 @@
 * @brief
 *
 */
+//Assembly GeoModule
+#include <GeoModules/GeoModules.hh>
+#define INCLUDE_GEOMODULE_SHARED_OBJECTS
+#include "AssemblyGeoModule.inc"
+#undef INCLUDE_GEOMODULE_SHARED_OBJECTS
 
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>
@@ -13,7 +18,7 @@
 using namespace CLHEP;
 namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
-void DetectorConstruction::ConstructAssembly() {
+void AssemblyGeoModule::Construct(GeoModulesContextPtr context) {
     static bool firstcall = true;
     if (!firstcall) {
         // only run once
@@ -42,8 +47,8 @@ void DetectorConstruction::ConstructAssembly() {
             ->AddTo(assembly);
     }
 
-    assembly->SetMother(world_phys)
-            ->SetMaterial(_copper)
+    assembly->SetMother(context->GetWorldPhys())
+            ->SetMaterial("copper")
             ->SetColor(0, 1, 0) // We can pre-configure the logical-volume!
             ->ForceSolid(true)
             ->SetPhysOffset({0, 0, -200})

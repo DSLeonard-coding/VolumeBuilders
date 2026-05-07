@@ -142,11 +142,11 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
         /**
          *
-         * @param material
+         * @param material G4Material* or string for local or NIST material
          * @return The builder
          * @ingroup LogicalVolumeConfigs
          */
-        DerivedPtr SetMaterial(G4Material *material);
+        DerivedPtr SetMaterial(const VBHelpers::G4MaterialPtrOrString &material);
 
         /**
          *

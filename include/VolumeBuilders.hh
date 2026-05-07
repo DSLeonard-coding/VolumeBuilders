@@ -12,6 +12,7 @@
 #define VOLUME_BUILDER_INCLUDES_HH_
 
 #include "VolumeBuildersTypes.hh"
+#include "MaterialsHelpers.hh"
 #include "RZBuilderCore.hh"
 #include "BoxBuilderCore.hh"
 #include "ISolidBuilder.hh"

@@ -1,9 +1,24 @@
+/**
+* @file
+* Created by @author Douglas S. Leonard on @date 7/12/25.  All rights Reserved
+* See related files for license, if any is provided.
+* 
+* @brief
+*
+*/
+//HexPart GeoModule
+#include <GeoModules/GeoModules.hh>
+#define INCLUDE_GEOMODULE_SHARED_OBJECTS
+#include "HexPartGeoModule.inc"
+#undef INCLUDE_GEOMODULE_SHARED_OBJECTS
+
 #include "DetectorConstruction_includes.hh" // common includes
-#include "VolumeBuilders.hh"
+#include <VolumeBuilders.hh>
+
 using namespace CLHEP;
 namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
-void DetectorConstruction::ConstructHexPart() {
+void HexPartGeoModule::Construct(GeoModulesContextPtr context) {
     static bool firstcall = true;
     if (!firstcall) {
         // only run once
@@ -13,15 +28,11 @@ void DetectorConstruction::ConstructHexPart() {
 
     //make a dedicated sample_material for vertex generation:
     // Density in materials is 1.14, but internet :) says 1.18 to 1.19 for cast acrylic.  Should weigh it really:
-    G4Material *sample_mat = GM::CopyMaterial(_copper, "sample_mat");
+    G4Material *sample_mat = VBHelpers::CopyMaterial("copper", "sample_mat");
     G4cout << "now ConstructArrayHexPart()\n" << G4endl;
 
     G4double sample_thickness_mm = 50;
-    if (ExtraOpts.find("hex_insert_mm") != ExtraOpts.end()) {
-        //if option is set
-        std::stringstream ss(ExtraOpts["hex_insert_mm"]);
-        ss >> sample_thickness_mm; //read it
-    } else {
+    if (!(context->GetExtraOpt("hex_insert_mm") >> sample_thickness_mm)) {
         //else set default but complain
         // Echo command instructions:
         sample_thickness_mm = 50.;
@@ -58,6 +69,6 @@ void DetectorConstruction::ConstructHexPart() {
 
 
     hex_filler
-        ->SetMother(world_phys)
+        ->SetMother(context->GetWorldPhys())
         ->PlaceAndFork();
 }

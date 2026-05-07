@@ -5,7 +5,6 @@
 
 #ifndef _GEOMODULES_HH
 #define _GEOMODULES_HH
-#include "GeoModulesContext.hh"
-#include "GeoModulesMaterialsHelpers.hh"
-namespace GM = DLG4::GeoModules;
+#include "GeoModules/GeoModulesContext.hh"
+#include "VolumeBuilders.hh"
 #endif

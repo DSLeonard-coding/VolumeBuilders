@@ -6,6 +6,7 @@
 #include "IVolumeBuilder.hh"
 #include "ISolidBuilder.hh"
 #include "VolumeBuilderConfigs.hh"
+#include "MaterialsHelpers.hh"
 /*
 
  * VolumeMaker.hh
@@ -151,13 +152,13 @@ namespace DLG4::VolumeBuilders::_internals_ {
          *     GetLogicalVolume(), or passing the builder to any consumer
          *     will trigger the build anyway.
          *
-         * @param material Pointer to material to use.
+         * @param material G4Material* OR a string name of a local or NIST material!
          * @param name Optional explicit name for logical volume.
          *      Normally already derived from builder/solid name.
          * @return This builder.
          */
         DerivedPtr MakeLogicalVolume(
-            G4Material *material = nullptr, G4String name = std::string());
+            const VBHelpers::G4MaterialPtrOrString &material = {}, G4String name = std::string());
 
         /**
              * Make the G4VSolid. Returns the builder.
@@ -228,11 +229,11 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
         /**
          *
-         * @param material
+         * @param material G4Material* OR a string name of a local or NIST material!
          * @return The builder
          * @ingroup LogicalVolumeConfigs
          */
-        DerivedPtr SetMaterial(G4Material *material);
+        DerivedPtr SetMaterial(const VBHelpers::G4MaterialPtrOrString &material);
 
         /**
          *

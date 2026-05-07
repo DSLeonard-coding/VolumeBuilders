@@ -16,6 +16,10 @@
 #include "i_shared_ptr.hh"
 
 #define ONCE_MUTABLE mutable  // for linkable objects
+namespace DLG4::VolumeBuilders::Helpers {
+    class G4MaterialPtrOrString;
+}
+namespace VBHelpers = DLG4::VolumeBuilders::Helpers;
 
 namespace DLG4::VolumeBuilders::_internals_ {
     // a shorthand out to the public namespace:

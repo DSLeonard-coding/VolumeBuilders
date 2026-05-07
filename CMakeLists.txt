@@ -1,6 +1,15 @@
 # This GeoModulesConfig.cmake is for VolumeBuilder
 # It defines a static library for VolumeBuilder, including its source files,
 # its headers, and its necessary Geant4 dependencies.
+# --- VolumeBuilders/CMakeLists.txt ---
+
+# The "Pragma Once" Guard
+get_property(VB_LOADED GLOBAL PROPERTY VB_LIBRARY_LOADED)
+if(VB_LOADED)
+    return()
+endif()
+set_property(GLOBAL PROPERTY VB_LIBRARY_LOADED TRUE)
+
 
 # Ensure minimum CMake version consistent with your main project
 cmake_minimum_required(VERSION 3.15)
@@ -19,9 +28,9 @@ include("${DSL_CMAKE_PATH}/cern/Geant4_Target.cmake")
 include("${DSL_CMAKE_PATH}/cern/ROOT_Target.cmake")
 include("${DSL_CMAKE_PATH}/utils/dsl_package_export.cmake")
 
-add_subdirectory(demo EXCLUDE_FROM_ALL)
 
 if(NOT VOLUMEBUILDERS_NO_DEMO)
+    add_subdirectory(demo EXCLUDE_FROM_ALL)
     set_property(TARGET VBDemo PROPERTY EXCLUDE_FROM_ALL FALSE)
 endif()
 

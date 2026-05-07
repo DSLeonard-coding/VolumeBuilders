@@ -133,7 +133,7 @@ Here's a clean example from a real simulated sample.
 
     for (auto &piece : pieces) {
         piece->SetVisibility(true)
-            ->SetMaterial(sample_mat)
+            ->SetMaterial(sample_mat)  // takes pointer OR a local or NIST name!
             ->SetColor(white)
             ->SetAlpha(0.5)
             ->ForceSolid(true)
