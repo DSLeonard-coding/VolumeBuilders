@@ -111,7 +111,7 @@ By default it this is setup to run the assembly demo.
 
 We'll get to details of modules, but at least one must call
 ```
-context->SetWorldVolume(some_logical_volume_pointer)
+context->SetWorldVolume(some_G4VPhysicalVolume_pointer)
 ```
 The default build as a WorldGeoModule included so you just have to modify it and include it in your recipes.
 

@@ -1,6 +1,6 @@
 ## The Distribution
 
-DLG4::VolumeBuilders is included now with DLG4::GeoModules (a modular geometry plugin package) and VBDemo that is built on both of them.  The runtime selection of VB examples is provided by GeoModules.  Building just the VolumeBuilders library is discussed below but the demo itself is the best framework for building a simulation based on it.  You don't need to use the GeoModules features, but they're available.  Building the demo is discussed more in [GeoModulesAndVBDemoREADME.md]([GeoModulesAndVBDemoREADME.md])
+DLG4::VolumeBuilders is included now with DLG4::GeoModules (a modular geometry plugin package) and VBDemo that is built on both of them.  The runtime selection of VB examples is provided by GeoModules.  Building just the VolumeBuilders library is discussed below but the demo itself is the best framework for building a simulation based on it.  You don't need to use the GeoModules features, but they're available.  Building the demo is discussed more in [GeoModulesAndVBDemoREADME.md](GeoModulesAndVBDemo.md)
 
 
 ## Building the library 
@@ -17,7 +17,7 @@ Copy the vb_user_setup_general.sh script to your home directory and edit the gea
 > make
 ```
 But to do anything interesting with it you need a simulation configured to use it.  The demo
-is the best template for that.  Building the demo, geometry modules from clion templates, and projects is covered in [GeoModulesAndVBDemoREADME.md](GeoModulesAndVBDemoREADME.md)
+is the best template for that.  Building the demo, geometry modules from clion templates, and projects is covered in [GeoModulesAndVBDemoREADME.md](GeoModulesAndVBDemo.md)
 
 
 ## Building and running the Demo
@@ -50,9 +50,9 @@ Now you can build, run, and debug, from the top right toolbar build window. Sele
 
 ## Building the library for your project
 
-This is covered in [GeoModulesREADME.md](GeoModulesAndVBDemoREADME.md#builing-a-new-project).  Simply put, copy the demo directory, and change a couple of paths in the CMakeLists.txt.
+This is covered in [GeoModulesREADME.md](GeoModulesAndVBDemo.md#builing-a-new-project).  Simply put, copy the demo directory, and change a couple of paths in the CMakeLists.txt.
 
-You may need to merge the CMakeLists.txt with the one for your project, but the provided one handles a lot.  The VolumeBuildes and GeoModules cmake files handle a lot of the details for you.
+You may need to merge the CMakeLists.txt with the one for your project, but the provided one handles a lot.  The VolumeBuilders and GeoModules cmake files handle much of the details for you.
 
 That's it. Build and run your project as usual.  You might take a look at the scripts here in cmake/  used by CMakeLists.txt as they are meant to ease Geant and ROOT builds in general, as well to leverage traditional env setup scripts, but they may not be tested on recent versions yet.
 

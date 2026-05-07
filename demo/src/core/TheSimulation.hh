@@ -42,6 +42,9 @@ private:
     // seems that theRunManager->SetUserInitialization takes ownership/cleans-up (undocumented "feature")
     // So we just keep a raw pointer:
     DetectorConstruction * const theDetectorConstruction = new DetectorConstruction();
+    // That one is inherited from the libary but adds nothing now.
+    //Alternatively, just use the library version directly.
+    //GeoModulesDetectorConstruction * const theDetectorConstruction = new GeoModulesDetectorConstruction();
 
 };
 
