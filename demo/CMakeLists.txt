@@ -21,13 +21,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #-----------------------------------------------------------------------------#
 #Configure cmake helpers
+#-----------------------------------------------------------------------------#
 set(SETUP_FILE "vb_user_setup.sh")
 set(SETUP_SCRIPT "$ENV{HOME}/${SETUP_FILE}")
 set(DSL_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/DSL/")
-#-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
 #Include helpers and ROOT/Geant builders
+#-----------------------------------------------------------------------------#
 include("${DSL_CMAKE_PATH}/cern/Geant4_Target.cmake")
 include("${DSL_CMAKE_PATH}/cern/ROOT_Target.cmake")
 include("${DSL_CMAKE_PATH}/utils/misc.cmake")
@@ -35,13 +36,14 @@ include("${DSL_CMAKE_PATH}/utils/Setup_Paths.cmake")
 
 #-----------------------------------------------------------------------------#
 #Include the GeoModules source library config
-include("../GeoModules/GeoModulesConfig.cmake")
 #-----------------------------------------------------------------------------#
+include("../GeoModules/GeoModulesConfig.cmake")
 
 
 #-----------------------------------------------------------------------------#
 # Set a default build type if none is specified (e.g., when building from command line)
 # This is important for consistent behavior.
+#-----------------------------------------------------------------------------#
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "No build type specified, defaulting to Release.")
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
@@ -49,11 +51,11 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "Debug-ASan")
 endif ()
 message(STATUS "CMAKE_BUILD_TYPE is: ${CMAKE_BUILD_TYPE}")
-#-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
 # Flags and Options
 # For C++ flags:
+#-----------------------------------------------------------------------------#
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g" CACHE STRING "Flags used by the C++ compiler for profiling builds." FORCE)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g" CACHE STRING "Flags used by the C++ compiler for profiling builds." FORCE)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG" CACHE STRING "Flags used by the C++ compiler for release builds." FORCE)
@@ -67,17 +69,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(OPTIONS -DG4VIS_USE)
 
 #-----------------------------------------------------------------------------#
-
-#-----------------------------------------------------------------------------#
 #VOLUMEBUILDERS
+#-----------------------------------------------------------------------------#
 
 set(VOLUMEBUILDERS_NO_DEMO ON CACHE BOOL "Disable demo executable build" FORCE)
 add_subdirectory(../ VolumeBuilders-build)
-#-----------------------------------------------------------------------------#
 
 
 #-----------------------------------------------------------------------------#
 #VBDemo
+#-----------------------------------------------------------------------------#
 
 # --- Source files ---
 file(GLOB_RECURSE SRC_FILES FOLLOW_SYMLINKS CONFIGURE_DEPENDS

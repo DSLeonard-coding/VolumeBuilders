@@ -10,7 +10,6 @@ if(VB_LOADED)
 endif()
 set_property(GLOBAL PROPERTY VB_LIBRARY_LOADED TRUE)
 
-
 # Ensure minimum CMake version consistent with your main project
 cmake_minimum_required(VERSION 3.15)
 
