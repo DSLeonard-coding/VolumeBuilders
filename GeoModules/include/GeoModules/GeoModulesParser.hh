@@ -52,7 +52,7 @@ namespace DLG4::GeoModules {
             return context_;
         }
 
-        G4VPhysicalVolume *GetWorldPhys() const;
+        G4VPhysicalVolume *GetWorldVolume() const;
 
     private:
         // This initializes the command interface which selects the geometry recipe to build:

@@ -40,7 +40,7 @@ void Example1GeoModule::Construct(GeoModulesContextPtr context) {
             ->AddPlane(p.IR            , p.OR                   , p.z -= 15 );
 
     // just a descriptively named variable for the documented README example:
-    G4VPhysicalVolume *another_builder_or_geant_physical_volume = context->GetWorldPhys();
+    G4VPhysicalVolume *another_builder_or_geant_physical_volume = context->GetWorldVolume();
 
     auto ring_part = VB::CreatePolyhedraBuilder("ring_part", 6)
             // can set configurations in any order mostly, but can be nice to set many things up front before geometry details:

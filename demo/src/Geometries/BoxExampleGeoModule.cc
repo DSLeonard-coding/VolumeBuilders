@@ -59,7 +59,7 @@ void BoxExampleGeoModule::Construct(GeoModulesContextPtr context) {
     // arrange all boxes in y and set common properties:
     double y = 0;
     for (auto &builder : builder_list) {
-        builder->SetMother(context->GetWorldPhys())
+        builder->SetMother(context->GetWorldVolume())
                ->SetMaterial("copper")
                ->ForceSolid(true)
                ->SetPhysOffset({mm, 0, y, 0}) // distribute in y

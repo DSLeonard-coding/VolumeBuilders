@@ -64,10 +64,10 @@ namespace DLG4::GeoModules {
         G4Element* GetElement(const G4String &elementName);
         void ListModules() const;
 
-        void SetWorldPhys(G4VPhysicalVolume *world_phys) {
+        void SetWorldVolume(G4VPhysicalVolume *world_phys) {
             world_phys_ = world_phys;
         };
-        G4VPhysicalVolume* GetWorldPhys() {
+        G4VPhysicalVolume* GetWorldVolume() {
             return world_phys_;
         };
 

@@ -4,17 +4,17 @@
 
 //*********EDIT TO DEFINE A UNIQUE MODULE NAME HERE*****************
 //***The class name, for use in the .cc, will be MODULE_BASEGeoModule*****
-#define MODULE_BASE BoxExample
+#define MODULE_BASE BoxTest
 
 #include "GeoModules/GeoModule_Inline1.inl"
 #ifdef INCLUDE_GEOMODULE_SHARED_OBJECTS
 /////////////Edit the Recipe name and the recipe  ////////////////////////
 void CLASSNAME::RegisterRecipes(GeoModulesParserPtr parser) {
-    parser->AddRecipe("BoxExample",
+    parser->AddRecipe("BoxTest",
         [](GeoModulesContextPtr context) -> void {
             context->ConstructGeoModule("Materials");
             context->ConstructGeoModule("World");
-            context->ConstructGeoModule("BoxExample");
+            context->ConstructGeoModule("BoxTest");
     });
 }
 

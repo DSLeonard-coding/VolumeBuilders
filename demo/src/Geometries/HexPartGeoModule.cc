@@ -69,6 +69,6 @@ void HexPartGeoModule::Construct(GeoModulesContextPtr context) {
 
 
     hex_filler
-        ->SetMother(context->GetWorldPhys())
+        ->SetMother(context->GetWorldVolume())
         ->PlaceAndFork();
 }

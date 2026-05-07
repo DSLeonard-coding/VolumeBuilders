@@ -48,5 +48,5 @@ void WorldGeoModule::Construct(GeoModulesContextPtr context) {
                  ->SetColor(0.8, 0.8, 0.8, 0.1)
                  ->SetVisibility(false)
                  ->GetPlacement();
-    context->SetWorldPhys(world_phys);
+    context->SetWorldVolume(world_phys);
 }

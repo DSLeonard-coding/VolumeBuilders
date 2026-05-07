@@ -4,6 +4,8 @@
 README for VolumeBuilders  code (and readme) Copyright Doug Leonard 2025, All rights reserved.
 
 Distributed under MIT (Expat) license.  
+Now Includes [DLG4::GeoModules](GeoModulesAndVBDemoREADME.md)
+
 Related Links:  
 - [The git code repo](https://github.com/DSLeonard-coding/VolumeBuilders)  
 - [The Doxygen documentation page (with working reference links)](https://DSLeonard-coding.github.io/VolumeBuilders/).  The links in the github README copy mostly don't work. 
@@ -89,7 +91,7 @@ A quick but trivial example.... Here is snippet of a typical world volume setup:
     logiHall->SetVisAttributes(G4VisAttributes::Invisible);
     G4VPhysicalVolume *physHall =
         new G4PVPlacement(0, zero_shift, logiHall, "world", NULL, false, 0);
-    world_phys = physHall;
+    context->SetWorldVolume(physHall);
 ```
 In VolumeBuilder we default rotation, position, mother in this case, implicitly build the logical volume, and skip all the temporaries variables, easing review and reducing typos:  
 
@@ -103,6 +105,7 @@ In VolumeBuilder we default rotation, position, mother in this case, implicitly 
         ->SetColor(0.8, 0.8, 0.8, 0.1)
         ->SetVisibility(false)
         ->GetPlacement();
+    context->SetWorldVolume(world_phys);
 ```
 
 ## BoxBuilder
@@ -161,14 +164,14 @@ VolumeBuilder started as simple wrappers for G4Polycone and G4polyhedra.  Those 
 Note that because the boxes have built-in offsets, often no furhter positioning is needed. These offsets are at the solid level, so just like an offset boolean solid, the center of the solid is still at (0,0) and rotations apply around the orgin.  The internal offset is intrinsic to VolumeBuilders, and can be exposed on any new Builders. This can sometimes ease boolean operations of parts where they sit, although a more general solution may be in the works for that.
 
 ### CopyMaterial
-Note: The CopyMaterial wrapper is a conveince method to duplicate materials with new names and desities.  It should be included with VolumeBuilders soon.
+Note: The CopyMaterial wrapper is a conveince method to duplicate materials with new names and desities. It accepts materials by variable or by a name from the local store or the NIST catalog. 
 
 ### BoxBuilder Demo example
 
 The following example is included as [src/Geometries/ConstructBoxExample.cc](<@ref demo/src/Geometries/ConstructBoxExample.cc>)  It multiple boxes arranged with faces set relative to z=0, including one rotated around its offset center.  Select BoxExample from the demo for the live example:
 ```cpp
     VB::SetGlobalDefaultUnit(CLHEP::mm);     // set a global unit
-    G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
+    G4VPhysicalVolume *another_builder_or_geant_physical_volume = context->GetWorldVolume();
     VB::VolumeBuilderList builder_list;
     // a small box to mark the world center
     auto box_part = VB::CreateZDeltaBoxBuilder(
@@ -200,7 +203,7 @@ The following example is included as [src/Geometries/ConstructBoxExample.cc](<@r
     // arrange all boxes in y and set common properties:
     double y = 0;
     for (auto &builder : builder_list) {
-        builder->SetMother(world_phys)
+        builder->SetMother(context->GetWorldVolume())
                ->SetMaterial(_copper)
                ->ForceSolid(true)
                ->SetPhysOffset({mm, 0, y, 0}) // distribute in y
@@ -391,7 +394,7 @@ A working example is provided in  [demo/src/Geometries/ConstructAssembly.cc](<@r
                 ->AddTo(assembly);
     }
 
-    assembly->SetMother(world_phys)
+    assembly->SetMother(context->GetWorldVolume())
             ->SetMaterial(_copper)
             ->SetColor(0, 1, 0) // We can pre-configure the logical-volume!
             ->ForceSolid(true)

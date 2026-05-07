@@ -47,7 +47,7 @@ void AssemblyGeoModule::Construct(GeoModulesContextPtr context) {
             ->AddTo(assembly);
     }
 
-    assembly->SetMother(context->GetWorldPhys())
+    assembly->SetMother(context->GetWorldVolume())
             ->SetMaterial("copper")
             ->SetColor(0, 1, 0) // We can pre-configure the logical-volume!
             ->ForceSolid(true)
