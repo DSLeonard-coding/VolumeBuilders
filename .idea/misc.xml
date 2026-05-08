@@ -3,9 +3,12 @@
   <component name="CMakePythonSetting">
     <option name="pythonIntegrationState" value="YES" />
   </component>
-  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/demo" />
   <component name="CidrRootsConfiguration">
     <excludeRoots>
+      <file path="$PROJECT_DIR$/build" />
+      <file path="$PROJECT_DIR$/build/CMakeFiles" />
+      <file path="$PROJECT_DIR$/demo/build" />
       <file path="$PROJECT_DIR$/docs/html" />
       <file path="$PROJECT_DIR$/docs/latex" />
     </excludeRoots>

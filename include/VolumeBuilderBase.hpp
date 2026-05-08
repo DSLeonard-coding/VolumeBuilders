@@ -126,7 +126,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::MakeLogicalVolume(G4Material *material, G4String name) {
+    DERIVED BASE::MakeLogicalVolume(const VBHelpers::G4MaterialPtrOrString &material, G4String name) {
         ValidateForVolumeBuild(STRINGIFY(BASE) "MakeLogicalVolume");
         //if no volume was previously built, should be safe to reset material.
         if (material) {
@@ -137,9 +137,11 @@ namespace DLG4::VolumeBuilders::_internals_ {
         }
         // Implicit construction through
         // ctor args..
-        logicvol_ptr_.ConstructAndLink(final_solid_ptr_,
+        logicvol_ptr_.ConstructAndRawLink(final_solid_ptr_,
             lv_configs_->material,
             name);
+        // non-owning link:
+        logicvol_ptr_.make_persistent();
 
         ApplyAttributes_();
         return this->shared_from_this();
@@ -406,7 +408,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::SetMaterial(G4Material *material) {
+    DERIVED BASE::SetMaterial(const VBHelpers::G4MaterialPtrOrString &material) {
         lv_configs_->material = material;
         return this->shared_from_this();
     }
@@ -797,7 +799,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     template <typename U>
     void BASE::make_persistent(const std::shared_ptr<void> &obj) {
         std::lock_guard<std::mutex> lock(s_registry_mutex);
-        black_hole.push_back(obj);
+        black_hole->push_back(obj);
     }
 
     template <typename U>

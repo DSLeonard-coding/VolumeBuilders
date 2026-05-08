@@ -4,6 +4,8 @@
 README for VolumeBuilders  code (and readme) Copyright Doug Leonard 2025, All rights reserved.
 
 Distributed under MIT (Expat) license.  
+Now Includes [DLG4::GeoModules](GeoModulesAndVBDemo.md)
+
 Related Links:  
 - [The git code repo](https://github.com/DSLeonard-coding/VolumeBuilders)  
 - [The Doxygen documentation page (with working reference links)](https://DSLeonard-coding.github.io/VolumeBuilders/).  The links in the github README copy mostly don't work. 
@@ -89,7 +91,7 @@ A quick but trivial example.... Here is snippet of a typical world volume setup:
     logiHall->SetVisAttributes(G4VisAttributes::Invisible);
     G4VPhysicalVolume *physHall =
         new G4PVPlacement(0, zero_shift, logiHall, "world", NULL, false, 0);
-    world_phys = physHall;
+    context->SetWorldVolume(physHall);
 ```
 In VolumeBuilder we default rotation, position, mother in this case, implicitly build the logical volume, and skip all the temporaries variables, easing review and reducing typos:  
 
@@ -103,6 +105,7 @@ In VolumeBuilder we default rotation, position, mother in this case, implicitly 
         ->SetColor(0.8, 0.8, 0.8, 0.1)
         ->SetVisibility(false)
         ->GetPlacement();
+    context->SetWorldVolume(world_phys);
 ```
 
 ## BoxBuilder
@@ -133,7 +136,7 @@ Here's a clean example from a real simulated sample.
 
     for (auto &piece : pieces) {
         piece->SetVisibility(true)
-            ->SetMaterial(sample_mat)
+            ->SetMaterial(sample_mat)  // takes pointer OR a local or NIST name!
             ->SetColor(white)
             ->SetAlpha(0.5)
             ->ForceSolid(true)
@@ -161,14 +164,14 @@ VolumeBuilder started as simple wrappers for G4Polycone and G4polyhedra.  Those 
 Note that because the boxes have built-in offsets, often no furhter positioning is needed. These offsets are at the solid level, so just like an offset boolean solid, the center of the solid is still at (0,0) and rotations apply around the orgin.  The internal offset is intrinsic to VolumeBuilders, and can be exposed on any new Builders. This can sometimes ease boolean operations of parts where they sit, although a more general solution may be in the works for that.
 
 ### CopyMaterial
-Note: The CopyMaterial wrapper is a conveince method to duplicate materials with new names and desities.  It should be included with VolumeBuilders soon.
+Note: The CopyMaterial wrapper is a conveince method to duplicate materials with new names and desities. It accepts materials by variable or by a name from the local store or the NIST catalog. 
 
 ### BoxBuilder Demo example
 
 The following example is included as [src/Geometries/ConstructBoxExample.cc](<@ref demo/src/Geometries/ConstructBoxExample.cc>)  It multiple boxes arranged with faces set relative to z=0, including one rotated around its offset center.  Select BoxExample from the demo for the live example:
 ```cpp
     VB::SetGlobalDefaultUnit(CLHEP::mm);     // set a global unit
-    G4VPhysicalVolume *another_builder_or_geant_physical_volume = world_phys;
+    G4VPhysicalVolume *another_builder_or_geant_physical_volume = context->GetWorldVolume();
     VB::VolumeBuilderList builder_list;
     // a small box to mark the world center
     auto box_part = VB::CreateZDeltaBoxBuilder(
@@ -200,7 +203,7 @@ The following example is included as [src/Geometries/ConstructBoxExample.cc](<@r
     // arrange all boxes in y and set common properties:
     double y = 0;
     for (auto &builder : builder_list) {
-        builder->SetMother(world_phys)
+        builder->SetMother(context->GetWorldVolume())
                ->SetMaterial(_copper)
                ->ForceSolid(true)
                ->SetPhysOffset({mm, 0, y, 0}) // distribute in y
@@ -391,7 +394,7 @@ A working example is provided in  [demo/src/Geometries/ConstructAssembly.cc](<@r
                 ->AddTo(assembly);
     }
 
-    assembly->SetMother(world_phys)
+    assembly->SetMother(context->GetWorldVolume())
             ->SetMaterial(_copper)
             ->SetColor(0, 1, 0) // We can pre-configure the logical-volume!
             ->ForceSolid(true)
@@ -538,11 +541,14 @@ with appropriate transformation.
 
 ###  CRTP fluent classes
 
-Fluent classes have methods that return the class (builder) itself so that methods can mbe chained as Factory()->method1()->method2()->...
+Near the end of completing this I worked out an arguably better, certainly easier, and I believe [novel way to do polymorphic fluent class in C++](www.github.com/DSLeonard-coding/SISIFI).  In hind sight, this would probably simplify a lot of the code and would have saved me some hair. 
+
+
+That said, fluent classes have methods that return the class (builder) itself so that methods can mbe chained as Factory()->method1()->method2()->...
 
 In this class, the functionality of unions, logical volumes, and placements are common (base class methods), but shape configuration is not.  So solid builder classes are derived, gaining the common functionality and specializing for types of solids.
 
-But in C++ a derived class must return the same type as a base class, and a base method obviously can only return one type, not every derived type.  So we can't have a single type to return.  The usual solution is to template the base class, so each derived has its own version of the base class, each returning its corresponding derived type object.  In this case VolumeBuilder<Derived> is the base class template corresponding to Derived and inherrited from by Derived, so both can return objects related to the Derived type (actually a smart pointer to the Derived object).
+But in C++ a derived class must return the same type as a base class, and a base method obviously can only return one type, not every derived type.  So we can't have a single type to return. (See link above that disproves this.)  The usual solution is to template the base class, so each derived has its own version of the base class, each returning its corresponding derived type object.  In this case VolumeBuilder<Derived> is the base class template corresponding to Derived and inherrited from by Derived, so both can return objects related to the Derived type (actually a smart pointer to the Derived object).
 
 Use of smart pointers for returns helps in places, because reference returns in the base class methods would slice.
 
@@ -569,16 +575,6 @@ VolumeBuilderCore has a ctor that also takes a G4VSolid and uses FromG4VSolid to
 This allow VBR to be used as a flexible parameter type to get a builder with a solid made or makeable.
 
 
-## Coding hindsight, and a novel(?) fluent design for C++?
-
-This type-erased CRTP method is nice to avoid boilerplate wrappers, but it's a bit abstract and saying it wasn't simple to get right is a huge understatement. The common types are actually concrete builders that can be constructed from other builders by linking to their data.  Getting views, cloning, and (limited) polymorphism right is/was hard.  
-
-My C# experience inspired another train of thought, a CRTP base method with a common interface method with common return types.  C# effectively exposes the CRTP method on the concrete object and the interface method on an interface view. Both methods are definable in the CRTP base class and the interface method would typically delegate to the concrete method and implicitly cast the return type. MUCH searching and AI querying (which presumably knows common patterns) could not get at a way to overcome that, in C++, a templated return type class cannot inherit methods from a common interface with a single return type.  The overwhelmingly common solution was to use type erasure (of more complex forms than used here)  The solution I finally realized from C# is..._don't_ inherit those methods:  Hide them!  You can have IBuilder and IBuilderImpl with IBuilder return types.  IBuilderImpl can be templated on the concrete type (IBuilderImpl<ConcreteBuilder>) but still have IBuilder return types so can still inherit from IBuilder.  BuilderBase<ConcreteBuilder> (the usual CRTP base) inherits from IBuilderImp<ConcreteBuilder> (and thus is an untemplated IBuilder too), but you leave IBuilderImpl _methods_ NON-VIRTUAL so BuilderBase<ConcreteBuilder> _hides_ them instead of inheriting from them.  This is what allows the BuilderBase to have templated return type and the interface to not.    IBuilderImpl<ConcreteBuilder> then knows the templated class and can delegate to the templated BuilderBase<ConcreteBuilder> functions with thin wrappers just like C# interface methods would.  Finally ConcreteBui
-lder inherits from BuidlerBase<ConcreteBuilder>.  You have fully polymorphic IBuilder views. This creates a little boiler plate for the wrappers, just as in C# (and is quite a bit less syntactically idiomatic than in C#), but it creates a straight-forward hierarchy that is expandable (to include say... StructureBuidler directly in the hierarchy), and eliminates a lot of conversion ctors and view links.  About the only other downside is the compiler does not fully enforce that a hiding method is defined.  But explicit delegation solves this, much as explicit interface implementation does in C#.  If the impl method delegates, the hiding method must exist to compile.
-
-Hindsight is 20/20.  From my searching, this is NOT a common idiom and it even took a lot of coercing and even arguing to get AI to generate an example of it, because it had no familiarity with the pattern, but rather knew only of reasons to not expect it could work, or diverted to other patterns that missed the point.  I can't say this pattern doesn't exist or that it's the best, but it's not in wide enough use for (free) AI to recognize or even easily "comprehend" it.
-
-It _could_ even be worth re-working VolumeBuilder to use this pattern.  It shouldn't require changes to the user code, in principle. 
 
 
 
