@@ -1,7 +1,7 @@
 #include "DetectorConstruction_includes.hh"  // common includes
-#define INCLUDE_GEOMODULE_SHARED_OBJECTS
+#define INCLUDE_GEOMODULE_RECIPES
 #include"MaterialsGeoModule.inc"
-#undef INCLUDE_GEOMODULE_SHARED_OBJECTS
+#undef INCLUDE_GEOMODULE_RECIPES
 #include <GeoModules/GeoModules.hh>
 using namespace CLHEP;
 

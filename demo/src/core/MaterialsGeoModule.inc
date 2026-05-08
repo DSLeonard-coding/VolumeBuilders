@@ -6,7 +6,7 @@
 #define MODULE_BASE Materials
 
 #include "GeoModules/GeoModule_Inline1.inl"
-#ifdef INCLUDE_GEOMODULE_SHARED_OBJECTS
+#ifdef INCLUDE_GEOMODULE_RECIPES
 /////////////Edit the Recipe name and the recipe  ////////////////////////
 // Materials module is associated with no geometry recipe.
 void CLASSNAME::RegisterRecipes(GeoModulesParserPtr parser) {}

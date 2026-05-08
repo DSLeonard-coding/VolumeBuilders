@@ -7,7 +7,7 @@
 #define MODULE_BASE BoxExample
 
 #include "GeoModules/GeoModule_Inline1.inl"
-#ifdef INCLUDE_GEOMODULE_SHARED_OBJECTS
+#ifdef INCLUDE_GEOMODULE_RECIPES
 /////////////Edit the Recipe name and the recipe  ////////////////////////
 void CLASSNAME::RegisterRecipes(GeoModulesParserPtr parser) {
     parser->AddRecipe("BoxExample",

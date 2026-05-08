@@ -8,9 +8,9 @@
 */
 //Example1 GeoModule
 #include <GeoModules/GeoModules.hh>
-#define INCLUDE_GEOMODULE_SHARED_OBJECTS
+#define INCLUDE_GEOMODULE_RECIPES
 #include "Example1GeoModule.inc"
-#undef INCLUDE_GEOMODULE_SHARED_OBJECTS
+#undef INCLUDE_GEOMODULE_RECIPES
 
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>

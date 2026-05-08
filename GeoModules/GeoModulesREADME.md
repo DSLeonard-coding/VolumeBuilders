@@ -131,7 +131,7 @@ Here's an example X-header and recipe produced by the present version of the Cli
 #define MODULE_BASE BoxTest
 
 #include "GeoModules/GeoModule_Inline1.inl"
-#ifdef INCLUDE_GEOMODULE_SHARED_OBJECTS
+#ifdef INCLUDE_GEOMODULE_RECIPES
 /////////////Edit the Recipe name and the recipe  ////////////////////////
 void CLASSNAME::RegisterRecipes(GeoModulesParserPtr parser) {
     parser->AddRecipe("BoxTest",
@@ -159,9 +159,9 @@ And here is the cc code for the same:
 // ReSharper disable CppExpressionWithoutSideEffects
 //BoxExample GeoModule
 #include <GeoModules/GeoModules.hh>
-#define INCLUDE_GEOMODULE_SHARED_OBJECTS
+#define INCLUDE_GEOMODULE_RECIPES
 #include "BoxTestGeoModule.inc"                                //MUST MATCH MODULE NAME
-#undef INCLUDE_GEOMODULE_SHARED_OBJECTS
+#undef INCLUDE_GEOMODULE_RECIPES
 
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>

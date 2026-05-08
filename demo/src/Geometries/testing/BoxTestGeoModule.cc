@@ -6,9 +6,9 @@
 // ReSharper disable CppExpressionWithoutSideEffects
 //BoxExample GeoModule
 #include <GeoModules/GeoModules.hh>
-#define INCLUDE_GEOMODULE_SHARED_OBJECTS
+#define INCLUDE_GEOMODULE_RECIPES
 #include "BoxTestGeoModule.inc"
-#undef INCLUDE_GEOMODULE_SHARED_OBJECTS
+#undef INCLUDE_GEOMODULE_RECIPES
 
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>
