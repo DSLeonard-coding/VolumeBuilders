@@ -5,7 +5,7 @@ endif()
 include (${CMAKE_CURRENT_LIST_DIR}/../utils/siphon_user_env.cmake)
 siphon_user_envs(ROOTSYS)
 if("$ENV{ROOTSYS}" STREQUAL "")
-    message(FATAL_ERROR "ROOTSYS not set in Environment or hpge_user_setup.sh")
+    message(FATAL_ERROR "ROOTSYS not set in Environment or DLG4ModuSim_setup.sh")
 endif()
 
 set(ROOT_BASE_DIR "$ENV{ROOTSYS}")
