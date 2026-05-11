@@ -3,7 +3,7 @@
 #include"MaterialsGeoModule.inc"
 #undef INCLUDE_GEOMODULE_RECIPES
 #include <GeoModules/GeoModules.hh>
-using namespace CLHEP;
+
 
 // Materials are now just a GeoModule.
 void MaterialsGeoModule::Construct(GeoModulesContextPtr context) {

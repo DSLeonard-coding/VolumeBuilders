@@ -1,17 +1,20 @@
 //GeoModulesCopyMaterials.  D.S. Leonard 2026 (code is much older, ~ 2017
+// This typically gets included through VolumeBuilders.hh !!
+
 #pragma once
 #include "VolumeBuildersTypes.hh"
+#include "VolumeBuildersUnitTypes.hh"
 #include <G4Material.hh>
 #include <G4String.hh>
 #include <G4Element.hh>
 #ifndef GEOMODULE_MATERIALS_HELPERS_HH
 #define GEOMODULE_MATERIALS_HELPERS_HH
-using namespace CLHEP;
+
 
 namespace DLG4::VolumeBuilders::Helpers {
     /// Copy a G4Material to one with a new name, and change its density
     G4Material *CopyMaterial(
-            G4MaterialPtrOrString source, const G4String &name, G4double dens, G4double unit);
+            G4MaterialPtrOrString source, const G4String &name, G4double dens, Density unit);
 
     /// Copy a G4Material to one with a new name.
     G4Material *CopyMaterial(G4MaterialPtrOrString source, const G4String &name);

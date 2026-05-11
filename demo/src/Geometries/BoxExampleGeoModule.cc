@@ -15,7 +15,7 @@
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>
 
-using namespace CLHEP;
+
 namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
 void BoxExampleGeoModule::Construct(GeoModulesContextPtr context) {
@@ -27,7 +27,7 @@ void BoxExampleGeoModule::Construct(GeoModulesContextPtr context) {
     firstcall = false;
     //@formatter:on
 
-    DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
+    DLG4::VolumeBuilders::SetGlobalDefaultUnit(VB::Length::mm); // set a global unit
     VB::BuilderViewList builder_list;
     // a small box to mark the world center
     auto box_part = VB::CreateZDeltaBoxBuilder(

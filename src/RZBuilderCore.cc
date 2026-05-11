@@ -44,7 +44,7 @@ namespace DLG4::VolumeBuilders {
     }
 
     RZBuilder CreateCylinderBuilder(
-        G4double unit, const G4String &name, G4double endz, G4double h, G4double OR, G4double IR) {
+            Length unit, const G4String &name, G4double endz, G4double h, G4double OR, G4double IR) {
         // ReSharper disable once CppDFAMemoryLeak
         auto object = RZBuilder(new RZBuilderCore(name));
         object->MakeSolidFunctionPtr_ = &RZBuilderCore::MakePolycone;
@@ -61,7 +61,7 @@ namespace DLG4::VolumeBuilders {
 
     RZBuilder CreateCylinderBuilder(const G4String &name, G4double endz, G4double h, G4double OR,
         G4double IR) {
-        return CreateCylinderBuilder(BuilderConfigs::global_default_unit, name, endz, h, OR, IR);
+        return CreateCylinderBuilder(Length(), name, endz, h, OR, IR);
     }
 }
 
@@ -137,21 +137,21 @@ namespace DLG4::VolumeBuilders::_internals_ {
                                      " for builder " + GetBuilderName() + ".\n"
                                      "IR and OR must be non-negative.");
         }
-        IR_.push_back(plane.IR * plane.unit);
-        OR_.push_back(plane.OR * plane.unit);
-        z_.push_back(plane.z * plane.unit);
+        IR_.push_back(plane.IR * plane.unit.Native());
+        OR_.push_back(plane.OR * plane.unit.Native());
+        z_.push_back(plane.z * plane.unit.Native());
         num_planes_++;
         return shared_from_this();
     }
 
-    RZBuilder RZBuilderCore::AddPlane(G4double unit, G4double IR, G4double OR, G4double z) {
-        auto plane = RZPlane{unit, IR, OR, z};
+    RZBuilder RZBuilderCore::AddPlane(G4double IR, G4double OR, G4double z, Length unit) {
+        auto plane = RZPlane{ IR, OR, z, unit};
         return AddPlane(plane);
     }
 
     // overload to take direct values with default unit
     RZBuilder RZBuilderCore::AddPlane(G4double IR, G4double OR, G4double z) {
-        auto plane = RZPlane{GetEffectiveDefaultUnit(), IR, OR, z};
+        auto plane = RZPlane{ IR, OR, z, Length()};
         return AddPlane(plane);
     }
 
@@ -167,17 +167,16 @@ namespace DLG4::VolumeBuilders::_internals_ {
     // 2. Unitless planes using builder's preset default unit
     RZBuilder RZBuilderCore::AddPlanes(const std::vector<RZPlaneUnitless> &planes) {
         for (const auto &plane : planes) {
-            G4double unit = this->GetEffectiveDefaultUnit();
-            auto rzplane = RZPlane{unit, plane.IR, plane.OR, plane.z};
+            auto rzplane = RZPlane{plane.IR, plane.OR, plane.z, Length()};
             AddPlane(rzplane);
         }
         return shared_from_this();
     }
 
     // 3. Most compact - one unit for all planes
-    RZBuilder RZBuilderCore::AddPlanes(G4double unit, const std::vector<RZPlaneUnitless> &planes) {
+    RZBuilder RZBuilderCore::AddPlanes(const std::vector<RZPlaneUnitless> &planes, Length unit) {
         for (const auto &plane : planes) {
-            auto rzplane = RZPlane{unit, plane.IR, plane.OR, plane.z};
+            auto rzplane = RZPlane{plane.IR, plane.OR, plane.z, unit};
             AddPlane(rzplane);
         }
         return shared_from_this();

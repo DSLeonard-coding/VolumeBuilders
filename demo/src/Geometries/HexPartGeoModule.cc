@@ -15,7 +15,7 @@
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>
 
-using namespace CLHEP;
+
 namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
 void HexPartGeoModule::Construct(GeoModulesContextPtr context) {
@@ -52,7 +52,7 @@ void HexPartGeoModule::Construct(GeoModulesContextPtr context) {
                       ->SetMaterial(sample_mat)
                       ->SetColor(0.8, 0.45, 0.45, 1)
                       ->ForceSolid(true)
-                      ->SetDefaultUnit(CLHEP::mm)
+                      ->SetDefaultUnit(VB::Length::mm)
             //@formatter:off
               ->AddPlane(p.IR = 0,  p.OR = 110.0 / 2.0, p.z = 0)
               ->AddPlane(p.IR,      p.OR,               p.z += sample_thickness_mm);

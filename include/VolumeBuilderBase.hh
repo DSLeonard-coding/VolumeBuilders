@@ -195,15 +195,15 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @ingroup booleans
          */
         DerivedPtr AddUnion(const VolumeBuilder &other,
-            const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0},
+            const DLG4::VolumeBuilders::ThreeVecDimensioner &offset = {0, 0, 0, VB::Length::mm},
             G4RotationMatrix *rotation = nullptr);
         ///@copydoc AddUnion
         DerivedPtr AddSubtraction(const VolumeBuilder &other,
-            const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0},
+            const DLG4::VolumeBuilders::ThreeVecDimensioner &offset = {0, 0, 0, VB::Length::mm},
             G4RotationMatrix *rotation = nullptr);
         ///@copydoc AddUnion
         DerivedPtr AddIntersection(const VolumeBuilder &other,
-            const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0},
+            const DLG4::VolumeBuilders::ThreeVecDimensioner &offset = {0, 0, 0, VB::Length::mm},
             G4RotationMatrix *rotation = nullptr);
         /** @} */
 
@@ -222,7 +222,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
             const VolumeBuilder &other,
             bool is_subtraction = false,
             bool is_intersection = false,
-            const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0},
+            const DLG4::VolumeBuilders::ThreeVecDimensioner &offset = {0, 0, 0, VB::Length::mm},
             G4RotationMatrix *rotation = nullptr
             );
         /** @} *
@@ -325,20 +325,20 @@ namespace DLG4::VolumeBuilders::_internals_ {
         /**
          * Set the translation vector for placement.
          * Using Set, rotation applies before translation, regardless of order set, just as in G4PVPlacement()
-         * You can pass (unit, x, y, z) or use the default unit with (x, y, z).
+         * You can pass (x, y, z, unit) or use the default unit with (x, y, z).
          *
          * Examples:
-         *   SetPhysOffset({CLHEP::cm, 1, 2, 3})     // 1cm, 2cm, 3cm
+         *   SetPhysOffset({ 1, 2, 3, VB::cm})     // 1cm, 2cm, 3cm
          *   SetPhysOffset({1, 2, 3})                // Uses default default unit (usually mm)
-         *   SetDefaultUnit(CLHEP::cm); SetPhysOffset({1, 2, 3})  // 1cm, 2cm, 3cm
-         *   SetDefaultUnit(1); SetPhysOffset({10*CLHEP::mm, 20*CLHEP::mm, 30*CLHEP::mm})  // Values already have units
-         *
+         *   SetDefaultUnit(VB::cm); SetPhysOffset({1, 2, 3})  // 1cm, 2cm, 3cm
+         *   // or work with raw geant values, must use CLHEP units, not VB:
+         *   SetDefaultUnit(VB::native); SetPhysOffset({10*CLHEP::mm, 20*CLHEP::mm, 30*CLHEP::mm})
          * @param offset Translation vector.  See method description for details.
          * @return This builder for chaining.
          * @ingroup PlacementConfigs
 
          */
-        DerivedPtr SetPhysOffset(const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0});
+        DerivedPtr SetPhysOffset(const DLG4::VolumeBuilders::ThreeVecDimensioner &offset = {0, 0, 0, VB::Length::mm});
         /**
          * Like SetPhysOffset but stacks with previous transformations in order applied.
          * Unlike with G4Transform multiplication, stacking is done in a way that allows
@@ -349,14 +349,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
          * @param offset
          * @return The builder
          */
-        DerivedPtr StackPhysOffset(const Unit3Vec &offset = {CLHEP::mm, 0, 0, 0});
+        DerivedPtr StackPhysOffset(const DLG4::VolumeBuilders::ThreeVecDimensioner &offset = {0, 0, 0, VB::Length::mm});
 
         /**
          * Set the G4Transform3D for placment.
          * The tranformation provided is meant to be in UNITLESS values.
          * Ie the unit is already pre-configured but not included in the values.
-         * So passing 5 means 5cm if SetDefault(CLHEP::cm) was set.
-         * Otherwise you SetDefaultUnit(1), and pass a value that was already multipled by units.
+         * So passing 5 means 5cm if SetDefault(VB::Length::cm) was set.
+         * Otherwise you SetDefaultUnit(VB::roaw), and pass a value that was already multipled by units.
          * To supply different units for each G4Tranform3D separately,
          * just call SetDefaultUnit(unit) before each call.
          * The call will overwite/replace rotation and translation.
@@ -584,22 +584,22 @@ namespace DLG4::VolumeBuilders::_internals_ {
         /**
          * @brief Set the per-Builder default unit for all later non-factory offsets.
          * Use DLG4::VolumeBuilders::SetGlobalDefaultUnit() to set a default for all builders,
-         * or fall back to the initial default of CLHEP::mm. \n
+         * or fall back to the initial default of VB::Length::mm. \n
          * - May not apply to values set before this is called. \n
          * - Does not apply to factory units like CreateCenteredBoxBuilder();\n
          * But should not be set and changed. Just use it once, early. \n
-         * @param unit The unit to set, ex: CLHEP::mm
+         * @param unit The VB::Length unit to set, ex: VB::Length::mm
          * @return The builder (allows chaining)
          * @ingroup Units
          */
-        DerivedPtr SetDefaultUnit(G4double unit);
+        DerivedPtr SetDefaultUnit(Length unit);
 
         /**
          * Get the builder default unit or global if not set.
          * @return The active default unit.
          * @ingroup Units
          */
-        G4double GetEffectiveDefaultUnit() const;
+        Length GetEffectiveDefaultUnit() const;
         /** @defgroup Batch collection
          *  @brief methods to collect builders for batch operation.
         /**
@@ -738,7 +738,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // For Geant, we need things left persistent, but this is a poor way even for this hack:
         static void make_persistent(const std::shared_ptr<void> &obj);
 
-        G4ThreeVector ProvisionUnits(const Unit3Vec &vec) const;
+        G4ThreeVector ProvisionUnits(const DLG4::VolumeBuilders::ThreeVecDimensioner &vec) const;
 
         // Private static helper
         // method(s) used by the instance methods

@@ -15,7 +15,7 @@
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>
 
-using namespace CLHEP;
+
 namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
 void Example1GeoModule::Construct(GeoModulesContextPtr context) {
@@ -27,7 +27,7 @@ void Example1GeoModule::Construct(GeoModulesContextPtr context) {
     firstcall = false;
     //@formatter:on
 
-    VB::SetGlobalDefaultUnit(CLHEP::cm); // set a global unit
+    VB::SetGlobalDefaultUnit(VB::Length::cm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
     VB::RZPlane p;
     p.unit = mm; // see prior note.
@@ -50,7 +50,7 @@ void Example1GeoModule::Construct(GeoModulesContextPtr context) {
             ->AddUnion(another_builder_or_geant_solid, {0, 0, 0}) // with relative z, may not need to provide offset.
             // can predefine this. If a builder, it will auto build if needed!:
             ->SetMother(another_builder_or_geant_physical_volume)
-            ->SetDefaultUnit(CLHEP::cm)
+            ->SetDefaultUnit(VB::Length::cm)
             // You can skip things to default them.  Less Noise!!
             // ->SetPhysOffset(something)                           // z referencing defined below may be enough!!
             // ->SetPhysRotation(zero_rot)

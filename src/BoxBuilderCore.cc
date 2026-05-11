@@ -35,14 +35,14 @@ namespace DLG4::VolumeBuilders {
         return object;
     }
 
-    BoxBuilder CreateBoxBuilder(const G4String &name, const G4double unit) {
+    BoxBuilder CreateBoxBuilder(const G4String &name, const Length unit) {
         auto object = BoxBuilder(new BoxBuilderCore(name));
         object->SetDefaultUnit(unit);
         return object;
     }
 
 
-    BoxBuilder CreateDeltasBoxBuilder(const G4double unit, const G4String &name,
+    BoxBuilder CreateDeltasBoxBuilder(const Length unit, const G4String &name,
         const G4double edge_x,
         const G4double x_delta,
         const G4double edge_y, const G4double y_delta, const G4double edge_z,
@@ -65,7 +65,7 @@ namespace DLG4::VolumeBuilders {
         return object;
     }
 
-    BoxBuilder CreateZDeltaBoxBuilder(const G4double unit, const G4String &name,
+    BoxBuilder CreateZDeltaBoxBuilder(const Length unit, const G4String &name,
         const G4double x_full_size,
         const G4double y_full_size,
         const G4double edge_z, const G4double z_delta) {
@@ -94,7 +94,7 @@ namespace DLG4::VolumeBuilders {
         return object;
     }
 
-    BoxBuilder CreateCenteredBoxBuilder(const G4double unit, const G4String &name,
+    BoxBuilder CreateCenteredBoxBuilder(const Length unit, const G4String &name,
         const G4double x_full_size, const G4double y_full_size,
         const G4double z_full_size) {
         if (x_full_size <= 0 || y_full_size <= 0 || z_full_size <= 0) {
@@ -132,7 +132,7 @@ namespace DLG4::VolumeBuilders {
         return object;
     }
 
-    BoxBuilder CreateEdgesBoxBuilder(const G4double unit, const G4String &name,
+    BoxBuilder CreateEdgesBoxBuilder(const Length unit, const G4String &name,
         const G4double x_edge1, const G4double x_edge2,
         const G4double y_edge1, const G4double y_edge2, const G4double z_edge1,
         const G4double z_edge2) {
@@ -210,95 +210,95 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     // These overloads handle the unit conversion and then delegate to the "Dimensioned" methods.
-    BoxBuilder BoxBuilderCore::SetXSize(const G4double unit, const G4double x_size) {
-        return SetXSizeDimensioned(x_size * unit);
+    BoxBuilder BoxBuilderCore::SetXSize(const Length unit, const G4double x_size) {
+        return SetXSizeDimensioned(x_size * unit.Native());
     }
 
-    BoxBuilder BoxBuilderCore::SetYSize(const G4double unit, const G4double y_size) {
-        return SetYSizeDimensioned(y_size * unit);
+    BoxBuilder BoxBuilderCore::SetYSize(const Length unit, const G4double y_size) {
+        return SetYSizeDimensioned(y_size * unit.Native());
     }
 
-    BoxBuilder BoxBuilderCore::SetZSize(const G4double unit, const G4double z_size) {
-        return SetZSizeDimensioned(z_size * unit);
+    BoxBuilder BoxBuilderCore::SetZSize(const Length unit, const G4double z_size) {
+        return SetZSizeDimensioned(z_size * unit.Native());
     }
 
     // These methods calculate the size and offset, apply the unit, and then delegate to the Dimensioned setters.
-    BoxBuilder BoxBuilderCore::SetXEdges(const G4double unit, const G4double x_edge1,
+    BoxBuilder BoxBuilderCore::SetXEdges(const Length unit, const G4double x_edge1,
         const G4double x_edge2) {
         G4double size = std::abs(x_edge2 - x_edge1);
         G4double offset = (x_edge1 + x_edge2) / 2.0;
-        SetXSizeDimensioned(size * unit);
+        SetXSizeDimensioned(size * unit.Native());
         return SetInternalOffsetDimensioned(
-            offset * unit,
+            offset * unit.Native(),
             this->builder_configs_->internal_offset.y(),
             this->builder_configs_->internal_offset.z()
             );
     }
 
-    BoxBuilder BoxBuilderCore::SetYEdges(const G4double unit, const G4double y_edge1,
+    BoxBuilder BoxBuilderCore::SetYEdges(const Length unit, const G4double y_edge1,
         const G4double y_edge2) {
         G4double size = std::abs(y_edge2 - y_edge1);
         G4double offset = (y_edge1 + y_edge2) / 2.0;
-        SetYSizeDimensioned(size * unit);
+        SetYSizeDimensioned(size * unit.Native());
         return SetInternalOffsetDimensioned(
             this->builder_configs_->internal_offset.x(),
-            offset * unit,
+            offset * unit.Native(),
             this->builder_configs_->internal_offset.z()
             );
     }
 
-    BoxBuilder BoxBuilderCore::SetZEdges(const G4double unit, const G4double z_edge1,
+    BoxBuilder BoxBuilderCore::SetZEdges(const Length unit, const G4double z_edge1,
         const G4double z_edge2) {
         G4double size = std::abs(z_edge2 - z_edge1);
         G4double offset = (z_edge1 + z_edge2) / 2.0;
-        SetZSizeDimensioned(size * unit);
+        SetZSizeDimensioned(size * unit.Native());
         return SetInternalOffsetDimensioned(
             this->builder_configs_->internal_offset.x(),
             this->builder_configs_->internal_offset.y(),
-            offset * unit
+            offset * unit.Native()
             );
     }
 
     // These methods calculate the size and offset from an edge and delta, apply the unit, and delegate.
-    BoxBuilder BoxBuilderCore::SetXEdgeDelta(const G4double unit, const G4double x_edge,
+    BoxBuilder BoxBuilderCore::SetXEdgeDelta(const Length unit, const G4double x_edge,
         const G4double x_delta) {
         G4double size = std::abs(x_delta);
         G4double offset = x_edge + x_delta / 2.0;
-        SetXSizeDimensioned(size * unit);
+        SetXSizeDimensioned(size * unit.Native());
         return SetInternalOffsetDimensioned(
-            offset * unit,
+            offset * unit.Native(),
             this->builder_configs_->internal_offset.y(),
             this->builder_configs_->internal_offset.z()
             );
     }
 
-    BoxBuilder BoxBuilderCore::SetYEdgeDelta(const G4double unit, const G4double y_edge,
+    BoxBuilder BoxBuilderCore::SetYEdgeDelta(const Length unit, const G4double y_edge,
         const G4double y_delta) {
         G4double size = std::abs(y_delta);
         G4double offset = y_edge + y_delta / 2.0;
-        SetYSizeDimensioned(size * unit);
+        SetYSizeDimensioned(size * unit.Native());
         return SetInternalOffsetDimensioned(
             this->builder_configs_->internal_offset.x(),
-            offset * unit,
+            offset * unit.Native(),
             this->builder_configs_->internal_offset.z()
             );
     }
 
-    BoxBuilder BoxBuilderCore::SetZEdgeDelta(const G4double unit, const G4double z_edge,
+    BoxBuilder BoxBuilderCore::SetZEdgeDelta(const Length unit, const G4double z_edge,
         const G4double z_delta) {
         G4double size = std::abs(z_delta);
         G4double offset = z_edge + z_delta / 2.0;
-        SetZSizeDimensioned(size * unit);
+        SetZSizeDimensioned(size * unit.Native());
         return SetInternalOffsetDimensioned(
             this->builder_configs_->internal_offset.x(),
             this->builder_configs_->internal_offset.y(),
-            offset * unit
+            offset * unit.Native()
             );
     }
 
-    BoxBuilder BoxBuilderCore::SetInternalOffset(const G4double unit, const G4double x,
+    BoxBuilder BoxBuilderCore::SetInternalOffset(const Length unit, const G4double x,
         const G4double y, const G4double z) {
-        return SetInternalOffsetDimensioned(x * unit, y * unit, z * unit);
+        return SetInternalOffsetDimensioned(x * unit.Native(), y * unit.Native(), z * unit.Native());
     }
 
     BoxBuilderCore::BoxBuilderCore(const G4String &name) {
