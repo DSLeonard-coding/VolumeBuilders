@@ -140,7 +140,7 @@ Here's a clean example from a real simulated sample.
             ->SetColor(white)
             ->SetAlpha(0.5)
             ->ForceSolid(true)
-            ->SetMother(AirshieldPhys_)
+            ->SetMother(SampleChamberPV_)
             ->MakePlacement();
     }
 ```
