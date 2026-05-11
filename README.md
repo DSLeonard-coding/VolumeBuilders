@@ -84,8 +84,10 @@ A quick but trivial example.... Here is snippet of a typical world volume setup:
 ```cpp
     auto *zero_rot = new G4RotationMatrix();
     auto zero_shift = G4ThreeVector(0, 0, 0); 
-    G4double bounding_size = 3. * meter / 2.0;
-    auto boxHall = new G4Box("worldbox", bounding_size, bounding_size, bounding_size);
+    G4double x_size = 3. * meter / 2.0;
+    G4double y_size = 4. * meter / 2.0;
+    G4double z_size = 5. * meter / 2.0;
+    auto boxHall = new G4Box("worldbox", x_size, y_size, z_size);
     auto logiHall = new G4LogicalVolume(boxHall, _air, "logiHall");
     auto logiHallVis = new G4VisAttributes(G4Colour(0.8, 0.8, 0.8, 0.1));
     logiHall->SetVisAttributes(logiHallVis);
@@ -101,7 +103,7 @@ In VolumeBuilder we default rotation, position, mother in this case, implicitly 
     namespace VB = DLG4::VolumeBuilders;
     
     VB::SetGlobalDefaultUnit(VB::Length::mm);
-    world_phys = VB::CreateCenteredBoxBuilder("hallbox",3000,3000,3000)
+    world_phys = VB::CreateCenteredBoxBuilder("hallbox",3000,4000,5000)
         ->SetMaterial(_air)
         ->SetColor(0.8, 0.8, 0.8, 0.1)
         ->SetVisibility(false)
