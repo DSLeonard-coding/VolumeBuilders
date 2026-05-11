@@ -4,7 +4,7 @@
 README for VolumeBuilders  code (and readme) Copyright Doug Leonard 2025, All rights reserved.
 
 Distributed under MIT (Expat) license.  
-Now Includes [DLG4::GeoModules](GeoModulesAndVBDemo.md)
+Now Includes [DLG4::GeoModules](GeoModules/GeoModulesREADME.md)
 
 Related Links:  
 - [The git code repo](https://github.com/DSLeonard-coding/VolumeBuilders)  
@@ -114,7 +114,6 @@ In VolumeBuilder we default rotation, position, mother in this case, implicitly 
 ## BoxBuilder
 
 Well, that's cute, but too simple. Let's size __and position__ a few boxes. 
-
 
 
 Here's a clean example from a real simulated sample. 
