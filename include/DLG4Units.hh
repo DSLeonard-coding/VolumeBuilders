@@ -35,6 +35,7 @@ namespace DLG4::Units {
     class Mass;
     class Volume;
     class Density;
+    class Angle;
     class Unit3Vec;
     template<typename Dimension>
     using Unit = UnitBase<Dimension, G4double>;
@@ -69,7 +70,8 @@ namespace DLG4::Units {
     inline G4double global_default_unit<Units::Volume> = CLHEP::mL;
     template<>
     inline G4double global_default_unit<Units::Unit3Vec> = CLHEP::mm;
-
+    template<>
+    inline G4double global_default_unit<Units::Angle> = CLHEP::radian;
     /**
      * Effectively a property setter for units
      */
@@ -390,6 +392,31 @@ namespace DLG4::Units {
         static const Density mg_per_cm3;
     };
 
+    //#########################################################################//
+    //*********************************Angle***************************#
+    //#########################################################################//
+    class Angle : public UnitBase<Angle, G4double> {
+        friend UnitBase<Angle, G4double>;
+
+    private:
+        explicit Angle(double Native)
+            : UnitBase(Native) {
+        }
+
+    public:
+        Angle() { NativeValue_ = GetGlobalDefault().NativeValue_; };
+
+        explicit Angle(double raw, Angle u)
+            : UnitBase(raw, u) {
+        }
+
+        static const Angle rad;
+        static const Angle radian;
+        static const Angle mrad;
+        static const Angle milliradian;
+        static const Angle deg;
+        static const Angle degree;
+    };
 
     inline Density operator/(const Mass &m, const Volume &v) {
         Density x = Density::FromNative(m.Native / v.Native);
@@ -578,6 +605,13 @@ namespace DLG4::Units {
     inline const Density Density::g_per_cm3{CLHEP::g / CLHEP::cm3};
     inline const Density Density::g_per_L{CLHEP::g / CLHEP::liter};
     inline const Density Density::mg_per_cm3{CLHEP::mg / CLHEP::cm3};
+
+    inline const Angle Angle::rad{CLHEP::radian};
+    inline const Angle Angle::radian{CLHEP::radian};
+    inline const Angle Angle::mrad{CLHEP::milliradian};
+    inline const Angle Angle::milliradian{CLHEP::milliradian};
+    inline const Angle Angle::deg{CLHEP::degree};
+    inline const Angle Angle::degree{CLHEP::degree};
 
     /**
      * Type-erases unit or value to just a value. BYPASSES TYPE SAFETY!!
