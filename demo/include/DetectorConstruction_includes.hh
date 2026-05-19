@@ -5,6 +5,7 @@
 #include "globals.hh"
 
 #include "DetectorConstruction.hh"  // the DetectorConstruction class header
+#include "G4Version.hh"
 
 #include "G4Material.hh"
 #include "G4Element.hh"

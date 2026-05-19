@@ -429,7 +429,11 @@ void MaterialsGeoModule::Construct(GeoModulesContextPtr context) {
     // Allocate memory for a new Material Property Table
     MPT = new G4MaterialPropertiesTable();
     // Fill with the molecular weight
+#if G4VERSION_NUMBER >= 1100
+    MPT->AddConstProperty("MOL", mol / g, true);
+#else
     MPT->AddConstProperty("MOL", mol / g);
+#endif
     // Attach this MPT to the PC
     dodecane->SetMaterialPropertiesTable(MPT);
 
@@ -452,7 +456,11 @@ void MaterialsGeoModule::Construct(GeoModulesContextPtr context) {
     // Allocate memory for a new Material Property Table
     MPT = new G4MaterialPropertiesTable();
     // Fill with the molecular weight
+#if G4VERSION_NUMBER >= 1100
+    MPT->AddConstProperty("MOL", mol / g, true);
+#else
     MPT->AddConstProperty("MOL", mol / g);
+#endif
     // Attach this MPT to the pseudocumene
     pseudocumene->SetMaterialPropertiesTable(MPT);
 
@@ -482,7 +490,11 @@ void MaterialsGeoModule::Construct(GeoModulesContextPtr context) {
         // Allocate memory for a new Material Property Table
         MPT = new G4MaterialPropertiesTable();
         // Fill with the molecular weight
-        MPT->AddConstProperty("MOL", mol / g);
+    #if G4VERSION_NUMBER >= 1100
+    MPT->AddConstProperty("MOL", mol / g, true);
+#else
+    MPT->AddConstProperty("MOL", mol / g);
+#endif
         // Attach this MPT to the pseudocumene
         LAB[i]->SetMaterialPropertiesTable(MPT);
     }
@@ -506,7 +518,11 @@ void MaterialsGeoModule::Construct(GeoModulesContextPtr context) {
     // Allocate memory for a new Material Property Table
     MPT = new G4MaterialPropertiesTable();
     // Fill with the molecular weight
+#if G4VERSION_NUMBER >= 1100
+    MPT->AddConstProperty("MOL", mol / g, true);
+#else
     MPT->AddConstProperty("MOL", mol / g);
+#endif
     // Attach this MPT to the PXE
     PXE->SetMaterialPropertiesTable(MPT);
 
@@ -532,7 +548,11 @@ void MaterialsGeoModule::Construct(GeoModulesContextPtr context) {
     // Allocate memory for a new Material Property Table
     MPT = new G4MaterialPropertiesTable();
     // Fill with the molecular weight
+#if G4VERSION_NUMBER >= 1100
+    MPT->AddConstProperty("MOL", mol / g, true);
+#else
     MPT->AddConstProperty("MOL", mol / g);
+#endif
     // Attach this MPT to the PC
     PPO->SetMaterialPropertiesTable(MPT);
 
@@ -559,7 +579,11 @@ void MaterialsGeoModule::Construct(GeoModulesContextPtr context) {
     // Allocate memory for a new Material Property Table
     MPT = new G4MaterialPropertiesTable();
     // Fill with the molecular weight
+#if G4VERSION_NUMBER >= 1100
+    MPT->AddConstProperty("MOL", mol / g, true);
+#else
     MPT->AddConstProperty("MOL", mol / g);
+#endif
     // Attach this MPT to the PC
     BPO->SetMaterialPropertiesTable(MPT);
 
@@ -583,7 +607,11 @@ void MaterialsGeoModule::Construct(GeoModulesContextPtr context) {
     // Allocate memory for a new Material Property Table
     MPT = new G4MaterialPropertiesTable();
     // Fill with the molecular weight
+#if G4VERSION_NUMBER >= 1100
+    MPT->AddConstProperty("MOL", mol / g, true);
+#else
     MPT->AddConstProperty("MOL", mol / g);
+#endif
     // Attach this MPT to the Bis-MSB
     BisMSB->SetMaterialPropertiesTable(MPT);
 

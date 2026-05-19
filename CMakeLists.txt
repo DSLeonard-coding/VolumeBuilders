@@ -30,10 +30,8 @@ include("${DSL_CMAKE_PATH}/cern/Geant4_Target.cmake")
 include("${DSL_CMAKE_PATH}/cern/ROOT_Target.cmake")
 include("${DSL_CMAKE_PATH}/utils/dsl_package_export.cmake")
 
-
 if(NOT VOLUMEBUILDERS_NO_DEMO)
-    add_subdirectory(demo EXCLUDE_FROM_ALL)
-    set_property(TARGET VBDemo PROPERTY EXCLUDE_FROM_ALL FALSE)
+    add_subdirectory(demo)
 endif()
 
 # --- Source files for VolumeBuilder ---

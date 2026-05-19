@@ -72,8 +72,10 @@ set(OPTIONS -DG4VIS_USE)
 #VOLUMEBUILDERS
 #-----------------------------------------------------------------------------#
 
-set(VOLUMEBUILDERS_NO_DEMO ON CACHE BOOL "Disable demo executable build" FORCE)
-add_subdirectory(../ VolumeBuilders-build)
+if(NOT TARGET VolumeBuilders)
+    set(VOLUMEBUILDERS_NO_DEMO ON CACHE BOOL "Disable demo executable build" FORCE)
+    add_subdirectory(../ VolumeBuilders-build)
+endif()
 
 
 #-----------------------------------------------------------------------------#
