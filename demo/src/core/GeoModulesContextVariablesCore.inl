@@ -12,5 +12,5 @@
 #include "VolumeBuilders.hh"
 
 #else
-   DLG4::VolumeBuilders::Length3Vec sample_center = DLG4::VolumeBuilders::Length3Vec(CLHEP::mm,0,0,0);
+   DLG4::VolumeBuilders::Length3Vec sample_center = DLG4::VolumeBuilders::Length3Vec(0,0,0,VB::Length::mm);
 #endif

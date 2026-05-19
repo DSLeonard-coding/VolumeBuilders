@@ -54,7 +54,7 @@ void BoxExampleGeoModule::Construct(GeoModulesContextPtr context) {
     VB::CreateZDeltaBoxBuilder("box_part4", 100, 100, 0, 200)
         // can set configurations in any order mostly, but can be nice to set many things up front before geometry details:
         ->SetColor(255. / 255, 165. / 255, 0) // orange
-        ->SetPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
+        ->SetPhysRotation(G4RotationMatrix().rotateY(-90.0 * CLHEP::deg))
         ->AddTo(builder_list);
     // arrange all boxes in y and set common properties:
     double y = 0;
@@ -62,7 +62,7 @@ void BoxExampleGeoModule::Construct(GeoModulesContextPtr context) {
         builder->SetMother(context->GetWorldVolume())
                ->SetMaterial("copper")
                ->ForceSolid(true)
-               ->SetPhysOffset({mm, 0, y, 0}) // distribute in y
+               ->SetPhysOffset({0, y, 0, VB::Length::mm}) // distribute in y
                ->MakePlacement();
         y += 100;
     }

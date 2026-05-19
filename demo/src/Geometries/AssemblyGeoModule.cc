@@ -30,7 +30,7 @@ void AssemblyGeoModule::Construct(GeoModulesContextPtr context) {
     DLG4::VolumeBuilders::SetGlobalDefaultUnit(VB::Length::mm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
     VB::RZPlane p;
-    p.unit = mm; // see prior note.
+    p.unit = VB::Length::mm; // see prior note.
     G4double some_reference;
 
     auto shape = VB::CreatePolyhedraBuilder("part", 3)
@@ -54,11 +54,11 @@ void AssemblyGeoModule::Construct(GeoModulesContextPtr context) {
             ->SetPhysOffset({0, 0, -200})
             ->PlaceAndFork()
             ->SetColor(1, 0, 0) // but the fork still shares logical volume so they are now ALL red.
-            ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
+            ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * CLHEP::deg))
             ->MakePlacement()
             // but we can clone only the Final solid, and rebuild LV with new color:
             ->ForkForLogicalVolume("blue")
             ->SetColor(0, 0, 1)
-            ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * deg))
+            ->StackPhysRotation(G4RotationMatrix().rotateY(-90.0 * CLHEP::deg))
             ->MakePlacement();
 }

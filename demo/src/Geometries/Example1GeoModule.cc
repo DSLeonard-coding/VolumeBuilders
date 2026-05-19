@@ -30,7 +30,7 @@ void Example1GeoModule::Construct(GeoModulesContextPtr context) {
     VB::SetGlobalDefaultUnit(VB::Length::cm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
     VB::RZPlane p;
-    p.unit = mm; // see prior note.
+    p.unit = VB::Length::mm; // see prior note.
     G4double some_reference;
 
     // some shape to union onto our main shape:

@@ -57,8 +57,6 @@ void HexPartGeoModule::Construct(GeoModulesContextPtr context) {
               ->AddPlane(p.IR = 0,  p.OR = 110.0 / 2.0, p.z = 0)
               ->AddPlane(p.IR,      p.OR,               p.z += sample_thickness_mm);
 
-    //*******************WARNING  This may not be exactly the same as top of surround, derived in different ways.
-    //*******************samples that sit on both should be reviewed  for overlap ex:  Cu2019 sample
     auto filler_id = VB::CreatePolyconeBuilder("filler_cu_id") // will be unioned to hex_filler.
                 ->AddPlane(p.IR = 0,    p.OR = 85 / 2.0,    p.z = -0.1)
                 ->AddPlane(p.IR,        p.OR,               p.z += sample_thickness_mm+0.1);

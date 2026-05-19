@@ -4,6 +4,8 @@
 #undef INCLUDE_GEOMODULE_RECIPES
 #include <GeoModules/GeoModules.hh>
 
+// uses legacy/geant raw units for now:
+using namespace CLHEP;
 
 // Materials are now just a GeoModule.
 void MaterialsGeoModule::Construct(GeoModulesContextPtr context) {
