@@ -48,13 +48,14 @@ Related Links:
 
 ## Introduction
 
-VolumeBuilders is a modernized fluent-style (ie chained) builder system for simplified and streamlined definition of Geant4 geometries, aimed at simplifying geometry definition and removing code noise to focus on configuration, with a result of easier definition and review and fewer bugs.  As a bonus, it allows easy definition of assemblies containing other assemblies and volumes, treating both in the same way, simply as objects to be configured (visibility etc) or placed.  
+VolumeBuilders is a modernized fluent-style (ie chained) builder system for simplified and streamlined definition of Geant4 geometries, aimed at simplifying geometry definition and removing code noise to focus on configuration, with a result of easier definition and review and fewer bugs, and more type safety.  As a bonus, it allows easy definition of assemblies containing other assemblies and volumes, treating both in the same way, simply as objects to be configured (visibility etc) or placed.  
 
 Some benefits/features include:
+- Safe compiler-aware unit types.  Cannot accidentally intermix units and values.
+- Default-settable units.  Less repetitive noise, no  bugs from unit ommission or double application.
 - IDE-focussed human discoverability and documentation of methods, with full web-based doxygen reference as well.
   - Fully configured for JetBrains Clion IDE
   - Namespaced method discovery/completion, hover docs (or cntrl-P), parameter "inlay" hints, and code analysis/checking.
-- Default settable units mean no unit multiplication bugs.
 - Flexible, offset, edge/center-based pre-boolean solid coordinates greatly ease definition and boolean operations, and allow placing many parts at a fixed reference or origin.
 - Highly streamlined syntax. Much reduced repetition of units, of reused parameter values, of types, and reduction of temp variables, thus removing a lot of noise, and avoiding oversight bugs.  
   - Ex: copy and place loops specify only what is changing (position for instance), easing comprehension.  Noise hides bugs.      
@@ -99,7 +100,7 @@ In VolumeBuilder we default rotation, position, mother in this case, implicitly 
     #include <VolumeBuilderIncludes.hh>
     namespace VB = DLG4::VolumeBuilders;
     
-    VB::SetGlobalDefaultUnit(CLHEP::mm);
+    VB::SetGlobalDefaultUnit(VB::Length::mm);
     world_phys = VB::CreateCenteredBoxBuilder("hallbox",3000,3000,3000)
         ->SetMaterial(_air)
         ->SetColor(0.8, 0.8, 0.8, 0.1)
@@ -117,12 +118,12 @@ Well, that's cute, but too simple. Let's size __and position__ a few boxes.
 Here's a clean example from a real simulated sample. 
 ```cpp
     VB::SetGlobalDefaultUnit(mm);
-    double bottom= array_plate_top_z_/mm;
+    double bottom= array_plate_top_z_.InUnits(VB::Length::mm);
     VB::VolumeBuilderList pieces;
     VB::CreateZDeltaBoxBuilder("bags_mid", 300, 276, bottom, 24.5 )->AddTo(pieces);
 
     // main +/-x walls, 13 bags each,vertical
-    bottom = array_surround_top_z_/mm;
+    bottom = array_surround_top_z_.InUnits(VB::Length::mm);
     VB::CreateDeltasBoxBuilder("bags+x",  -225, 450, 150, 65, bottom, 200)->AddTo(pieces);
     VB::CreateDeltasBoxBuilder("bags-x", -225, 450, -150, -65, bottom, 200)->AddTo(pieces);
                                       // x,   dx ,  y  , dy , z     , dz
@@ -153,7 +154,13 @@ And here is the geometry it makes, a powder sample measured on the CUP CAGe dete
 The code is self-explanatory. The logical and physical volumes are named with "_L" and "_P" extensions, and copy_numbers are incremented automatically by default (or explicitly provided) when relevant. 
 
 ### Units
-Units can be set globally as above ([DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::cm)](<@ref DLG4::VolumeBuilders::_internals_::SetGlobalDefaultUnit()>)), per builder (from solid to placement), per solid, per vector, or per value (by setting units to 1).  This also avoids many mistakes relating to failure to multiply units or double multiplying in calculations.  
+Units can be set globally as above ([DLG4::VolumeBuilders::SetGlobalDefaultUnit(VB::Length::cm)](<@ref DLG4::VolumeBuilders::_internals_::SetGlobalDefaultUnit()>)), per builder (from solid to placement), per solid, per vector, or per value (by setting units to 1).  This also avoids many mistakes relating to failure to multiply units or double multiplying in calculations.  
+
+### Units in-depth
+All VB-native unit parameters are now type checked.  Doubles cannot take VB::Unit types and VB::Unit types will not accept doubles.   All  VB::Unit implementations  (VB::Length, VB::Mass, VB::Volume, VB::Density) will return a raw value on explicit call to:  obj.GetRaw(), provided by the VB::Unit base class.  Some Unit math is supported.  Scalar multiplication returns a new unit, not a double (unless using .GetRaw()) allowing you to pass a customized unit to a Unit parameter.  Mass/Volume returns a Density, but density aliases exist, ex:  g_per_cm3.  More complex math requires direct value access and construction of a new Unit: Unit(math::pow(Length.GetRaw(),3.0), but is possible.  The point is the conversion to a Unit is still explicit, never accidental. 
+
+#### Developer tech notes for Units:
+The Unit implementations add nothing to the Unit base class instance.  They only add static factory methods with Unit return type, that know how to construct a specific internal value.  Ie Length::m is a factory returning a Unit (via a Length handle) with an internal value of CLHEP::m. Binary operator methods exist as mentioned, but are defined external to the classes.  Hence no slicing or polymorphism occurs. After construction all units are the same and callable through a pointer to Unit.
 
 ### Offset solids
 
@@ -170,7 +177,7 @@ Note: The CopyMaterial wrapper is a conveince method to duplicate materials with
 
 The following example is included as [src/Geometries/ConstructBoxExample.cc](<@ref demo/src/Geometries/ConstructBoxExample.cc>)  It multiple boxes arranged with faces set relative to z=0, including one rotated around its offset center.  Select BoxExample from the demo for the live example:
 ```cpp
-    VB::SetGlobalDefaultUnit(CLHEP::mm);     // set a global unit
+    VB::SetGlobalDefaultUnit(VB::Length::mm);     // set a global unit
     G4VPhysicalVolume *another_builder_or_geant_physical_volume = context->GetWorldVolume();
     VB::VolumeBuilderList builder_list;
     // a small box to mark the world center
@@ -234,7 +241,7 @@ namespace VB = DLG4::VolumeBuilders;
 VB::RZPlane p;
 p.unit = mm;  // ACTUALLY DOES NOTHING in this example.  
                 // We could pass an RZPlane (with units), but here we just use it to hold temps.
-VB::SetGlobalUnit(CLHEP::cm);     // set a global unit
+VB::SetGlobalDefaultUnit(VB::cm);     // set a global unit
 
 G4Double  lower_can_reference;
 auto ring_part = VB::CreatePolyhedraBuilder("ring_part"); 
@@ -275,7 +282,7 @@ G4Color coppertone(0.72, 0.45, .2);
 VB::RZPlane p;
 p.unit = mm; // see prior note.
 G4double some_reference;
-VB::SetGlobalUnit(CLHEP::cm);     // set a global unit
+VB::SetGlobalDefaultUnit(VB::cm);     // set a global unit
 
 auto ring_part = VB::CreatePolyhedraBuilder("ring_part", 6)
         // can set configurations in any order mostly, but can be nice to set many things up front before geometry details:
@@ -285,7 +292,7 @@ auto ring_part = VB::CreatePolyhedraBuilder("ring_part", 6)
         ->AddUnion(another_builder_or_geant_solid, {0, 0, 0}) 
         ->SetMother(another_builder_or_geant_physical_volume)
         // can predefine this. If a builder, it will auto build if needed!
-        ->SetDefaultUnit(CLHEP::cm)
+        ->SetDefaultUnit(VB::Length::cm)
         // You can skip things to default them, z-referencing below is enough:
         // ->SetPhysOffset(something)     
         // ->SetPhysRotation(zero_rot)
@@ -317,7 +324,7 @@ This also shows an example, of placing multiple objects in a loop.
 // A std::vector<VolumeReferenceBuilder>  ie a vector of generic builders.
 VB::VolumeBuilderList builder_list; 
 
-VB::SetGlobalDefaultUnit(CLHEP::mm);
+VB::SetGlobalDefaultUnit(VB::Length::mm);
 // We can get a normal G4 solid!!!! 
 auto ring_part = VB::CreateFromG4VSolid->Create(some_G4_solid, "ring_part");  // name will come from the Solid itself. 
     ->SetMaterial(_copper)
@@ -374,7 +381,7 @@ auto my_assembly = VB::CreateAssembly("assembly1")
 A working example is provided in  [demo/src/Geometries/ConstructAssembly.cc](<@ref demo/src/Geometries/ConstructAssembly.cc>) and can be run with the "assembly" volume selection on the demo.  The code looks about like this (or some updated version of this):
 
 ```cpp
-    VB::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
+    VB::SetGlobalDefaultUnit(VB::Length::mm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
     RZPlane p;
     p.unit = mm; // see prior note.
@@ -437,7 +444,7 @@ Since the builders can manage the whole build, you often don't need to explicitl
 
 Here's an example of mixing VolumeBuilder and Geant4 commands:
 ```cpp
-VB::SetGlobalDefaultUnit(CLHEP::cm);
+VB::SetGlobalDefaultUnit(VB::Length::cm);
 auto another_can = VB::CreateFromG4VSolid(some_G4_solid); 
     ->SetMaterial(_copper)
     ->SetColor(coppertone)  

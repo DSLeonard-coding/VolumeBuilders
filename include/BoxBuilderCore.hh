@@ -44,12 +44,12 @@ namespace DLG4::VolumeBuilders {
     /**
     * @brief Create an unconfigured Box Solid, for use with SetXEdges() etc...
     * @param name  Base name to derive geometry object names from.
-    * @param unit  unit for this call only (ex: CLHEP::mm)
+    * @param unit  unit for this call only (ex: VB::Length::mm)
     * @return The builder.  Set configurations and then call .MakeSolid() and .MakeLogicalVolume() on it.
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
     * */
-    BoxBuilder CreateBoxBuilder(const G4String &name, G4double unit);
+    BoxBuilder CreateBoxBuilder(const G4String &name, Length unit);
 
     /**
      * @brief Create a Box solid.
@@ -68,7 +68,7 @@ namespace DLG4::VolumeBuilders {
 
     /**
     * @brief Create a Box solid.
-    * @param unit  The unit to use for this call only (ex: CLHEP::mm)
+    * @param unit  The unit to use for this call only (ex: VB::Length::mm)
     * @param name  Base name to derive geometry object names from.
     * @param x_full_size  FULL X size
     * @param y_full_size  FULL Y size
@@ -78,7 +78,7 @@ namespace DLG4::VolumeBuilders {
     *     @ingroup BoxBuilder
     * */
     BoxBuilder CreateCenteredBoxBuilder
-    (G4double unit, const G4String &name, G4double x_full_size, G4double y_full_size,
+    (Length unit, const G4String &name, G4double x_full_size, G4double y_full_size,
         G4double z_full_size);
 
     /**
@@ -99,7 +99,7 @@ namespace DLG4::VolumeBuilders {
 
     /**
     * @brief Create a Box solid.
-    * @param unit  The unit to use for this call only (ex: CLHEP::mm)
+    * @param unit  The unit to use for this call only (ex: VB::Length::mm)
     * @param name  Base name to derive geometry object names from.
     * @param x_full_size  FULL X size
     * @param y_full_size  FULL Y size
@@ -110,7 +110,7 @@ namespace DLG4::VolumeBuilders {
     *     @ingroup BoxBuilder
     * */
     BoxBuilder CreateZDeltaBoxBuilder
-    (G4double unit, const G4String &name, G4double x_full_size, G4double y_full_size,
+    (Length unit, const G4String &name, G4double x_full_size, G4double y_full_size,
         G4double edge_z, G4double z_delta);
 
 
@@ -134,7 +134,7 @@ namespace DLG4::VolumeBuilders {
 
     /**
     * @brief Create a Box solid.
-    * @param unit  The unit to use for this call only (ex: CLHEP::mm)
+    * @param unit  The unit to use for this call only (ex: VB::Length::mm)
     * @param name  Base name to derive geometry object names from.
     * @param edge_x  The x reference of one end (either one)
     * @param x_delta  FULL X size, + or - from end_x.
@@ -146,7 +146,7 @@ namespace DLG4::VolumeBuilders {
     *     See VolumeBuilder for inherited public methods including Union/Subtraction.
     *     @ingroup BoxBuilder
     * */
-    BoxBuilder CreateDeltasBoxBuilder(G4double unit,
+    BoxBuilder CreateDeltasBoxBuilder(Length unit,
         const G4String &name, G4double edge_x, G4double x_delta, G4double edge_y, G4double y_delta,
         G4double edge_z, G4double z_delta);
 
@@ -170,7 +170,7 @@ namespace DLG4::VolumeBuilders {
 
     /**
      * @brief Create a Box solid from edge coordinates using a specified unit.
-     * @param unit The unit to use for this call only (ex: CLHEP::mm)
+     * @param unit The unit to use for this call only (ex: VB::Length::mm)
      * @param name Base name to derive geometry object names from.
      * @param x_edge1 One end of the box in the x-dimension.
      * @param x_edge2 The other end of the box in the x-dimension.
@@ -182,7 +182,7 @@ namespace DLG4::VolumeBuilders {
      * See VolumeBuilder for inherited public methods including Union/Subtraction.
      * @ingroup BoxBuilder
      * */
-    BoxBuilder CreateEdgesBoxBuilder(G4double unit, const G4String &name, G4double x_edge1,
+    BoxBuilder CreateEdgesBoxBuilder(Length unit, const G4String &name, G4double x_edge1,
         G4double x_edge2,
         G4double y_edge1, G4double y_edge2, G4double z_edge1, G4double z_edge2);
 
@@ -210,24 +210,24 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
         // Friend all the factories.  Keeping them external is easier for users, but more boilerplate.
         friend BoxBuilder VB::CreateBoxBuilder(const G4String &name);
-        friend BoxBuilder VB::CreateBoxBuilder(const G4String &name, G4double unit);
+        friend BoxBuilder VB::CreateBoxBuilder(const G4String &name, Length unit);
         friend BoxBuilder VB::CreateDeltasBoxBuilder(const G4String &name, G4double edge_x,
             G4double x_delta, G4double edge_y, G4double y_delta, G4double edge_z, G4double z_delta);
-        friend BoxBuilder VB::CreateDeltasBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilder VB::CreateDeltasBoxBuilder(Length unit, const G4String &name,
             G4double edge_x, G4double x_delta, G4double edge_y, G4double y_delta, G4double edge_z,
             G4double z_delta);
         friend BoxBuilder VB::CreateZDeltaBoxBuilder(const G4String &name, G4double x_full_size,
             G4double y_full_size, G4double edge_z, G4double z_delta);
-        friend BoxBuilder VB::CreateZDeltaBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilder VB::CreateZDeltaBoxBuilder(Length unit, const G4String &name,
             G4double x_full_size, G4double y_full_size, G4double edge_z, G4double z_delta);
         friend BoxBuilder VB::CreateCenteredBoxBuilder(const G4String &name, G4double x_full_size,
             G4double y_full_size, G4double z_full_size);
-        friend BoxBuilder VB::CreateCenteredBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilder VB::CreateCenteredBoxBuilder(Length unit, const G4String &name,
             G4double x_full_size, G4double y_full_size, G4double z_full_size);
         friend BoxBuilder VB::CreateEdgesBoxBuilder(const G4String &name, G4double x_edge1,
             G4double x_edge2, G4double y_edge1, G4double y_edge2, G4double z_edge1,
             G4double z_edge2);
-        friend BoxBuilder VB::CreateEdgesBoxBuilder(G4double unit, const G4String &name,
+        friend BoxBuilder VB::CreateEdgesBoxBuilder(Length unit, const G4String &name,
             G4double x_edge1, G4double x_edge2, G4double y_edge1, G4double y_edge2,
             G4double z_edge1, G4double z_edge2);
 
@@ -248,19 +248,19 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // BoxBuilder method overloads with a leading `unit` parameter.
         // These allow for a per-call unit override.
 
-        BoxBuilder SetXSize(G4double unit, G4double x_size);
-        BoxBuilder SetYSize(G4double unit, G4double y_size);
-        BoxBuilder SetZSize(G4double unit, G4double z_size);
+        BoxBuilder SetXSize(Length unit, G4double x_size);
+        BoxBuilder SetYSize(Length unit, G4double y_size);
+        BoxBuilder SetZSize(Length unit, G4double z_size);
 
-        BoxBuilder SetXEdges(G4double unit, G4double x_edge1, G4double x_edge2);
-        BoxBuilder SetYEdges(G4double unit, G4double y_edge1, G4double y_edge2);
-        BoxBuilder SetZEdges(G4double unit, G4double z_edge1, G4double z_edge2);
+        BoxBuilder SetXEdges(Length unit, G4double x_edge1, G4double x_edge2);
+        BoxBuilder SetYEdges(Length unit, G4double y_edge1, G4double y_edge2);
+        BoxBuilder SetZEdges(Length unit, G4double z_edge1, G4double z_edge2);
 
-        BoxBuilder SetXEdgeDelta(G4double unit, G4double x_edge, G4double x_delta);
-        BoxBuilder SetYEdgeDelta(G4double unit, G4double y_edge, G4double y_delta);
-        BoxBuilder SetZEdgeDelta(G4double unit, G4double z_edge, G4double z_delta);
+        BoxBuilder SetXEdgeDelta(Length unit, G4double x_edge, G4double x_delta);
+        BoxBuilder SetYEdgeDelta(Length unit, G4double y_edge, G4double y_delta);
+        BoxBuilder SetZEdgeDelta(Length unit, G4double z_edge, G4double z_delta);
 
-        BoxBuilder SetInternalOffset(G4double unit, G4double x, G4double y, G4double z);
+        BoxBuilder SetInternalOffset(Length unit, G4double x, G4double y, G4double z);
 
     private:
         BoxBuilder SetXSizeDimensioned(G4double x_size);
@@ -282,7 +282,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         G4double z_size_{};
         G4double x_size_{};
         G4double y_size_{};
-        G4double unit_{};
+        Length unit_{};
 
 
         BoxBuilderCore() = default;

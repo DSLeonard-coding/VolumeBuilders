@@ -43,7 +43,9 @@ list(APPEND VOLUMEBUILDERS_SRC ${VOLUMEBUILDERS_SRC_CC} ${VOLUMEBUILDERS_SRC_CPP
 
 # --- Define the VolumeBuilder static library ---
 add_library(VolumeBuilders STATIC ${VOLUMEBUILDERS_SRC}
-        include/BuilderFactories.hh)
+        include/BuilderFactories.hh
+        include/DLG4Units.hh
+        include/VolumeBuildersUnitTypes.hh)
 add_library(DLG4::VolumeBuilders ALIAS VolumeBuilders)
 
 # --- Include directories for VolumeBuilder ---

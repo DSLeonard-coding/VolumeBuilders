@@ -66,15 +66,10 @@ namespace DLG4::VolumeBuilders::_internals_ {
             lv_configs_->material = new G4Material(
                 // This is Geant. Of course we won't delete it :)
                 "VolumeBuilderDefaultGas", 2., 4. * CLHEP::g / CLHEP::mole,
-                0. * CLHEP::mg / CLHEP::cm3, kStateGas,
+                1.0E-25 * CLHEP::mg / CLHEP::cm3, kStateGas,
                 4.3 * CLHEP::kelvin, 1.e-8 * CLHEP::bar
                 );
         }
-        // lv_configs_->material = new G4Material( // This is Geant.  Of course we won't delete it :)
-        //         "VolumeBuilderDefaultGas", 2., 4. * CLHEP::g / CLHEP::mole,
-        //         0. * CLHEP::mg / CLHEP::cm3, kStateGas,
-        //         4.3 * CLHEP::kelvin, 1.e-8 * CLHEP::bar);
-        //        lv_configs_->vis_att = std::make_shared<G4VisAttributes>(true);
         lv_configs_->vis_att = G4VisAttributes(true);
     }
 
@@ -242,7 +237,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     // End of Setsolid versions
 
     template <typename U>
-    DERIVED BASE::AddUnion(const VolumeBuilder &other, const Unit3Vec &new_offset,
+    DERIVED BASE::AddUnion(const VolumeBuilder &other, const DLG4::VolumeBuilders::ThreeVecDimensioner &new_offset,
         G4RotationMatrix *rotation) {
         bool is_subtraction = false;
         bool is_intersection = false;
@@ -251,7 +246,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::AddSubtraction(const VolumeBuilder &other, const Unit3Vec &new_offset,
+    DERIVED BASE::AddSubtraction(const VolumeBuilder &other, const DLG4::VolumeBuilders::ThreeVecDimensioner &new_offset,
         G4RotationMatrix *rotation) {
         if (other) {
             bool is_subtraction = true;
@@ -266,7 +261,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::AddIntersection(const VolumeBuilder &other, const Unit3Vec &new_offset,
+    DERIVED BASE::AddIntersection(const VolumeBuilder &other, const DLG4::VolumeBuilders::ThreeVecDimensioner &new_offset,
         G4RotationMatrix *rotation) {
         if (other) {
             bool is_subtraction = false;
@@ -282,7 +277,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     template <typename U>
     DERIVED BASE::AddBoolean(const VolumeBuilder &other, bool is_subtraction,
-        bool is_intersection, const Unit3Vec &new_offset, G4RotationMatrix *rotation) {
+        bool is_intersection, const DLG4::VolumeBuilders::ThreeVecDimensioner &new_offset, G4RotationMatrix *rotation) {
         auto offset = ProvisionUnits(new_offset);
 
         if (other) {
@@ -560,7 +555,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     // SetTranslation
     template <typename U>
-    DERIVED BASE::SetPhysOffset(const Unit3Vec &new_offset) {
+    DERIVED BASE::SetPhysOffset(const DLG4::VolumeBuilders::ThreeVecDimensioner &new_offset) {
         const auto &offset = ProvisionUnits(new_offset);
         placement_configs_->translation = offset;
         PropagateTransform();
@@ -569,7 +564,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     // SetTranslation
     template <typename U>
-    DERIVED BASE::StackPhysOffset(const Unit3Vec &stacked_offset) {
+    DERIVED BASE::StackPhysOffset(const DLG4::VolumeBuilders::ThreeVecDimensioner &stacked_offset) {
         const auto &offset = ProvisionUnits(stacked_offset);
         placement_configs_->translation += offset; // add translation
         PropagateTransform();
@@ -579,7 +574,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     template <typename U>
     DERIVED BASE::SetPhysTransform(const G4Transform3D &new_transform) {
         SetPhysRotation(new_transform.getRotation()); // gets a copy on stack
-        SetPhysOffset({GetEffectiveDefaultUnit(), new_transform.getTranslation()});
+        SetPhysOffset({ (G4ThreeVector)new_transform.getTranslation(), GetEffectiveDefaultUnit()});
         PropagateTransform();
         return this->shared_from_this();
     }
@@ -588,7 +583,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     DERIVED BASE::StackPhysTransform(const G4Transform3D &new_transform) {
         //order matters when stacking.  Not when "setting"
         StackPhysRotation(new_transform.getRotation()); // gets a copy on stack
-        StackPhysOffset({GetEffectiveDefaultUnit(), new_transform.getTranslation()});
+        StackPhysOffset({new_transform.getTranslation(),GetEffectiveDefaultUnit()});
         PropagateTransform();
         return this->shared_from_this();
     }
@@ -901,19 +896,19 @@ namespace DLG4::VolumeBuilders::_internals_ {
     }
 
     template <typename U>
-    DERIVED BASE::SetDefaultUnit(G4double unit) {
-        this->builder_configs_->default_unit = unit;
+    DERIVED BASE::SetDefaultUnit(VB::Length unit) {
+        this->builder_configs_->default_unit = unit.Native;
         return this->shared_from_this();
     }
 
     template <typename U>
-    G4double BASE::GetEffectiveDefaultUnit() const {
+    VB::Length BASE::GetEffectiveDefaultUnit() const {
         auto temp = builder_configs_.get();
         auto local = temp->default_unit;
         //        auto local = builder_configs_->default_unit;
-        auto global = BuilderConfigs::global_default_unit;
+        auto global = DLG4::Units::global_default_unit<DLG4::Units::Length>;
         G4double default_unit = local.value_or(global);
-        return default_unit;
+        return Length(default_unit,Length::native);
     }
 
     template <typename U>
@@ -954,7 +949,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
     // apply the active default unit to a provided vector
     // unless the vector alerady has units.
     template <typename U>
-    G4ThreeVector BASE::ProvisionUnits(const Unit3Vec &vec) const {
+    G4ThreeVector BASE::ProvisionUnits(const DLG4::VolumeBuilders::ThreeVecDimensioner &vec) const {
         // will apply default or internal unit.
         return vec.apply_units(GetEffectiveDefaultUnit());
     }

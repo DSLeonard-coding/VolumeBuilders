@@ -113,6 +113,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 # --- Compile options common to all builds ---
 target_compile_options(${PROJECT_NAME} PRIVATE
+        -Werror=unused-result
         -mfpmath=sse
         -fPIC
         ${OPTIONS}

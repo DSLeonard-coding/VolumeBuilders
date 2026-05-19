@@ -11,7 +11,7 @@
  *      VolumeMaker which it inherits from provides more generic extended functionality (syntax helpers) to it.
  *      Such as logical volume creation, unions/subtractions, and vis attribute settings.
  *      Features/Benefits
- *      -Unit is separate and remembered for cleaner/simpler dimensioning
+ *      -Unit is separate, a separate compiler-known type, and remembered for cleaner/simpler dimensioning
  *                        (no * mm everwhere, no double unit application, no forgotten unit).
  *      -z=0 point can be outside of object, allowing many objects to reference from a single z.
  *      -Much simpler than using unions for multi-plane objects
@@ -42,14 +42,14 @@ namespace DLG4::VolumeBuilders {
      *  Overloads make this not strictly needed.
      *  */
     struct RZPlane {
-        G4double unit; // unit
+        Length unit; // unit
         G4double IR;   // inner radius
         G4double OR;   // outer radius
         G4double z;
         RZPlane() = default;
 
-        RZPlane(G4double u, G4double ir, G4double or_, G4double z_)
-            : unit(u), IR(ir), OR(or_), z(z_) {
+        explicit RZPlane(G4double ir, G4double or_, G4double z_, Length u)
+            :  IR(ir), OR(or_), z(z_), unit(u) {
         }
     };
 
@@ -98,8 +98,8 @@ namespace DLG4::VolumeBuilders {
      * @return The builder.  Set configurations and then call .MakeSolid() and .MakeLogicalVolume() on it.
      *     See VolumeBuilder for inherited public methods including Union/Subtraction.
      */
-    RZBuilder CreateCylinderBuilder(G4double unit, const G4String &name,
-        G4double endz, G4double height, G4double OR, G4double IR = 0);
+    RZBuilder CreateCylinderBuilder(Length unit, const G4String &name,
+            G4double endz, G4double height, G4double OR, G4double IR = 0);
 
     /**
      * Create a simple cylinder builder using global default unit.
@@ -141,8 +141,8 @@ namespace DLG4::VolumeBuilders::_internals_ {
             const G4String &name, int sides, G4double phi_start, G4double phi_tot);
         friend RZBuilder VB::CreatePolyconeBuilder(const G4String &name, G4double phi_start,
             G4double phi_tot);
-        friend RZBuilder VB::CreateCylinderBuilder(G4double unit, const G4String &name,
-            G4double endz, G4double height, G4double OR, G4double IR);
+        friend RZBuilder VB::CreateCylinderBuilder(VolumeBuilders::Length unit, const G4String &name,
+                G4double endz, G4double height, G4double OR, G4double IR);
         friend RZBuilder VB::CreateCylinderBuilder(const G4String &name,
             G4double endz, G4double height, G4double OR, G4double IR);
 
@@ -158,7 +158,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
         /**
          * Adds a plane defining one IR,OR,Z triplet in the volume design
-         * @param plane // the unit, IR, OR, Z data for this "plane"
+         * @param plane // the IR, OR, Z, unit data for this "plane"
          */
         RZBuilder AddPlane(const RZPlane &plane);
         /**
@@ -173,17 +173,17 @@ namespace DLG4::VolumeBuilders::_internals_ {
         /**
          * Adds a plane defining one IR,OR,Z triplet in the volume design
          * Uses preset unit from default (mm) or SetUnit(unit);
-         * @param unit The unit to use for THIS plane only (ex: CLHEP::mm)
          * @param IR Inner radius
          * @param OR Outer radius
          * @param z Z position
+         * @param unit The unit to use for THIS plane only (ex: VB::Length::mm)
          */
-        RZBuilder AddPlane(G4double unit, G4double IR, G4double OR, G4double z);
+        RZBuilder AddPlane(G4double IR, G4double OR, G4double z, Length unit);
 
 
         /**
          * Adds multiple RZ planes each defining one unit,IR,OR,Z set in the volume design
-         * @param planes {{unit,IR, OR, Z},{unit,IR,OR,Z},...}, unit ex: CLHEP::mm
+         * @param planes {{IR, OR, Z, unit},{IR,OR,Z,unit},...}, unit ex: VB::Length::mm
          */
         RZBuilder AddPlanes(const std::vector<RZPlane> &planes);
         /**
@@ -195,10 +195,10 @@ namespace DLG4::VolumeBuilders::_internals_ {
         /**
          * Adds multiple planes each defining one IR,OR,Z triplet in the volume design
          * Uses preset unit from default (mm) or SetUnit(unit);
-         * @param unit The unit to use for THESE planes only (ex: CLHEP::mm)
          * @param planes {{IR, OR, Z},{IR,OR,Z},...}
+         * @param unit The unit to use for THESE planes only (ex: VB::Length::mm)
          */
-        RZBuilder AddPlanes(G4double unit, const std::vector<RZPlaneUnitless> &planes);
+        RZBuilder AddPlanes(const std::vector<RZPlaneUnitless> &planes, Length unit);
 
         /**
          * Flip Solid Configuration.

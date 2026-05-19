@@ -14,7 +14,8 @@
 #include <memory>
 #include <optional>
 #include <vector>
-#include <CLHEP/Units/SystemOfUnits.h>
+#include "VolumeBuildersTypes.hh"
+//#include <CLHEP/Units/SystemOfUnits.h>
 
 #include "disableable_shared_from_this.hh"
 #include "i_shared_ptr.hh"
@@ -36,12 +37,11 @@ namespace DLG4::VolumeBuilders::_internals_ {
         G4RotationMatrix *rotation{};
     };
 
+
     struct BuilderConfigs {
         G4String name{}; // initial solid name
         std::optional<G4double> default_unit;
         bool reflect_base_solid_z;
-        // actually global, but it needs to live somewhere untemplated.
-        static G4double global_default_unit;
         // Interface pointer for type erased class access (Copied in linking ctor only)
         // Linkable<ISolidBuilder> isolid_ptr;
         // Linkable <VolumeBuetilderReference> builder_view;
@@ -50,6 +50,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         // an internal offset for non-centered solids:
         G4ThreeVector internal_offset{};
     };
+
 
     struct BooleanConfigs {
         std::vector<BooleanSolid> booleans;
@@ -83,9 +84,6 @@ namespace DLG4::VolumeBuilders::_internals_ {
         void copyFrom(const VolumeConfigs &other);
     };
 
-    // Set the default value for the global default unit.
-    //  (The default for the default for the default).
-    inline G4double BuilderConfigs::global_default_unit = CLHEP::mm;
 
     // Placement parameters
     struct PlacementConfigs {
@@ -114,14 +112,6 @@ namespace DLG4::VolumeBuilders::_internals_ {
         ~PlacementConfigs() = default;
     };
 }
-namespace DLG4::VolumeBuilders {
-    /**
-     * @brief Set the default unit for all VolumeBuilder methods.
-     * @ingroup Units
-     * */
-    inline void SetGlobalDefaultUnit(G4double unit) {
-        _internals_::BuilderConfigs::global_default_unit = unit;
-    }
-}
+
 #endif //VOLUMEBUIDERTYPES_HH
 //TODO Implement auto parent name incrementing?

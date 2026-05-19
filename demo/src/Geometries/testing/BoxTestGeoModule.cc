@@ -13,7 +13,7 @@
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>
 
-using namespace CLHEP;
+
 namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
 void BoxTestGeoModule::Construct(GeoModulesContextPtr context) {
@@ -27,7 +27,7 @@ void BoxTestGeoModule::Construct(GeoModulesContextPtr context) {
 
     //make a dedicated sample_material for vertex generation.  Can adjust density with optional 3rd parameter
     G4Material *sample_mat = VBHelpers::CopyMaterial("G4_CONCRETE", "sample_mat");
-    VB::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
+    VB::SetGlobalDefaultUnit(VB::Length::mm); // set a global unit
 
     auto box_part = VB::CreateZDeltaBoxBuilder(
                     "BoxTest_box", // name

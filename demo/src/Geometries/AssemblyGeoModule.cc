@@ -15,7 +15,7 @@
 #include "DetectorConstruction_includes.hh" // common includes
 #include <VolumeBuilders.hh>
 
-using namespace CLHEP;
+
 namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
 
 void AssemblyGeoModule::Construct(GeoModulesContextPtr context) {
@@ -27,7 +27,7 @@ void AssemblyGeoModule::Construct(GeoModulesContextPtr context) {
     firstcall = false;
     //@formatter:on
 
-    DLG4::VolumeBuilders::SetGlobalDefaultUnit(CLHEP::mm); // set a global unit
+    DLG4::VolumeBuilders::SetGlobalDefaultUnit(VB::Length::mm); // set a global unit
     G4Color coppertone(0.72, 0.45, .2);
     VB::RZPlane p;
     p.unit = mm; // see prior note.

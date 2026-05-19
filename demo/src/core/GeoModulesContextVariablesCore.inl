@@ -10,7 +10,7 @@
 #ifdef GEOMDULES_CONTEXT_INCLUDES
 // includes go here
 #include "VolumeBuilders.hh"
-using namespace CLHEP;
+
 #else
-   DLG4::VolumeBuilders::Unit3Vec sample_center = DLG4::VolumeBuilders::Unit3Vec(CLHEP::mm,0,0,0);
+   DLG4::VolumeBuilders::Length3Vec sample_center = DLG4::VolumeBuilders::Length3Vec(CLHEP::mm,0,0,0);
 #endif

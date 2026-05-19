@@ -14,11 +14,14 @@
 
 #include "disableable_shared_from_this.hh"
 #include "i_shared_ptr.hh"
+//#include "VolumeBuilderConfigs.hh"
 
 #define ONCE_MUTABLE mutable  // for linkable objects
+
 namespace DLG4::VolumeBuilders::Helpers {
     class G4MaterialPtrOrString;
 }
+
 namespace VBHelpers = DLG4::VolumeBuilders::Helpers;
 
 namespace DLG4::VolumeBuilders::_internals_ {
@@ -112,41 +115,6 @@ namespace DLG4::VolumeBuilders::_internals_ {
     template<typename U>
     using ENABLE_SHARED_WRAPPER = Utilities::disableable_shared_from_this<U>;
 
-    using UnitlessG4Transform3D = G4Transform3D;
-    using Unitless3Vec = G4ThreeVector;
-    /**
-     * @brief A 3D vector that carries its own unit information
-     * @details Stores unit, x, y, z as separate values.
-     * Can be constructed from 3 values (gets default unit) or 4 values (explicit unit first)
-     */
-    class Unit3Vec {
-    public:
-        double x, y, z;
-        std::optional<double> units;
-
-        // 3-value constructor - no units specified, raw values
-        Unit3Vec(double x, double y, double z)
-            : x(x), y(y), z(z), units(std::nullopt) {
-        }
-
-        // 4-value constructor - units specified, scale the values
-        Unit3Vec(double u, double x, double y, double z)
-            : x(x), y(y), z(z), units(u) {
-        }
-
-        Unit3Vec(double u, const Unitless3Vec &vec)
-            : x(vec.getX()), y(vec.getY()), z(vec.getZ()), units(u) {
-        }
-
-        [[nodiscard]] G4ThreeVector apply_units(const double dflt_unit) const {
-            auto vec = G4ThreeVector(0, 0, 0);
-            auto unit = this->units.value_or(dflt_unit);
-            vec.setX(this->x * unit);
-            vec.setY(this->y * unit);
-            vec.setZ(this->z * unit);
-            return vec;
-        }
-    };
 
     template<typename T>
     std::shared_ptr<T> shared_mutable_this(const std::enable_shared_from_this<T> *obj) {
@@ -157,6 +125,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
         return std::const_pointer_cast<std::remove_const_t<T> >(sp_const);
     }
 }
+
 
 //Export names for API usage/tab-completion.
 ///@namespace DLG4::VolumeBuilders
@@ -172,18 +141,15 @@ namespace DLG4::VolumeBuilders {
     /// @copydoc _internals_::VolumeBuilder
     template<typename T>
     using VolumeBuilder = _internals_::VolumeBuilderBase<T>;
-    /// @copydoc _internals_::BuilderView
+    /// @copydoc _internals_::VolumeBuilder
     using BuilderView = _internals_::VolumeBuilder;
     /// @copydoc _internals_::BuilderViewList
     using BuilderViewList = _internals_::BuilderViewList;
-    /// @copydoc _internals_::StructureView
+    /// @copydoc _internals_::StructureBuilder
     using StructureView = _internals_::StructureBuilder;
     /// @copydoc _internals_::StructureViewList
     using StructureViewList = _internals_::StructureViewList;
-    /// @copydoc _internals_::Unit3Vec
-    using Unit3Vec = _internals_::Unit3Vec;
-    /// @copydoc _internals_::Unitless3Vec
-    using Unitless3Vec = _internals_::Unitless3Vec;
+
 
 }
 

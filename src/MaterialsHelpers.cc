@@ -1,7 +1,8 @@
 //GeoModulesCopyMaterials.  D.S. Leonard 2026 (code is much older, ~ 2017
 #include "MaterialsHelpers.hh"
 #include "G4NistManager.hh"
-using namespace CLHEP;
+#include "DLG4Units.hh"
+
 
 namespace DLG4::VolumeBuilders::Helpers {
 
@@ -48,22 +49,18 @@ namespace DLG4::VolumeBuilders::Helpers {
     }
 
     G4Material *CopyMaterial(
-            G4MaterialPtrOrString source, const G4String &name, const G4double dens, const G4double unit) {
-        const double dens_with_unit = dens * unit;
+            G4MaterialPtrOrString source, const G4String &name, const G4double dens, const Density unit) {
+        const double dens_with_unit = dens * unit.Native;
         constexpr int n_components = 1;
-        constexpr G4double fraction_mass = 100 * perCent;
+        constexpr G4double fraction_mass = 100 * CLHEP::perCent;
         const auto dest = new G4Material(name, dens_with_unit, n_components);
         dest->AddMaterial(source, fraction_mass);
         return dest;
     }
-    // G4Material *CopyMaterial(
-    //         const G4String &source, const G4String &name, const G4double dens, const G4double unit) {
-    //     return CopyMaterial(GetMaterial(source), name, dens, unit);
-    // }
 
     G4Material *CopyMaterial(G4MaterialPtrOrString source, const G4String &name) {
         const G4double dens = source->GetDensity();
-        const auto dest = CopyMaterial(source, name, dens, 1);
+        const auto dest = CopyMaterial(source, name, dens, Density::native);
         return dest;
     }
 

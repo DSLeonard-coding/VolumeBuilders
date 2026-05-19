@@ -11,7 +11,7 @@
 #include <G4Element.hh>
 #include <G4VPhysicalVolume.hh>
 #include <memory>
-#include <CLHEP/Units/SystemOfUnits.h>
+//#include <CLHEP/Units/SystemOfUnits.h>
 //including these from here is a dirty hack
 //It's for use in XYZGeoModule.cc that include GeoModulesContext.hh
 //But should include more.  Doing it here risks header loops

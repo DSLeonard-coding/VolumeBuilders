@@ -226,14 +226,14 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     template <typename U>
     DERIVED BASE::SetPhysOffset(
-        const Unit3Vec &offset) {
+        const DLG4::VolumeBuilders::ThreeVecDimensioner &offset) {
         this->builder_configs_->builder_view->SetPhysOffset(offset);
         return this->shared_from_this();
     }
 
     template <typename U>
     DERIVED BASE::StackPhysOffset(
-        const Unit3Vec &offset) {
+        const DLG4::VolumeBuilders::ThreeVecDimensioner &offset) {
         this->builder_configs_->builder_view->StackPhysOffset(offset);
         return this->shared_from_this();
     }
@@ -374,7 +374,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
     template <typename U>
     DERIVED BASE::SetDefaultUnit(
-        G4double unit) {
+        VB::Length unit) {
         // Transforms are all stored INTERNALLY with units... so we can safely
         // set the interface unit on each hierachy.
         this->builder_configs_->builder_view->SetDefaultUnit(unit);
@@ -383,7 +383,7 @@ namespace DLG4::VolumeBuilders::_internals_ {
 
 
     template <typename U>
-    G4double BASE::GetEffectiveDefaultUnit() const {
+    VB::Length BASE::GetEffectiveDefaultUnit() const {
         return this->builder_configs_->builder_view->GetEffectiveDefaultUnit();
     }
 
