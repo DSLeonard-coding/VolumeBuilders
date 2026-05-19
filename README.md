@@ -548,7 +548,7 @@ with appropriate transformation.
 
 ###  CRTP fluent classes
 
-Near the end of completing this I worked out an arguably better, certainly easier, and I believe [novel way to do polymorphic fluent class in C++](www.github.com/DSLeonard-coding/SISIFI).  In hind sight, this would probably simplify a lot of the code and would have saved me some hair. 
+Near the end of completing this I worked out an arguably better, certainly easier, and I believe [novel way to do polymorphic fluent class in C++](https:://www.github.com/DSLeonard-coding/SISIFI).  In hind sight, this would probably simplify a lot of the code and would have saved me some hair. 
 
 
 That said, fluent classes have methods that return the class (builder) itself so that methods can mbe chained as Factory()->method1()->method2()->...
