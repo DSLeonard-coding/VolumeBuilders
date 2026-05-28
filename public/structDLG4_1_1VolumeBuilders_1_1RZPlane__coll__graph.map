@@ -1,0 +1,27 @@
+<map id="RZPlane" name="RZPlane">
+<area shape="rect" id="Node000001" title="Struct for adding planes to GeantMultiPlane –DSLeonard 2024 Overloads make this not strictly needed." alt="" coords="5,427,81,455"/>
+<area shape="rect" id="Node000002" href="$classDLG4_1_1Units_1_1Length.html" title=" " alt="" coords="10,255,76,282"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="46,298,46,427,40,427,40,298"/>
+<area shape="poly" id="edge16_Node000002_Node000002" title=" " alt="" coords="68,244,80,242,92,246,99,255,102,269,98,285,86,294,70,294,54,285,57,281,71,288,84,289,93,282,97,268,95,257,89,250,80,248,69,249"/>
+<area shape="rect" id="Node000003" href="$classDLG4_1_1Units_1_1UnitBase.html" title=" " alt="" coords="119,427,343,455"/>
+<area shape="poly" id="edge15_Node000003_Node000002" title=" " alt="" coords="55,296,82,349,101,377,125,401,146,414,170,424,168,429,144,419,122,405,97,381,77,352,50,298"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="202,419,187,405,55,285,59,281,190,401,206,415"/>
+<area shape="rect" id="Node000004" href="$structDLG4_1_1Units_1_1UnitTag.html" title=" " alt="" coords="184,5,254,33"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="222,49,231,362,233,426,228,426,226,362,217,49"/>
+<area shape="rect" id="Node000006" href="$classDLG4_1_1Units_1_1UnitBase.html" title="CRTP base methods for Unit classes." alt="" coords="473,82,672,110"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="270,29,510,79,509,84,269,34"/>
+<area shape="rect" id="Node000005" href="$structDLG4_1_1Units_1_1UnitBase_1_1ScalableProxy.html" title=" " alt="" coords="240,255,427,282"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="320,297,241,428,237,425,316,294"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="459,116,419,136,390,164,367,197,340,255,336,253,362,194,386,160,415,132,456,111"/>
+<area shape="rect" id="Node000007" href="$structDLG4_1_1Units_1_1UnitBase_1_1ScalableProxy.html" title=" " alt="" coords="451,255,603,282"/>
+<area shape="poly" id="edge8_Node000007_Node000006" title=" " alt="" coords="494,120,478,136,471,150,470,166,479,198,497,229,516,252,512,256,493,232,474,200,464,166,466,149,473,132,491,116"/>
+<area shape="rect" id="Node000008" href="$structDLG4_1_1Units_1_1UnitBase_1_1DefaultUnitsProxy.html" title=" " alt="" coords="626,255,766,282"/>
+<area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="592,121,612,149,689,253,685,256,608,153,588,124"/>
+<area shape="rect" id="Node000009" href="$structDLG4_1_1Units_1_1UnitBase_1_1NativeProxy.html" title=" " alt="" coords="791,255,892,282"/>
+<area shape="poly" id="edge12_Node000009_Node000006" title=" " alt="" coords="688,106,741,117,778,132,805,160,823,194,835,227,842,253,837,255,830,229,818,196,800,163,775,136,740,122,687,112"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="520,239,519,189,523,160,532,133,551,109,556,112,537,135,528,161,524,189,525,239"/>
+<area shape="poly" id="edge13_Node000003_Node000008" title=" " alt="" coords="683,297,655,332,637,350,616,364,550,395,479,417,409,431,344,438,343,433,408,425,478,412,548,390,614,360,633,346,651,329,678,294"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="693,239,685,187,675,160,660,136,644,123,626,113,628,108,647,118,664,132,680,157,690,186,699,238"/>
+<area shape="poly" id="edge14_Node000003_Node000009" title=" " alt="" coords="832,297,811,332,781,364,751,383,725,393,662,406,580,420,496,430,344,440,343,435,495,425,579,415,661,400,723,388,749,379,777,360,807,328,827,294"/>
+<area shape="poly" id="edge11_Node000006_Node000009" title=" " alt="" coords="856,240,868,215,877,187,878,160,874,147,867,136,843,126,795,118,672,106,673,101,796,113,844,121,870,132,879,145,883,159,882,188,873,217,861,243"/>
+</map>

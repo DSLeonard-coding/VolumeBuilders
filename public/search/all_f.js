@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['rad_0',['rad',['../classDLG4_1_1Units_1_1Angle.html#a9fa2d16554933738f3c9f184ffcc7fa6',1,'DLG4::Units::Angle']]],
+  ['radian_1',['radian',['../classDLG4_1_1Units_1_1Angle.html#a5551227fe278e566a9702ff28c2739b3',1,'DLG4::Units::Angle']]],
+  ['readme_2emd_2',['README.md',['../README_8md.html',1,'']]],
+  ['recipes_3',['Recipes',['../md_GeoModules_2GeoModulesREADME.html#autotoc_md31',1,'']]],
+  ['recipes_20and_20module_20code_20example_20and_20details_4',['Recipes and Module Code Example and Details',['../md_GeoModules_2GeoModulesREADME.html#autotoc_md39',1,'']]],
+  ['reference_20semantics_20and_20builder_20assignment_5',['Advanced: Reference semantics and builder assignment',['../index.html#autotoc_md21',1,'']]],
+  ['references_6',['Primary References',['../index.html#autotoc_md1',1,'']]],
+  ['reflect_5fbase_5fsolid_5fz_7',['reflect_base_solid_z',['../structDLG4_1_1VolumeBuilders_1_1__internals___1_1BuilderConfigs.html#aec72d088976b9964386d9aa4a61d3635',1,'DLG4::VolumeBuilders::_internals_::BuilderConfigs']]],
+  ['reflect_5fz_8',['reflect_z',['../structDLG4_1_1VolumeBuilders_1_1__internals___1_1BooleanConfigs.html#a30b736881561b663f83a0e032c244267',1,'DLG4::VolumeBuilders::_internals_::BooleanConfigs']]],
+  ['reflectzbasesolid_9',['ReflectZBaseSolid',['../group__Transforms.html#gaa5283fc7f213e7bac047021702a877d9',1,'DLG4::VolumeBuilders::_internals_::VolumeBuilderBase']]],
+  ['reflectzfinalsolid_10',['ReflectZFinalSolid',['../group__Transforms.html#gadf302f18ec4970f5460f8fc23a33caa7',1,'DLG4::VolumeBuilders::_internals_::VolumeBuilderBase']]],
+  ['reflectzsolidconfig_11',['ReflectZSolidConfig',['../group__RZBuilder.html#ga0037b30071b8c48d85d30a8b0348d946',1,'DLG4::VolumeBuilders::_internals_::RZBuilderCore']]],
+  ['resulttype_12',['ResultType',['../namespaceDLG4_1_1Units.html#abcb9ba2b28731bb8c5fb522f74bc46bb',1,'DLG4::Units']]],
+  ['roadmap_13',['Missing features and roadmap',['../index.html#autotoc_md25',1,'']]],
+  ['rotation_14',['rotation',['../structDLG4_1_1VolumeBuilders_1_1__internals___1_1BooleanSolid.html#af4bf95e938773125c09c3a79acae6b51',1,'DLG4::VolumeBuilders::_internals_::BooleanSolid::rotation'],['../structDLG4_1_1VolumeBuilders_1_1__internals___1_1PlacementConfigs.html#abc6c51e7ddfec8db60d1a679930c9970',1,'DLG4::VolumeBuilders::_internals_::PlacementConfigs::rotation']]],
+  ['running_20the_20demo_15',['Building and running the Demo',['../md_HowToBuild.html#autotoc_md43',1,'']]],
+  ['rzbuilder_16',['rzbuilder',['../namespaceDLG4_1_1VolumeBuilders_1_1__internals__.html#a85dbbf0e0e941fb21d62775255a960a7',1,'DLG4::VolumeBuilders::_internals_::RZBuilder'],['../namespaceDLG4_1_1VolumeBuilders.html#a59f1da7d49fda69634d2bc4dc1489d5e',1,'DLG4::VolumeBuilders::RZBuilder'],['../namespaceDLG4_1_1VolumeBuilders_1_1BuilderCores.html#a7b7bee20e6f7b7c8f5c3f0632954426a',1,'DLG4::VolumeBuilders::BuilderCores::RZBuilder']]],
+  ['rzbuilder_20configurations_17',['RZbuilder Configurations',['../group__RZBuilder.html',1,'']]],
+  ['rzbuilder_20examples_18',['More in-depth with RZBuilder examples',['../index.html#autotoc_md10',1,'']]],
+  ['rzbuilder_20improvements_19',['RZBuilder improvements',['../index.html#autotoc_md24',1,'']]],
+  ['rzbuildercore_20',['rzbuildercore',['../classDLG4_1_1VolumeBuilders_1_1__internals___1_1VolumeBuilderBase.html#a94a4b6cc29870b9d0ec822756464baae',1,'DLG4::VolumeBuilders::_internals_::VolumeBuilderBase::RZBuilderCore'],['../classDLG4_1_1VolumeBuilders_1_1__internals___1_1RZBuilderCore.html',1,'RZBuilderCore'],['../classDLG4_1_1VolumeBuilders_1_1__internals___1_1StructureBuilderBase.html#a94a4b6cc29870b9d0ec822756464baae',1,'DLG4::VolumeBuilders::_internals_::StructureBuilderBase::RZBuilderCore']]],
+  ['rzbuildercore_2ecc_21',['RZBuilderCore.cc',['../RZBuilderCore_8cc.html',1,'']]],
+  ['rzbuildercore_2ehh_22',['RZBuilderCore.hh',['../RZBuilderCore_8hh.html',1,'']]],
+  ['rzplane_23',['rzplane',['../structDLG4_1_1VolumeBuilders_1_1RZPlane.html#a052400c85b559f413e714e456b339b8b',1,'DLG4::VolumeBuilders::RZPlane::RZPlane(G4double ir, G4double or_, G4double z_, Length u)'],['../structDLG4_1_1VolumeBuilders_1_1RZPlane.html#a4a7a52a9be0b1462262af2a482ab9c13',1,'DLG4::VolumeBuilders::RZPlane::RZPlane()=default'],['../structDLG4_1_1VolumeBuilders_1_1RZPlane.html',1,'RZPlane']]],
+  ['rzplaneunitless_24',['RZPlaneUnitless',['../structDLG4_1_1VolumeBuilders_1_1RZPlaneUnitless.html',1,'DLG4::VolumeBuilders']]]
+];

@@ -1,0 +1,16 @@
+<map id="UnitBase&lt; T, NativeType &gt;::DefaultUnitsProxy" name="UnitBase&lt; T, NativeType &gt;::DefaultUnitsProxy">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,175,190,220"/>
+<area shape="rect" id="Node000002" href="$classDLG4_1_1Units_1_1UnitBase.html" title="CRTP base methods for Unit classes." alt="" coords="282,82,481,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="273,116,203,136,164,155,129,177,126,172,161,151,201,132,272,111"/>
+<area shape="rect" id="Node000004" href="$structDLG4_1_1Units_1_1UnitBase_1_1ScalableProxy.html" title=" " alt="" coords="214,184,365,211"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="276,120,259,135,255,146,259,158,276,181,272,185,254,161,250,146,255,133,272,116"/>
+<area shape="rect" id="Node000005" href="$structDLG4_1_1Units_1_1UnitBase_1_1DefaultUnitsProxy.html" title=" " alt="" coords="389,184,529,211"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="377,125,377,138,380,150,397,168,418,181,416,185,394,172,376,152,371,139,371,125"/>
+<area shape="rect" id="Node000006" href="$structDLG4_1_1Units_1_1UnitBase_1_1NativeProxy.html" title=" " alt="" coords="584,184,686,211"/>
+<area shape="poly" id="edge8_Node000006_Node000002" title=" " alt="" coords="482,112,544,132,587,156,621,181,618,185,584,160,542,136,481,117"/>
+<area shape="rect" id="Node000003" href="$structDLG4_1_1Units_1_1UnitTag.html" title=" " alt="" coords="346,5,417,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="384,48,384,82,379,82,379,48"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="296,168,305,150,318,132,350,108,353,113,321,136,310,152,301,170"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="447,170,427,136,401,113,405,109,432,132,452,168"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="640,168,641,151,634,136,611,122,574,112,481,101,482,96,575,106,613,117,638,132,646,150,646,168"/>
+</map>

@@ -4,6 +4,19 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [Overview](#overview)
+- [Modules](#modules)
+  - [Recipes](#recipes)
+  - [GeometryModules](#geometrymodules)
+  - [Materials and Elements](#materials-and-elements)
+    - [Local materials](#local-materials)
+    - [NIST materials](#nist-materials)
+  - [Builing a new project](#builing-a-new-project)
+  - [Create a module fast and easy using the clion templates](#create-a-module-fast-and-easy-using-the-clion-templates)
+  - [Building the world](#building-the-world)
+  - [Recipes and Module Code Example and Details](#recipes-and-module-code-example-and-details)
+- [Building](#building)
+
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Overview

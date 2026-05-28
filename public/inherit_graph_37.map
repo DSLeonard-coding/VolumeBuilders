@@ -1,0 +1,31 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$structDLG4_1_1Units_1_1UnitTag.html" title=" " alt="" coords="5,185,76,213"/>
+<area shape="rect" id="Node000001" href="$classDLG4_1_1Units_1_1UnitBase.html" title=" " alt="" coords="130,5,347,33"/>
+<area shape="poly" id="edge36_Node000000_Node000001" title=" " alt="" coords="47,169,57,139,72,105,94,71,122,42,141,31,143,36,125,47,98,74,77,107,62,141,52,171"/>
+<area shape="rect" id="Node000003" href="$classDLG4_1_1Units_1_1UnitBase.html" title=" " alt="" coords="164,57,313,102"/>
+<area shape="poly" id="edge38_Node000000_Node000003" title=" " alt="" coords="59,171,87,140,122,112,162,93,164,98,125,116,90,144,63,175"/>
+<area shape="rect" id="Node000005" href="$classDLG4_1_1Units_1_1UnitBase.html" title=" " alt="" coords="126,125,350,153"/>
+<area shape="poly" id="edge40_Node000000_Node000005" title=" " alt="" coords="85,176,123,162,163,151,164,156,124,167,87,181"/>
+<area shape="rect" id="Node000007" href="$classDLG4_1_1Units_1_1UnitBase.html" title=" " alt="" coords="151,177,326,222"/>
+<area shape="poly" id="edge42_Node000000_Node000007" title=" " alt="" coords="91,196,151,196,151,202,91,202"/>
+<area shape="rect" id="Node000010" href="$classDLG4_1_1Units_1_1UnitBase.html" title=" " alt="" coords="131,245,346,273"/>
+<area shape="poly" id="edge45_Node000000_Node000010" title=" " alt="" coords="87,217,124,231,164,242,163,247,123,236,85,222"/>
+<area shape="rect" id="Node000012" href="$classDLG4_1_1Units_1_1UnitBase.html" title=" " alt="" coords="124,297,353,325"/>
+<area shape="poly" id="edge47_Node000000_Node000012" title=" " alt="" coords="62,223,90,255,125,282,152,294,150,299,122,287,86,258,58,227"/>
+<area shape="rect" id="Node000014" href="$classDLG4_1_1Units_1_1UnitBase.html" title="CRTP base methods for Unit classes." alt="" coords="139,349,338,377"/>
+<area shape="poly" id="edge49_Node000000_Node000014" title=" " alt="" coords="54,226,80,282,100,311,125,334,147,346,144,351,122,339,96,314,76,285,49,229"/>
+<area shape="rect" id="Node000002" href="$classDLG4_1_1Units_1_1Angle.html" title=" " alt="" coords="420,5,478,33"/>
+<area shape="poly" id="edge37_Node000001_Node000002" title=" " alt="" coords="362,16,420,16,420,22,362,22"/>
+<area shape="rect" id="Node000004" href="$classDLG4_1_1Units_1_1Density.html" title=" " alt="" coords="414,65,485,93"/>
+<area shape="poly" id="edge39_Node000003_Node000004" title=" " alt="" coords="329,76,413,76,413,82,329,82"/>
+<area shape="rect" id="Node000006" href="$classDLG4_1_1Units_1_1Length.html" title=" " alt="" coords="416,125,482,153"/>
+<area shape="poly" id="edge41_Node000005_Node000006" title=" " alt="" coords="366,136,416,136,416,142,366,142"/>
+<area shape="rect" id="Node000008" href="$classDLG4_1_1Units_1_1Length3Vec.html" title="A 3 vector that is scalable with/to Units." alt="" coords="401,185,497,213"/>
+<area shape="poly" id="edge43_Node000007_Node000008" title=" " alt="" coords="341,196,401,196,401,202,341,202"/>
+<area shape="rect" id="Node000009" href="$classDLG4_1_1VolumeBuilders_1_1ThreeVecDimensioner.html" title="A 3D vector that manages unit policy for parameter passing If constructed with a unit,..." alt="" coords="545,185,710,213"/>
+<area shape="poly" id="edge44_Node000008_Node000009" title=" " alt="" coords="513,196,545,196,545,202,513,202"/>
+<area shape="rect" id="Node000011" href="$classDLG4_1_1Units_1_1Mass.html" title=" " alt="" coords="422,245,477,273"/>
+<area shape="poly" id="edge46_Node000010_Node000011" title=" " alt="" coords="361,256,421,256,421,262,361,262"/>
+<area shape="rect" id="Node000013" href="$classDLG4_1_1Units_1_1Volume.html" title=" " alt="" coords="414,297,484,325"/>
+<area shape="poly" id="edge48_Node000012_Node000013" title=" " alt="" coords="369,308,413,308,413,314,369,314"/>
+</map>

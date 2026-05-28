@@ -21,6 +21,8 @@ Related Links:
 - [Hello World](#hello-world)
 - [BoxBuilder](#boxbuilder)
   - [Units](#units)
+  - [Units in-depth](#units-in-depth)
+    - [Developer tech notes for Units:](#developer-tech-notes-for-units)
   - [Offset solids](#offset-solids)
   - [CopyMaterial](#copymaterial)
   - [BoxBuilder Demo example](#boxbuilder-demo-example)
@@ -42,7 +44,6 @@ Related Links:
   - [Missing features and roadmap](#missing-features-and-roadmap)
 - [Programming notes](#programming-notes)
   - [CRTP fluent classes](#crtp-fluent-classes)
-- [Coding hindsight, and a novel(?) fluent design for C++?](#coding-hindsight-and-a-novel-fluent-design-for-c)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

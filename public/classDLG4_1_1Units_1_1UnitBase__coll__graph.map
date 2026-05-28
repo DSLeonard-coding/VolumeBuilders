@@ -1,0 +1,19 @@
+<map id="UnitBase&lt; T, NativeType &gt;" name="UnitBase&lt; T, NativeType &gt;">
+<area shape="rect" id="Node000001" title="CRTP base methods for Unit classes." alt="" coords="116,268,315,295"/>
+<area shape="rect" id="Node000002" href="$structDLG4_1_1Units_1_1UnitTag.html" title=" " alt="" coords="5,5,76,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="36,48,31,82,30,122,36,163,52,201,72,224,97,241,152,265,150,270,94,246,68,228,48,204,30,165,25,122,26,82,31,48"/>
+<area shape="rect" id="Node000004" href="$classDLG4_1_1Units_1_1UnitBase.html" title="CRTP base methods for Unit classes." alt="" coords="130,82,330,110"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="89,37,198,79,196,84,87,42"/>
+<area shape="rect" id="Node000003" href="$structDLG4_1_1Units_1_1UnitBase_1_1ScalableProxy.html" title=" " alt="" coords="62,175,214,203"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,213,206,266,202,269,157,216"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="145,159,163,132,197,108,200,113,167,136,150,162"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="116,117,91,125,75,136,72,145,77,155,104,172,101,177,73,158,67,146,71,132,88,120,115,112"/>
+<area shape="rect" id="Node000005" href="$structDLG4_1_1Units_1_1UnitBase_1_1DefaultUnitsProxy.html" title=" " alt="" coords="237,175,377,203"/>
+<area shape="poly" id="edge7_Node000005_Node000004" title=" " alt="" coords="225,125,225,138,229,150,241,163,257,172,254,177,238,167,224,152,219,139,219,125"/>
+<area shape="rect" id="Node000006" href="$structDLG4_1_1Units_1_1UnitBase_1_1NativeProxy.html" title=" " alt="" coords="402,175,503,203"/>
+<area shape="poly" id="edge9_Node000006_Node000004" title=" " alt="" coords="341,112,394,132,422,151,443,173,440,176,418,155,391,136,339,117"/>
+<area shape="poly" id="edge10_Node000001_Node000005" title=" " alt="" coords="285,215,230,269,226,265,282,211"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="293,163,276,136,249,112,252,108,280,132,298,160"/>
+<area shape="poly" id="edge11_Node000001_Node000006" title=" " alt="" coords="427,214,402,231,374,246,336,260,298,270,296,264,334,255,371,241,399,227,424,210"/>
+<area shape="poly" id="edge8_Node000004_Node000006" title=" " alt="" coords="477,162,485,148,486,142,483,136,460,122,423,112,330,101,330,96,424,106,462,117,486,132,491,140,491,149,482,165"/>
+</map>

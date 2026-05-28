@@ -2,7 +2,6 @@ build/**
 html/**
 docs/html/**
 !docs/html/dot*.svg
-public/**
 latex/**
 docs/latex/**
 /share

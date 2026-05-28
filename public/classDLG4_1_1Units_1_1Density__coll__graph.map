@@ -1,0 +1,28 @@
+<map id="Density" name="Density">
+<area shape="rect" id="Node000001" title=" " alt="" coords="262,527,334,555"/>
+<area shape="rect" id="Node000002" href="$classDLG4_1_1Units_1_1UnitBase.html" title=" " alt="" coords="235,268,384,312"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,328,304,377,301,527,295,527,299,377,303,327"/>
+<area shape="rect" id="Node000009" href="$classDLG4_1_1Units_1_1Density.html" title=" " alt="" coords="314,389,386,417"/>
+<area shape="poly" id="edge15_Node000009_Node000002" title=" " alt="" coords="322,327,331,352,346,388,341,390,326,354,317,328"/>
+<area shape="rect" id="Node000003" href="$structDLG4_1_1Units_1_1UnitTag.html" title=" " alt="" coords="5,5,76,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="36,49,30,83,28,123,34,164,41,184,52,201,69,220,90,236,137,260,187,275,235,283,234,288,186,280,135,265,87,241,66,224,48,204,37,186,29,166,23,123,25,82,30,48"/>
+<area shape="rect" id="Node000005" href="$classDLG4_1_1Units_1_1UnitBase.html" title="CRTP base methods for Unit classes." alt="" coords="301,82,500,110"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="91,28,337,79,336,84,90,33"/>
+<area shape="rect" id="Node000004" href="$structDLG4_1_1Units_1_1UnitBase_1_1ScalableProxy.html" title=" " alt="" coords="62,175,256,203"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="193,209,278,265,275,269,190,213"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="315,117,251,136,212,156,179,177,176,172,209,151,250,132,313,112"/>
+<area shape="rect" id="Node000006" href="$structDLG4_1_1Units_1_1UnitBase_1_1ScalableProxy.html" title=" " alt="" coords="280,175,431,203"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="324,120,307,135,305,145,309,154,331,172,327,176,305,158,299,145,303,133,320,116"/>
+<area shape="rect" id="Node000007" href="$structDLG4_1_1Units_1_1UnitBase_1_1DefaultUnitsProxy.html" title=" " alt="" coords="454,175,595,203"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="417,122,440,149,460,162,482,172,480,177,458,167,437,153,413,125"/>
+<area shape="rect" id="Node000008" href="$structDLG4_1_1Units_1_1UnitBase_1_1NativeProxy.html" title=" " alt="" coords="619,175,720,203"/>
+<area shape="poly" id="edge11_Node000008_Node000005" title=" " alt="" coords="516,104,564,115,610,132,639,151,661,173,657,177,636,155,607,136,562,120,515,109"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="353,159,360,133,380,109,384,112,365,135,358,160"/>
+<area shape="poly" id="edge12_Node000002_Node000007" title=" " alt="" coords="483,212,358,269,356,265,481,207"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="510,163,488,136,468,123,446,113,449,108,471,118,492,132,514,159"/>
+<area shape="poly" id="edge13_Node000002_Node000008" title=" " alt="" coords="632,212,547,246,464,267,385,281,384,276,462,262,545,241,630,207"/>
+<area shape="poly" id="edge10_Node000005_Node000008" title=" " alt="" coords="691,162,698,148,695,136,671,126,624,118,500,106,501,101,624,113,672,121,698,132,703,148,696,164"/>
+<area shape="poly" id="edge17_Node000001_Node000009" title=" " alt="" coords="342,432,305,528,300,526,337,431"/>
+<area shape="poly" id="edge14_Node000002_Node000009" title=" " alt="" coords="337,375,315,313,320,312,342,373"/>
+<area shape="poly" id="edge16_Node000009_Node000009" title=" " alt="" coords="402,392,409,396,412,403,404,413,386,416,386,411,401,409,407,402,405,399,400,396"/>
+</map>

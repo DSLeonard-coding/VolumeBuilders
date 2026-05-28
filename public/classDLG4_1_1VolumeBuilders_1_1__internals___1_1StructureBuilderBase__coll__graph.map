@@ -1,0 +1,9 @@
+<map id="StructureBuilderBase&lt; U &gt;" name="StructureBuilderBase&lt; U &gt;">
+<area shape="rect" id="Node000001" title="A type&#45;erased (data shared view) view of a builder or assembly, ie a &quot;structure.&quot;." alt="" coords="134,174,332,201"/>
+<area shape="rect" id="Node000002" href="$classDLG4_1_1Utilities_1_1disableable__shared__from__this.html" title=" " alt="" coords="5,98,250,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,133,216,171,213,175,157,137"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="50,5,205,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="130,66,130,97,125,97,125,66"/>
+<area shape="rect" id="Node000004" href="$classDLG4_1_1VolumeBuilders_1_1__internals___1_1IStructureBuilder.html" title="a non&#45;fluent polymorphic class to access the derived solid&#45;builder from a base reference: This gets u..." alt="" coords="274,98,405,126"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="310,137,253,175,250,171,307,133"/>
+</map>
