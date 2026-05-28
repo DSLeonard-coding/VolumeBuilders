@@ -10,8 +10,8 @@
 namespace DLG4::VolumeBuilders {
     /// @copydoc DLG4::Units::SetGlobalDefaultUnit
     using DLG4::Units::SetGlobalDefaultUnit;
-    /// @copydoc DLG4::Units::Unit3Vec
-    using Length3Vec = DLG4::Units::Unit3Vec;
+    /// @copydoc DLG4::Units::Length3Vec
+    using Length3Vec = DLG4::Units::Length3Vec;
     /// @copydoc DLG4::Units::Unit
     template <class T,class NativeType>
     using Unit = DLG4::Units::UnitBase<T,NativeType>;
@@ -31,7 +31,7 @@ namespace DLG4::VolumeBuilders {
      * @details Stores unit, x, y, z as separate values.
      */
 
-    class ThreeVecDimensioner : public DLG4::Units::Unit3Vec {
+    class ThreeVecDimensioner : public DLG4::Units::Length3Vec {
     public:
         double x, y, z;
         ThreeVecDimensioner() = default;
@@ -40,16 +40,16 @@ namespace DLG4::VolumeBuilders {
 
         ThreeVecDimensioner &operator=(const ThreeVecDimensioner &) = delete;
 
-        ThreeVecDimensioner(Unit3Vec v)
-            : Unit3Vec(v) { Sync(); }
+        ThreeVecDimensioner(Length3Vec v)
+            : Length3Vec(v) { Sync(); }
 
         ThreeVecDimensioner(G4ThreeVector v, const Length &u)
-            : Unit3Vec(v, u) { Sync(); }
+            : Length3Vec(v, u) { Sync(); }
 
         ThreeVecDimensioner(double x, double y, double z, const Length &u)
-            : Unit3Vec(x, y, z, u) { Sync(); }
+            : Length3Vec(x, y, z, u) { Sync(); }
 
-        ThreeVecDimensioner(double x, double y, double z): Unit3Vec(x,y,z,DLG4::Units::Length::native) {
+        ThreeVecDimensioner(double x, double y, double z): Length3Vec(x,y,z,DLG4::Units::Length::native) {
             is_dimensioned_ = false;
             Sync();
         }

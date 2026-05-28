@@ -36,12 +36,12 @@ namespace DLG4::Units {
     class Volume;
     class Density;
     class Angle;
-    class Unit3Vec;
+    class Length3Vec;
     template<typename Dimension>
     using Unit = UnitBase<Dimension, G4double>;
 
-    /// @copydoc DLG4::Units::Unit3Vec
-    using Length3Vec = Unit3Vec;
+    /// @copydoc DLG4::Units::Length3Vec
+    using Length3Vec = Length3Vec;
     class ThreeVecDimensioner;
 
     template<typename T>
@@ -69,7 +69,7 @@ namespace DLG4::Units {
     template<>
     inline G4double global_default_unit<Units::Volume> = CLHEP::mL;
     template<>
-    inline G4double global_default_unit<Units::Unit3Vec> = CLHEP::mm;
+    inline G4double global_default_unit<Units::Length3Vec> = CLHEP::mm;
     template<>
     inline G4double global_default_unit<Units::Angle> = CLHEP::radian;
     /**
@@ -114,9 +114,9 @@ namespace DLG4::Units {
 
             // Assignment operator
             // Evaluator is always a temporary rvalue proxy returned by operator(),
-            // but assingment passes through to the permanent parent.
+            // but assignment passes through to the permanent parent.
             // This allows to block auto x =    because x is an l-value, and we don't
-            // define l-value assignement!
+            // define l-value assignment!
             void operator=(NativeType val) && { parent.NativeValue_ = val * scale; }
             // conversion operator
             operator NativeType() const {
@@ -292,7 +292,7 @@ namespace DLG4::Units {
     //#########################################################################//
     class Length : public UnitBase<Length, G4double> {
         friend UnitBase;
-        friend Unit3Vec;
+        friend Length3Vec;
 
     private:
         explicit Length(double Native)
@@ -306,7 +306,7 @@ namespace DLG4::Units {
 
         Length() { NativeValue_ = GetGlobalDefault().NativeValue_; };
 
-        // Deeclare essentially named singleton factories:
+        // Declare essentially named singleton factories:
         static const Length fermi;
         static const Length angstrom;
         static const Length nm;
@@ -427,15 +427,15 @@ namespace DLG4::Units {
     /**
      * A 3 vector that is scalable with/to Units.
      */
-    class Unit3Vec : public UnitBase<Unit3Vec, G4ThreeVector> {
-        //    class Unit3Vec : public Length {
+    class Length3Vec : public UnitBase<Length3Vec, G4ThreeVector> {
+        //    class Length3Vec : public Length {
         friend UnitBase<Length, G4ThreeVector>;
         //        friend Length;
     private:
         //obj.Native.x() doesn't work without casting obj.Native to the vector first.
         // This proxy wraps the casts to give us direct .Native.x() methods.'
         struct NativeVectorProxy {
-            Unit3Vec &parent;
+            Length3Vec &parent;
 
             void operator=(const G4ThreeVector &val) { parent.NativeValue_ = val; }
 
@@ -464,28 +464,28 @@ namespace DLG4::Units {
         // shadow Scalable Proxy to scale with a length, not a vector
         ScalableProxy<Length> InUnits{*this};
 
-        Unit3Vec()
+        Length3Vec()
             : Native{*this} {
         }
 
         //Copy Constructor
-        Unit3Vec(const Unit3Vec &other)
+        Length3Vec(const Length3Vec &other)
             : UnitBase(other),
-              default_length_(other.default_length_),
               Native{*this},
-              InUnits{*this} {
+              InUnits{*this},
+              default_length_(other.default_length_) {
         }
 
         // Move Constructor
-        Unit3Vec(Unit3Vec &&other) noexcept
+        Length3Vec(Length3Vec &&other) noexcept
             : UnitBase(std::move(other)),
-              default_length_(std::move(other.default_length_)),
               Native{*this},
-              InUnits{*this} {
+              InUnits{*this},
+              default_length_(std::move(other.default_length_)) {
         }
 
         // Copy Assignment Operator
-        Unit3Vec &operator=(const Unit3Vec &other) {
+        Length3Vec &operator=(const Length3Vec &other) {
             if (this != &other) {
                 UnitBase::operator=(other); // Safely copies the unified base NativeValue_
                 this->default_length_ = other.default_length_;
@@ -494,7 +494,7 @@ namespace DLG4::Units {
         }
 
         // Move Assignment Operator
-        Unit3Vec &operator=(Unit3Vec &&other) noexcept {
+        Length3Vec &operator=(Length3Vec &&other) noexcept {
             if (this != &other) {
                 UnitBase::operator=(std::move(other)); // Safely moves the unified base NativeValue_
                 this->default_length_ = std::move(other.default_length_);
@@ -502,56 +502,56 @@ namespace DLG4::Units {
             return *this;
         }
 
-        Unit3Vec(double x, double y, double z, const Length &u) {
-            u.CheckUnit("Unit3Vec(x,y,z,u)");
+        Length3Vec(double x, double y, double z, const Length &u) {
+            u.CheckUnit("Length3Vec(x,y,z,u)");
             NativeValue_ = G4ThreeVector(x, y, z) * u.NativeValue_.value();
         }
 
-        Unit3Vec(const G4ThreeVector &v, const Length &u) {
-            u.CheckUnit("Unit3Vec(x,y,z,u)");
+        Length3Vec(const G4ThreeVector &v, const Length &u) {
+            u.CheckUnit("Length3Vec(x,y,z,u)");
             NativeValue_ = v * u.NativeValue_.value();
         }
 
-        static Unit3Vec FromNative(const G4ThreeVector &v) {
-            return Unit3Vec(v, Length::native);
+        static Length3Vec FromNative(const G4ThreeVector &v) {
+            return Length3Vec(v, Length::native);
         }
 
 
         // components as Length types...
         Length x() const {
-            CheckValue("Unit3Vec");
+            CheckValue("Length3Vec");
             return Length::FromNative(NativeValue_.value().x());
         }
 
         Length y() const {
-            CheckValue("Unit3Vec");
+            CheckValue("Length3Vec");
             return Length::FromNative(NativeValue_.value().y());
         }
 
         Length z() const {
-            CheckValue("Unit3Vec");
+            CheckValue("Length3Vec");
             return Length::FromNative(NativeValue_.value().z());
         }
 
         void x(const Length &val) {
-            val.CheckValue("Unit3Vec, x");
+            val.CheckValue("Length3Vec, x");
             EnsureInternalVec().setX(val.NativeValue_.value());
         }
 
         void y(const Length &val) {
-            val.CheckValue("Unit3Vec, x");
+            val.CheckValue("Length3Vec, x");
             EnsureInternalVec().setY(val.NativeValue_.value());
         }
 
         void z(const Length &val) {
-            val.CheckValue("Unit3Vec, x");
+            val.CheckValue("Length3Vec, x");
             EnsureInternalVec().setZ(val.NativeValue_.value());
         }
 
-        Unit3Vec(const Length &x, const Length &y, const Length &z) {
-            x.CheckValue("Unit3Vec");
-            y.CheckValue("Unit3Vec");
-            z.CheckValue("Unit3Vec");
+        Length3Vec(const Length &x, const Length &y, const Length &z) {
+            x.CheckValue("Length3Vec");
+            y.CheckValue("Length3Vec");
+            z.CheckValue("Length3Vec");
             NativeValue_ = G4ThreeVector(x.NativeValue_.value(), y.NativeValue_.value(), z.NativeValue_.value());
         }
 
@@ -559,7 +559,7 @@ namespace DLG4::Units {
         Length default_length_{Length::native};
 
     private:
-        Unit3Vec(G4double value) {
+        Length3Vec(G4double value) {
         }
 
         // Helper to ensure the optional is initialized before we write to it
@@ -635,12 +635,12 @@ namespace DLG4::Units {
     //********************************************************************//
 
 
-    // Mutliplication and division of value and unit create Unit.
+    // Multiplication and division of value and unit create Unit.
     // Which one is the Unit?
     template<typename T, typename U>
     using ResultType = std::conditional_t<std::is_base_of_v<UnitTag, T>, T, U>;
     template<typename T>
-    using NativeType = std::conditional_t<std::is_base_of_v<Unit3Vec, T>, G4ThreeVector,
+    using NativeType = std::conditional_t<std::is_base_of_v<Length3Vec, T>, G4ThreeVector,
         std::conditional_t<std::is_base_of_v<UnitTag, T>, G4double,
             T> >;
 
@@ -675,7 +675,6 @@ namespace DLG4::Units {
 
 
     using UnitlessG4Transform3D = G4Transform3D;
-    using Length3Vec = Unit3Vec;
 
     template<typename T, typename = void>
     struct is_valid_expr : std::false_type {
@@ -692,6 +691,7 @@ namespace DLG4::Units {
     //    Uncomment below for testing:
     // class Test {
     //     void testmethod(const Length &u) const {
+    //         double x = (5.0*Length::mm).Native;
     //         std::stringstream s {"5.0"};
     //         Length in;
     //         s >> in.InUnits(Length::mm);
@@ -737,6 +737,13 @@ namespace DLG4::Units {
     //         })>, "Test Failed: cannot add Length to double");
     //      }
     //  };
+    class MoreTest {
+        void testmethod() {
+            Length x;
+            x.Native = 5.0;
+        }
+    };
+
 };
 
 #endif //DLG4MODUSIM_DLG4UNITS_HH
