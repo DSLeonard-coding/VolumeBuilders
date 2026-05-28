@@ -1,0 +1,72 @@
+/**
+* @file
+* Created by @author Douglas S. Leonard on @date 7/12/25.  All rights Reserved
+* See related files for license, if any is provided.
+* 
+* @brief
+*
+*/
+//HexPart GeoModule
+#include <GeoModules/GeoModules.hh>
+#define INCLUDE_GEOMODULE_RECIPES
+#include "HexPartGeoModule.inc"
+#undef INCLUDE_GEOMODULE_RECIPES
+
+#include "DetectorConstruction_includes.hh" // common includes
+#include <VolumeBuilders.hh>
+
+
+namespace VB = DLG4::VolumeBuilders; // Geometry builder helpers.
+
+void HexPartGeoModule::Construct(GeoModulesContextPtr context) {
+    static bool firstcall = true;
+    if (!firstcall) {
+        // only run once
+        return;
+    }
+    firstcall = false;
+
+    //make a dedicated sample_material for vertex generation:
+    // Density in materials is 1.14, but internet :) says 1.18 to 1.19 for cast acrylic.  Should weigh it really:
+    G4Material *sample_mat = VBHelpers::CopyMaterial("copper", "sample_mat");
+    G4cout << "now ConstructArrayHexPart()\n" << G4endl;
+
+    G4double sample_thickness_mm = 50;
+    if (!(context->GetExtraOpt("hex_insert_mm") >> sample_thickness_mm)) {
+        //else set default but complain
+        // Echo command instructions:
+        sample_thickness_mm = 50.;
+        G4cout << "Use:" << G4endl;
+        G4cout << "    /detGeometry/opt \"hex_insert_mm\" " << G4endl;
+        G4cout << "    to set thickness of hex shield insert" << G4endl;
+        G4cout << "Assuming default value of:" << 50 << false << G4endl;
+    }
+
+    //  Copper  hex:  //////////////////////
+    VB::RZPlane p; // just for clarity and temps, since we use the component setting method here:
+    auto hex_filler = VB::CreatePolyhedraBuilder(
+                          "hex_filler",
+                          6,
+                          30.) // start at 30 deg
+                      ->SetVisibility(true)
+                      ->SetMaterial(sample_mat)
+                      ->SetColor(0.8, 0.45, 0.45, 1)
+                      ->ForceSolid(true)
+                      ->SetDefaultUnit(VB::Length::mm)
+            //@formatter:off
+              ->AddPlane(p.IR = 0,  p.OR = 110.0 / 2.0, p.z = 0)
+              ->AddPlane(p.IR,      p.OR,               p.z += sample_thickness_mm);
+
+    auto filler_id = VB::CreatePolyconeBuilder("filler_cu_id") // will be unioned to hex_filler.
+                ->AddPlane(p.IR = 0,    p.OR = 85 / 2.0,    p.z = -0.1)
+                ->AddPlane(p.IR,        p.OR,               p.z += sample_thickness_mm+0.1);
+    //@formatter:on
+
+    hex_filler->AddSubtraction(filler_id)
+              ->SetBooleanName("hex_insert");
+
+
+    hex_filler
+        ->SetMother(context->GetWorldVolume())
+        ->PlaceAndFork();
+}
