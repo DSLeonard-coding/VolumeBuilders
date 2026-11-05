@@ -1,10 +1,9 @@
-#CupSimNoClean.cmake D.S.Leonard 2026
+#CupSimExternalBuild.cmake D.S.Leonard 2026
 #
 #  Builds cupsim if it doesn't exist, but does not clean it on a Clion cache rebuild.
 #  Libraries are made in place.
-#  Adds an explicit clean-externals target.
+#  Adds an explicit clean-CUPSim and CUPSim targets.
 #
-#This
 
 # Set the actual file paths FIRST (Crucial for add_custom_command syntax) ---
 set(MCOBJS_SO "${MCObjs_path}/build/libMCObjs.so")
@@ -39,6 +38,7 @@ add_custom_command(
         -DMCObjs_INCLUDE_DIR:PATH="${MCObjs_path}"
         "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"
         "-DCMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}"
+        -DCMAKE_CXX_FLAGS="-I${MCObjs_path}"
         COMMAND ${CMAKE_COMMAND} --build "${CupSim_path}/build" -j2
         COMMENT "Building CupSim using ROOT at ${ROOT_DIR_PATH}..."
         VERBATIM
@@ -59,20 +59,23 @@ set_target_properties(CupSimL PROPERTIES
 )
 
 # Create the Glue Target for build dependency ---
-add_custom_target(Externals DEPENDS "${MCOBJS_SO}" "${CUPSIM_SO}")
+add_custom_target(CUPSim DEPENDS "${MCOBJS_SO}" "${CUPSIM_SO}")
 
-# Initialize or Attach to the Global clean-externals target ---
-if(NOT TARGET clean-externals)
-    add_custom_target(clean-externals COMMENT "Global Clean for External Libs")
+# Initialize or Attach to the Global clean-CUPSim target ---
+if(NOT TARGET clean-CUPSim)
+    add_custom_target(clean-CUPSim COMMENT "Global Clean for External Libs")
 endif()
 
 add_custom_command(
-        TARGET clean-externals POST_BUILD
-        COMMAND ${CMAKE_COMMAND} --build "${MCObjs_path}/build" --target clean
-        COMMAND ${CMAKE_COMMAND} --build "${CupSim_path}/build" --target clean
-        COMMENT "Adding CupSim and MCObjs to the global clean-externals task"
+        TARGET clean-CUPSim POST_BUILD
+#      Do a full cache clear
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${MCObjs_path}/build"
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${CupSim_path}/build"
+#        COMMAND ${CMAKE_COMMAND} --build "${MCObjs_path}/build" --target clean
+#        COMMAND ${CMAKE_COMMAND} --build "${CupSim_path}/build" --target clean
+        COMMENT "Adding CupSim and MCObjs to the global clean-CUPSim task"
 )
 
-add_dependencies(MCObjs Externals)
-add_dependencies(CupSimL Externals)
+add_dependencies(MCObjs CUPSim)
+add_dependencies(CupSimL CUPSim)
 
