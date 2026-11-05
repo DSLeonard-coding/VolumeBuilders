@@ -3,6 +3,11 @@
 #   CUPSIM
 #-----------------------------------------------------------------------------#
 #Make sure these use absolute paths
+# Ensure CupSimL links against the modern Geant4 imported targets cleanly,
+# which automatically brings in all modular physics components without any hardcoded paths:
+# Ensure CupSimL links against the modern Geant4 imported targets cleanly,
+# which automatically brings in all modular physics components without any hardcoded paths:
+
 add_subdirectory(${MCObjs_path} MCObjs-build)
 
 set(MCObjs "Exist!" CACHE INTERNAL "")
@@ -16,3 +21,4 @@ target_include_directories(CupSimL INTERFACE ${CupSim_path})
 
 set_target_properties(MCObjs PROPERTIES INSTALL_RPATH "${CMAKE_BINARY_DIR}/MCObjs-build")
 set_target_properties(CupSimL PROPERTIES INSTALL_RPATH "${CMAKE_BINARY_DIR}/CupSim-build")
+
