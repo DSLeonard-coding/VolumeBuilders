@@ -189,6 +189,9 @@ namespace DLG4::VolumeBuilders::_internals_ {
             //if this matters, something is already very wrong.  But it can help unmask that.
         }
 
+        /// Not moveable.
+        Linkable(Linkable&&) = delete;
+
         /// Copy constructor does deep copy, not link
         /// This is safest and default
         Linkable(const Linkable<T> &other) :
