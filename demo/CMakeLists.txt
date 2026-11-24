@@ -20,11 +20,24 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #-----------------------------------------------------------------------------#
+#CPM package management
+#To use this in your code, copy only the CPM folder from www.github.com/DSLeonard-coding/DSLeonard-cmake
+# into your cmake/ directory. If you use the rest, it's better to pull it in with dsl_get_repo
+# so you can get updates.
+#-----------------------------------------------------------------------------#
+include(cmake/DSLGetRepos/DSLGetRepo.cmake)
+#-----------------------------------------------------------------------------#
+#Configure cmake helpers
+#-----------------------------------------------------------------------------#
+# Get the helpers.
+dsl_get_repo( DSLeonard-cmake https://github.com/DSLeonard-coding/DSLeonard-cmake master)
+set(DSL_CMAKE_PATH "${DSLeonard-cmake_SOURCE_DIR}/cmake/DSL")
+
+#-----------------------------------------------------------------------------#
 #Configure cmake helpers
 #-----------------------------------------------------------------------------#
 set(SETUP_FILE "vb_user_setup.sh")
 set(SETUP_SCRIPT "$ENV{HOME}/${SETUP_FILE}")
-set(DSL_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/DSL/")
 
 #-----------------------------------------------------------------------------#
 #Include helpers and ROOT/Geant builders

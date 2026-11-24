@@ -16,6 +16,22 @@ cmake_minimum_required(VERSION 3.15)
 # Define a project for this sub-component
 project(VolumeBuilders LANGUAGES CXX)
 
+#-----------------------------------------------------------------------------#
+#CPM package management
+#To use this in your code, copy only the CPM folder from www.github.com/DSLeonard-coding/DSLeonard-cmake
+# into your cmake/ directory. If you use the rest, it's better to pull it in with dsl_get_repo
+# so you can get updates.
+#-----------------------------------------------------------------------------#
+include(cmake/DSLGetRepos/DSLGetRepo.cmake)
+
+#-----------------------------------------------------------------------------#
+#Configure cmake helpers
+#-----------------------------------------------------------------------------#
+# Get the helpers.
+dsl_get_repo( DSLeonard-cmake https://github.com/DSLeonard-coding/DSLeonard-cmake master)
+set(DSL_CMAKE_PATH "${DSLeonard-cmake_SOURCE_DIR}/cmake/DSL/")
+
+
 # Set C++ standard consistent with your main project
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -24,7 +40,6 @@ if(NOT SETUP_FILE)
 set(SETUP_FILE "vb_user_setup.sh")
 endif()
 set(SETUP_SCRIPT "$ENV{HOME}/${SETUP_FILE}")
-set(DSL_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/DSL/")
 include("${DSL_CMAKE_PATH}/utils/Setup_Paths.cmake")
 include("${DSL_CMAKE_PATH}/cern/Geant4_Target.cmake")
 include("${DSL_CMAKE_PATH}/cern/ROOT_Target.cmake")

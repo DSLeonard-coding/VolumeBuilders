@@ -17,7 +17,7 @@ source ${GEANT4_PATH}/bin/geant4.sh  # this should work on standard geant instal
 export ASAN_OPTIONS=detect_leaks=1:color=always
 export ROOT_DIR=${ROOT_PATH}
 export ROOTSYS=${ROOT_DIR}
-export GEANT4_PATH=${Geant4_DIR}
+#export GEANT4_PATH=${Geant4_DIR}
 
 #Extra ROOT setup
 source ${ROOT_PATH}/bin/thisroot.sh
