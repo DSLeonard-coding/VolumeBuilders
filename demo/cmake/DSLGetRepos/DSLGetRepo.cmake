@@ -164,10 +164,14 @@ function(_dsl_repo_impl NAME REPO TAG DOWNLOAD_ONLY_MODE)
     get_filename_component(home   "${home}"   ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
     get_filename_component(wanted "${wanted}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
+    get_filename_component(_home_parent "${home}" DIRECTORY)
+    get_filename_component(_home_name   "${home}" NAME)
+    set(_lockfile "${_home_parent}/.${_home_name}.lock")
+
     # serialize across processes (parallel CLion profiles); released when we return
-    file(LOCK "${home}.lock" GUARD FUNCTION TIMEOUT 300 RESULT_VARIABLE locked)
+    file(LOCK "${_lockfile}" GUARD FUNCTION TIMEOUT 300 RESULT_VARIABLE locked)
     if(NOT locked EQUAL 0)
-        message(FATAL_ERROR "dsl_get_repo: timed out waiting for ${home}.lock")
+        message(FATAL_ERROR "dsl_get_repo: timed out waiting for ${_lockfile}")
     endif()
 
     foreach(arg IN LISTS _dgr_UNPARSED_ARGUMENTS)
@@ -223,6 +227,10 @@ function(_dsl_repo_impl NAME REPO TAG DOWNLOAD_ONLY_MODE)
                 SOURCE_DIR "${home}"
                 DOWNLOAD_ONLY ${DOWNLOAD_ONLY_MODE}
                 ${_dgr_UNPARSED_ARGUMENTS})
+
+        if(EXISTS "${home}/.developing")
+            message(WARNING "The override is set by the existence of ${home}/.developing\n Delete it to allow auto update." )
+        endif()
 
         if(DOWNLOAD_ONLY_MODE AND first_registration)
             set_property(GLOBAL PROPERTY DGR_FETCHED_${NAME} TRUE)
