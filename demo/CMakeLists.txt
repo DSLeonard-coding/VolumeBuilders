@@ -33,6 +33,7 @@ include(cmake/DSLGetRepos/DSLGetRepo.cmake)
 dsl_get_repo( DSLeonard-cmake https://github.com/DSLeonard-coding/DSLeonard-cmake master)
 set(DSL_CMAKE_PATH "${DSLeonard-cmake_SOURCE_DIR}/cmake/DSL")
 
+
 #-----------------------------------------------------------------------------#
 #Configure cmake helpers
 #-----------------------------------------------------------------------------#
@@ -50,6 +51,7 @@ include("${DSL_CMAKE_PATH}/utils/Setup_Paths.cmake")
 #-----------------------------------------------------------------------------#
 #Include the GeoModules source library config
 #-----------------------------------------------------------------------------#
+dsl_get_repo( DLG4GeoModules https://github.com/DSLeonard-coding/DLG4GeoModules master DIR "GeoModules")
 include("../GeoModules/GeoModulesConfig.cmake")
 
 

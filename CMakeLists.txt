@@ -31,6 +31,11 @@ include(cmake/DSLGetRepos/DSLGetRepo.cmake)
 dsl_get_repo( DSLeonard-cmake https://github.com/DSLeonard-coding/DSLeonard-cmake master)
 set(DSL_CMAKE_PATH "${DSLeonard-cmake_SOURCE_DIR}/cmake/DSL/")
 
+dsl_get_repo( DLG4Units https://github.com/DSLeonard-coding/DLG4Units master DIR "deps/DLG4Units")
+
+dsl_get_repo( DLG4GeoModules https://github.com/DSLeonard-coding/DLG4GeoModules master DIR "GeoModules")
+
+
 
 # Set C++ standard consistent with your main project
 set(CMAKE_CXX_STANDARD 17)
