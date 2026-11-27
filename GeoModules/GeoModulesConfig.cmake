@@ -23,13 +23,11 @@ if(NOT script_res EQUAL 0)
 endif()
 
 #Re-trigger the code injection if any modules change
-file(GLOB_RECURSE _ FOLLOW_SYMLINKS CONFIGURE_DEPENDS
+file(GLOB_RECURSE inc_files FOLLOW_SYMLINKS CONFIGURE_DEPENDS
         ${CMAKE_SOURCE_DIR}/src/*.inc
         ${CMAKE_SOURCE_DIR}/include/*.inc
 )
-file(GLOB _ FOLLOW_SYMLINKS CONFIGURE_DEPENDS
-        ${src}/linked/*
-)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${inc_files})
 
 file(GLOB_RECURSE GEOMODULES_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/src/*.cc
