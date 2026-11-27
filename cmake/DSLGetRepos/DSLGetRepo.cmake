@@ -137,7 +137,7 @@ function(_dsl_repo_impl NAME REPO TAG DOWNLOAD_ONLY_MODE)
     if(DEFINED CACHE{DGR_REPOS_DIR})
         get_filename_component(store "$CACHE{DGR_REPOS_DIR}" ABSOLUTE BASE_DIR "${CMAKE_SOURCE_DIR}")
     else()
-        set(store "${CMAKE_SOURCE_DIR}/dependencies")
+        set(store "${CMAKE_SOURCE_DIR}/deps")
     endif()
 
     # where the real source lives: user override, else the one top-level store

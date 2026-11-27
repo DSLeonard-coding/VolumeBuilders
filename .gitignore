@@ -6,7 +6,7 @@ public/**
 latex/**
 docs/latex/**
 /share
-
+.developing
 
 # Ignore other user-specific or temporary files
 **/.idea/workspace.xml
@@ -25,3 +25,4 @@ docs/latex/**
 *.swp
 geotree.txt
 build/
+/GeoModules
