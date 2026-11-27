@@ -14,7 +14,10 @@
 
 sync:   1. add packages from BUILD/cpm-package-lock.cmake that are missing from package-sources.cmake
         2. lock every package that is _then_ in sources but not in the lock
-        Existing sources and lock entries are never touched.
+        Existing sources and lock entries are never touched, with one exception: a "stub"
+        sources entry (no GIT_REPOSITORY, e.g. created while a CPM_<NAME>_SOURCE override was
+        active) is replaced as soon as a build lock entry with a real repo shows up.
+        Stubs are never written to the lock file.
 
 update: First runs sync, then updates locks in specified package (or --all) in package-lock.cmake
         to the latest commit on the tip of the branch specified in package-sources.cmake.
@@ -69,6 +72,11 @@ def extract_field(block, key):
     return match.group(1) if match else None
 
 
+def is_stub(block):
+    """A stub has no repo to lock (override or local source). Replaceable in sources, never locked."""
+    return not extract_field(block, "GIT_REPOSITORY")
+
+
 def resolve_ref(repo_url, git_ref):
     if COMMIT_SHA_RE.match(git_ref):
         return git_ref
@@ -99,12 +107,20 @@ def resolve_ref(repo_url, git_ref):
 
 
 def lock_block(package_name, source_block, previous_lock_block):
-    """Sources block -> lock block with GIT_TAG '<sha> # <ref>'."""
+    """Sources block -> lock block with GIT_TAG '<sha> # <ref>'.
+
+    Returns previous_lock_block (possibly None) when the sources entry is a stub, so an
+    existing good pin is never lost and a stub is never written to the lock.
+    """
     repo_url = extract_field(source_block, "GIT_REPOSITORY")
     git_ref = extract_field(source_block, "GIT_TAG")
     if not repo_url or not git_ref:
-        print(f"  {package_name}: no GIT_REPOSITORY/GIT_TAG, copied as is")
-        return source_block
+        print(
+            f"  {package_name}: no GIT_REPOSITORY/GIT_TAG in sources, not locked "
+            f"(filled in automatically when a configure without the override runs, "
+            f"or edit package-sources.cmake)"
+        )
+        return previous_lock_block
     resolved_sha = resolve_ref(repo_url, git_ref)
     previous_sha = extract_field(previous_lock_block, "GIT_TAG") if previous_lock_block else None
     if resolved_sha != previous_sha:
@@ -199,13 +215,20 @@ def main():
     source_entries = parse_declarations(sources_text)
     lock_entries = parse_declarations(read_text(lock_path))
 
-    # 1. merge new packages into sources (existing entries win)
+    # 1. merge new packages into sources. Real entries win; stubs are replaceable.
     for package_name, block in build_lock_entries.items():
-        if package_name in source_entries:
-            continue
+        existing = source_entries.get(package_name)
+        if existing is not None and not is_stub(existing):
+            continue  # real entry: user's, never touched
+        if existing is not None and is_stub(block):
+            continue  # stub replacing stub: nothing to gain
+        if existing is not None:
+            sources_text = sources_text.replace(existing, block)
+            print(f"  {package_name}: stub in sources replaced with real entry")
+        else:
+            sources_text = (sources_text or SOURCES_HEADER).rstrip("\n") + f"\n\n# {package_name}\n{block}\n"
+            print(f"  {package_name}: added to sources ({extract_field(block, 'GIT_TAG')})")
         source_entries[package_name] = block
-        sources_text = (sources_text or SOURCES_HEADER).rstrip("\n") + f"\n\n# {package_name}\n{block}\n"
-        print(f"  {package_name}: added to sources ({extract_field(block, 'GIT_TAG')})")
 
     # prune packages that left the CMake project
     all_known_packages = list(dict.fromkeys([*source_entries, *lock_entries]))
@@ -235,6 +258,8 @@ def main():
             block = lock_block(package_name, source_entries[package_name], lock_entries.get(package_name))
         else:
             block = lock_entries[package_name]  # already locked: untouched
+        if block is None:
+            continue  # stub with no prior pin: leave it out of the lock
         output_lines.append(f"# {package_name}\n{block}\n\n")
 
     any_change = False
