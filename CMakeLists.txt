@@ -35,6 +35,7 @@ dsl_get_repo( DLG4Units https://github.com/DSLeonard-coding/DLG4Units master DIR
 
 dsl_get_repo( DLG4GeoModules https://github.com/DSLeonard-coding/DLG4GeoModules master DIR "GeoModules")
 
+dsl_get_repo( VBDemo https://github.com/DSLeonard-coding/VBDemo master DIR "demo")
 
 
 # Set C++ standard consistent with your main project

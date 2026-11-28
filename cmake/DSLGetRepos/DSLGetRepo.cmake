@@ -33,7 +33,6 @@ function(_dgr_strip_all_download_only)
     endforeach()
 endfunction()
 
-# must come after the definition (a function can't be called before it is defined)
 _dgr_strip_all_download_only()
 
 # Sets ${result} (in the caller) to TRUE if `dir` is a working git clone, else FALSE.
@@ -117,7 +116,7 @@ function(make_symlink link target)
 endfunction()
 
 
-# dsl_repo_impl(NAME REPO TAG DOWNLOAD_ONLY_MODE [DIR] CPM_ARGS)
+# _dsl_repo_impl(NAME REPO TAG DOWNLOAD_ONLY_MODE [DIR] CPM_ARGS)
 #
 # The real source (the "home") is always ${DGR_REPOS_DIR}/${NAME}, or the user's
 # CPM_<NAME>_SOURCE if set.  It is returned in ${NAME}_SOURCE_DIR.
@@ -127,10 +126,19 @@ endfunction()
 # it becomes a symlink to the home.  Relative paths are relative to the calling
 # CMakeLists.txt (CMAKE_CURRENT_SOURCE_DIR).
 #
+# Two phases:
+#  1. FETCH (locked): always a DOWNLOAD_ONLY clone/update of ${home}, plus symlink and
+#     .gitignore upkeep.  Nothing here recurses into other dsl_* calls, so the lock
+#     can never be re-entered.
+#  2. ADD (unlocked, dsl_add_repo only): registered with CPM as ${NAME}_BUILD pointing
+#     at the directory CPM actually fetched.  add_subdirectory recurses into the
+#     dependency's own dsl_* calls here, with no lock held, so circular dependencies
+#     work: CPM registers the name before add_subdirectory, so the cycle stops at its
+#     "already added" return.
+#
 # Get-then-add: CPM treats a DOWNLOAD_ONLY package as already added, so a later add
-# under the same name would never call add_subdirectory.  When NAME was previously
-# fetched by dsl_get_repo, the add is registered with CPM as ${NAME}_BUILD, pointing
-# at the already-fetched home.  The URL/tag are not used for that call.
+# under the same name would never call add_subdirectory.  Hence the ${NAME}_BUILD
+# registration.  The URL/tag are not used for that call.
 # OPTIONS: only dsl_add_repo applies them, and the first add wins.
 function(_dsl_repo_impl NAME REPO TAG DOWNLOAD_ONLY_MODE)
     # where real sources live: only a cache value (-DDGR_REPOS_DIR=...) can move it
@@ -164,16 +172,6 @@ function(_dsl_repo_impl NAME REPO TAG DOWNLOAD_ONLY_MODE)
     get_filename_component(home   "${home}"   ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
     get_filename_component(wanted "${wanted}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
-    get_filename_component(_home_parent "${home}" DIRECTORY)
-    get_filename_component(_home_name   "${home}" NAME)
-    set(_lockfile "${_home_parent}/.${_home_name}.lock")
-
-    # serialize across processes (parallel CLion profiles); released when we return
-    file(LOCK "${_lockfile}" GUARD FUNCTION TIMEOUT 300 RESULT_VARIABLE locked)
-    if(NOT locked EQUAL 0)
-        message(FATAL_ERROR "dsl_get_repo: timed out waiting for ${_lockfile}")
-    endif()
-
     foreach(arg IN LISTS _dgr_UNPARSED_ARGUMENTS)
         if(arg STREQUAL "SOURCE_DIR" OR arg STREQUAL "DOWNLOAD_ONLY"
                 OR arg STREQUAL "NAME" OR arg STREQUAL "GIT_REPOSITORY"
@@ -183,58 +181,60 @@ function(_dsl_repo_impl NAME REPO TAG DOWNLOAD_ONLY_MODE)
         endif()
     endforeach()
 
-    # Was this name already fetched by a dsl_get_repo call?  Then an add must use the
-    # ${NAME}_BUILD registration, or CPM would see NAME as already added.
-    get_property(fetched GLOBAL PROPERTY DGR_FETCHED_${NAME})
-    if(NOT DOWNLOAD_ONLY_MODE AND fetched)
-        set(pkg "${NAME}_BUILD")
-        set(CPM_PACKAGE_LOCK_ENABLED FALSE)
-        CPMAddPackage(
-                NAME ${pkg}
-                SOURCE_DIR "${home}"
-                DOWNLOAD_ONLY NO
-                ${_dgr_UNPARSED_ARGUMENTS})
+    # ------------------------------------------------------------------
+    # Phase 1: FETCH, under the cross-process lock
+    # ------------------------------------------------------------------
+    get_filename_component(_home_parent "${home}" DIRECTORY)
+    get_filename_component(_home_name   "${home}" NAME)
+    set(_lockfile "${_home_parent}/.${_home_name}.lock")
+
+    # serialize across processes (parallel CLion profiles).  GUARD FUNCTION is a safety
+    # net for the FATAL_ERROR paths; the normal path releases explicitly below.
+    file(LOCK "${_lockfile}" GUARD FUNCTION TIMEOUT 300 RESULT_VARIABLE locked)
+    if(NOT locked EQUAL 0)
+        message(FATAL_ERROR "dsl_get_repo: timed out waiting for ${_lockfile}")
+    endif()
+
+    if(overridden OR EXISTS "${home}/.developing")
+        # user-supplied or in-development source: CPM must not touch it
+        set(CPM_${NAME}_SOURCE "${home}")
     else()
-        set(pkg "${NAME}")
-
-        if(overridden OR EXISTS "${home}/.developing")
-            # user-supplied or in-development source: CPM must not touch it
-            set(CPM_${NAME}_SOURCE "${home}")
-        else()
-            # anything else CPM manages, so it updates when the locks (shas) say to
-            is_git_repo("${home}" valid_clone)
-            if(NOT valid_clone)
-                # folder missing or unusable: drop this build dir's stale record, then clone
-                string(TOLOWER "${NAME}" lower_name)
-                file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/_deps/${lower_name}-subbuild")
-            endif()
+        # anything else CPM manages, so it updates when the locks (shas) say to
+        is_git_repo("${home}" valid_clone)
+        if(NOT valid_clone)
+            # folder missing or unusable: drop this build dir's stale record, then clone
+            string(TOLOWER "${NAME}" lower_name)
+            file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/_deps/${lower_name}-subbuild")
         endif()
+    endif()
 
-        # The declaration replaces this call's args, so put the call's mode back
-        if(NOT "${CPM_DECLARATION_${NAME}}" STREQUAL "")
-            list(APPEND CPM_DECLARATION_${NAME} DOWNLOAD_ONLY ${DOWNLOAD_ONLY_MODE})
-        endif()
+    # The declaration replaces this call's args, so put the fetch mode back.
+    # The fetch is always DOWNLOAD_ONLY, whether the caller is get or add.
+    if(NOT "${CPM_DECLARATION_${NAME}}" STREQUAL "")
+        list(APPEND CPM_DECLARATION_${NAME} DOWNLOAD_ONLY YES)
+    endif()
 
-        set(first_registration FALSE)
-        if(NOT "${NAME}" IN_LIST CPM_PACKAGES)
-            set(first_registration TRUE)
-        endif()
+    set(first_registration FALSE)
+    if(NOT "${NAME}" IN_LIST CPM_PACKAGES)
+        set(first_registration TRUE)
+    endif()
 
-        CPMAddPackage(
-                NAME ${NAME}
-                GIT_REPOSITORY ${REPO}
-                GIT_TAG ${TAG}
-                SOURCE_DIR "${home}"
-                DOWNLOAD_ONLY ${DOWNLOAD_ONLY_MODE}
-                ${_dgr_UNPARSED_ARGUMENTS})
+    CPMAddPackage(
+            NAME ${NAME}
+            GIT_REPOSITORY ${REPO}
+            GIT_TAG ${TAG}
+            SOURCE_DIR "${home}"
+            DOWNLOAD_ONLY YES
+            ${_dgr_UNPARSED_ARGUMENTS})
 
-        if(EXISTS "${home}/.developing")
-            message(WARNING "The override is set by the existence of ${home}/.developing\n Delete it to allow auto update." )
-        endif()
+    if(EXISTS "${home}/.developing")
+        message(WARNING "The override is set by the existence of ${home}/.developing\n Delete it to allow auto update." )
+    endif()
 
-        if(DOWNLOAD_ONLY_MODE AND first_registration)
-            set_property(GLOBAL PROPERTY DGR_FETCHED_${NAME} TRUE)
-        endif()
+    # Only claim the name if we registered it.  If someone else (a plain CPMAddPackage)
+    # got there first, the fetch above was a no-op and the name is not ours to re-add.
+    if(first_registration)
+        set_property(GLOBAL PROPERTY DGR_FETCHED_${NAME} TRUE)
     endif()
 
     if(NOT overridden)
@@ -246,10 +246,57 @@ function(_dsl_repo_impl NAME REPO TAG DOWNLOAD_ONLY_MODE)
         git_ignore_entry("${wanted}")
     endif()
 
-    # CPMAddPackage's results landed in this function's scope (under ${pkg});
-    # pass them on to the caller under the plain name
+    # Release now, before anything can recurse.
+    file(LOCK "${_lockfile}" RELEASE)
+
+    # ------------------------------------------------------------------
+    # Phase 2: ADD, no lock held
+    # ------------------------------------------------------------------
+    set(pkg "${NAME}")
+    get_property(fetched GLOBAL PROPERTY DGR_FETCHED_${NAME})
+    if(NOT DOWNLOAD_ONLY_MODE AND fetched)
+        # Add what CPM actually fetched (env override, lock declaration, local package)
+        set(src "${${NAME}_SOURCE_DIR}")
+        if(src STREQUAL "" OR NOT IS_DIRECTORY "${src}")
+            message(WARNING "dsl_add_repo: nothing to add for ${NAME} "
+                    "(no source dir; found via find_package?)")
+        else()
+            set(pkg "${NAME}_BUILD")
+            set(CPM_PACKAGE_LOCK_ENABLED FALSE)
+
+            # Pin the binary dir to the one phase 1 reported, so it is known before the
+            # add starts (a cycle re-entering mid-add can't see CPM's own record yet).
+            set(bin_args "")
+            if(NOT "${${NAME}_BINARY_DIR}" STREQUAL "")
+                set(bin_args BINARY_DIR "${${NAME}_BINARY_DIR}")
+            endif()
+
+            CPMAddPackage(
+                    NAME ${pkg}
+                    SOURCE_DIR "${src}"
+                    ${bin_args}
+                    DOWNLOAD_ONLY NO
+                    FORCE YES        # skip CPM's find_package(${pkg}) lookup
+                    ${_dgr_UNPARSED_ARGUMENTS})
+            if(${pkg}_ADDED)
+                cpm_create_module_file(${NAME})
+            endif()
+        endif()
+    endif()
+
+    # Keep phase 1's values unless phase 2 has real ones (empty inside a cycle).
+    if(NOT pkg STREQUAL NAME)
+        foreach(var SOURCE_DIR BINARY_DIR)
+            if(NOT "${${pkg}_${var}}" STREQUAL "")
+                set(${NAME}_${var} "${${pkg}_${var}}")
+            endif()
+        endforeach()
+        set(${NAME}_ADDED "${${pkg}_ADDED}")
+    endif()
+
+    # pass results to the caller under the plain name
     foreach(var SOURCE_DIR BINARY_DIR ADDED)
-        set(${NAME}_${var} "${${pkg}_${var}}" PARENT_SCOPE)
+        set(${NAME}_${var} "${${NAME}_${var}}" PARENT_SCOPE)
     endforeach()
     set(CPM_LAST_PACKAGE_NAME "${NAME}" PARENT_SCOPE)
 endfunction()

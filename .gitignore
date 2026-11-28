@@ -26,3 +26,9 @@ docs/latex/**
 geotree.txt
 build/
 /GeoModules
+/demo
+/deps/.DLG4GeoModules.lock
+/deps/.DLG4Units.lock
+/deps/.DLG4VBDemo.lock
+/deps/.DSLeonard-cmake.lock
+/.idea/inspectionProfiles/Project_Default.xml
