@@ -4,9 +4,36 @@
 # DSLeonard-cmake
 CPMDeclarePackage(DSLeonard-cmake
   NAME DSLeonard-cmake
-  GIT_TAG 90ec7de3eafaa9e9c76d795bde4b888dc570ef9d # master
+  GIT_TAG bef9ad17a6a551a5d0fb3f5ed179e323a6cb4777 # master
   DOWNLOAD_ONLY YES
   GIT_REPOSITORY https://github.com/DSLeonard-coding/DSLeonard-cmake
   SOURCE_DIR ${CMAKE_SOURCE_DIR}/dependencies/DSLeonard-cmake
+)
+
+# DLG4Units
+CPMDeclarePackage(DLG4Units
+  NAME DLG4Units
+  GIT_TAG 34405cbae2e961be322f29883300689f5c0f091b # master
+  DOWNLOAD_ONLY YES
+  GIT_REPOSITORY https://github.com/DSLeonard-coding/DLG4Units
+  SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/DLG4Units
+)
+
+# DLG4GeoModules
+CPMDeclarePackage(DLG4GeoModules
+  NAME DLG4GeoModules
+  GIT_TAG e2f6dd26c3af355a6663cbd0ef0e734977205bdb # master
+  DOWNLOAD_ONLY YES
+  GIT_REPOSITORY https://github.com/DSLeonard-coding/DLG4GeoModules
+  SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/DLG4GeoModules
+)
+
+# VBDemo
+CPMDeclarePackage(VBDemo
+  NAME VBDemo
+  GIT_TAG 109a29b953dc9a6eb5f9b14886f61812c863a54b # master
+  DOWNLOAD_ONLY YES
+  GIT_REPOSITORY https://github.com/DSLeonard-coding/VBDemo
+  SOURCE_DIR ${CMAKE_SOURCE_DIR}/deps/VBDemo
 )
 

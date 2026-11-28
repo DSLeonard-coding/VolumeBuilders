@@ -7,6 +7,8 @@ latex/**
 docs/latex/**
 /share
 .developing
+cmake-*
+**/*.lock
 
 # Ignore other user-specific or temporary files
 **/.idea/workspace.xml
